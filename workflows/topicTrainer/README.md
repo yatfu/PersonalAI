@@ -1,6 +1,6 @@
 # topicTrainer
 
-Give it a topic, it produces a validated, ordered curriculum and a concrete day-by-day plan to learn it.
+Give it a topic, it produces a validated, ordered curriculum and a single-page HTML learning resource covering it.
 
 ## When to run it
 
@@ -9,8 +9,6 @@ Whenever you want a structured learning path for a topic, instead of researching
 ## Inputs
 
 - `topic` (required) — what to learn
-- `daysAvailable` (required) — how many days to spread it over
-- `minutesPerDay` (required) — daily time budget
 - `currentLevel` (optional) — beginner/some background/etc., defaults to beginner
 - `focus` (optional) — e.g. "practical/build-oriented" vs "theory-first"
 
@@ -19,7 +17,7 @@ Whenever you want a structured learning path for a topic, instead of researching
 `outputs/topicTrainer/<topicSlug>/`
 - `research.md` — validated research brief
 - `curriculum.md` — ordered modules with objectives and milestones
-- `dayPlan.md` — the day-by-day schedule
+- `resource.html` — a single self-contained page: one accordion section per module, with visualizations where they help
 
 ## Agents
 
@@ -28,7 +26,7 @@ Whenever you want a structured learning path for a topic, instead of researching
 | [`agents/researchAgent.md`](agents/researchAgent.md) | Maps the topic: subtopics, dependencies, key concepts, common pitfalls |
 | [`agents/validationAgent.md`](agents/validationAgent.md) | Checks the research for accuracy, gaps, and bad sequencing before anything is built on top of it |
 | [`agents/curriculumPlanner.md`](agents/curriculumPlanner.md) | Turns validated research into ordered modules with objectives and milestones |
-| [`agents/dayPlanner.md`](agents/dayPlanner.md) | Fits the curriculum into the user's actual day-by-day schedule |
+| [`agents/resourceBuilder.md`](agents/resourceBuilder.md) | Turns the curriculum + research into a single accordion-style HTML page to actually learn from |
 
 See [orchestrator.md](orchestrator.md) for the sequence, the validation retry loop, and the handoff contract between stages.
 

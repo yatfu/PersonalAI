@@ -32,4 +32,4 @@ workflows/
 
 ## Current workflows
 
-- **[topicTrainer](topicTrainer/README.md)** — give it a topic, it researches, validates, builds a curriculum, and produces a day-by-day learning plan.
+- **[topicTrainer](topicTrainer/README.md)** — give it a topic, it researches, validates, builds a curriculum, and produces a single accordion-style HTML page to learn it from.

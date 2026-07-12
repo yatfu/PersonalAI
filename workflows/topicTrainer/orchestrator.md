@@ -8,7 +8,7 @@ Not an agent itself — the control-flow spec that runs the four agents in order
 2. **validationAgent** — research brief → validation verdict (approved, or issues to fix)
    - if not approved: send the specific issues back to **researchAgent**, which revises and resubmits (see Loops below)
 3. **curriculumPlanner** — approved research brief → curriculum (ordered modules, objectives, milestones)
-4. **dayPlanner** — curriculum + `daysAvailable` + `minutesPerDay` + `currentLevel` → day-by-day plan
+4. **resourceBuilder** — curriculum + the approved research brief + `currentLevel` → single self-contained HTML learning page
 
 ## Handoff contract
 
@@ -27,12 +27,14 @@ validationAgent → researchAgent (only on rejection):
 validationAgent → curriculumPlanner (only on approval):
   - the research brief, unchanged, plus a short note on anything borderline that was approved anyway
 
-curriculumPlanner → dayPlanner:
+curriculumPlanner → resourceBuilder:
   - modules: ordered list, each with a name, objective, the subtopics it covers, and relative weight/depth
   - milestones: checkpoints — "after module N, you should be able to ..."
+  - the approved research brief, carried forward unchanged — resourceBuilder needs keyConcepts/pitfalls/sources as the substance for each module's content, not just the curriculum's headings
 
-dayPlanner → orchestrator:
-  - the finished day-by-day plan, plus a flag if daysAvailable/minutesPerDay couldn't realistically fit the curriculum (with a recommendation: extend days, or trim scope)
+resourceBuilder → orchestrator:
+  - resource.html — a single self-contained HTML page, one accordion section per module, with visualizations where they aid understanding
+  - a flag if any module's underlying research was too thin to write real content for (rather than a padded/generic section)
 ```
 
 ## Loops / retries
@@ -41,8 +43,8 @@ If **validationAgent** rejects the research brief, it goes back to **researchAge
 
 ## Stopping condition
 
-Run is complete when `dayPlanner` produces a plan (or reports the time budget can't fit the curriculum and needs a decision from the user).
+Run is complete when `resourceBuilder` produces `resource.html` (or flags modules whose research was too thin to write real content for).
 
 ## Output location
 
-`outputs/topicTrainer/<topicSlug>/` — write `research.md` (final approved version), `curriculum.md`, and `dayPlan.md`. `<topicSlug>` = the topic in camelCase, e.g. topic "Async Rust" → `asyncRust`.
+`outputs/topicTrainer/<topicSlug>/` — write `research.md` (final approved version), `curriculum.md`, and `resource.html`. `<topicSlug>` = the topic in camelCase, e.g. topic "Async Rust" → `asyncRust`.

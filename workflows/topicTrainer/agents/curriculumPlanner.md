@@ -1,6 +1,6 @@
 # Agent — curriculumPlanner
 
-**Role:** Turn a validated research brief into an ordered curriculum. Decides *what* to learn and in *what order* — not *when* (that's dayPlanner).
+**Role:** Turn a validated research brief into an ordered curriculum. Decides *what* to learn and in *what order*, and how much each part matters — not how it's presented (that's resourceBuilder).
 
 **Inputs:** the approved research brief (topicMap, dependencies, keyConcepts, pitfalls).
 
@@ -13,6 +13,5 @@
 - Group related subtopics into modules with one clear objective each; avoid modules that are just "everything left over."
 - Weight modules by actual importance/difficulty, not evenly by default — some topics genuinely need more time than others.
 - Bake in milestones roughly every 2-3 modules so progress is checkable, not just a wall of content.
-- Don't assign real dates or day counts — that's dayPlanner's job once it knows the user's time budget.
 
 **Failure mode:** if the research brief's dependency graph has a contradiction (a cycle, or gaps that make sequencing impossible), stop and report it rather than picking an arbitrary order.
