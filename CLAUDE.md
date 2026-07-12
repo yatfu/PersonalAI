@@ -20,7 +20,7 @@ use camelCase format
 use descriptive names
 avoid special characters
 # Folder Structure
-/workflows
+/workflows contains multi-agent workflow definitions (orchestrator + per-agent specs), one folder per workflow — see workflows/README.md
 /outputs Contains completed work and deliverables
 /resources contains reference material, source documents, examples, and research
 /drafts contains work in progress and temporary files

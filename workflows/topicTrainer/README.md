@@ -1,0 +1,37 @@
+# topicTrainer
+
+Give it a topic, it produces a validated, ordered curriculum and a concrete day-by-day plan to learn it.
+
+## When to run it
+
+Whenever you want a structured learning path for a topic, instead of researching and sequencing it yourself.
+
+## Inputs
+
+- `topic` (required) — what to learn
+- `daysAvailable` (required) — how many days to spread it over
+- `minutesPerDay` (required) — daily time budget
+- `currentLevel` (optional) — beginner/some background/etc., defaults to beginner
+- `focus` (optional) — e.g. "practical/build-oriented" vs "theory-first"
+
+## Output
+
+`outputs/topicTrainer/<topicSlug>/`
+- `research.md` — validated research brief
+- `curriculum.md` — ordered modules with objectives and milestones
+- `dayPlan.md` — the day-by-day schedule
+
+## Agents
+
+| Agent | Role |
+|---|---|
+| [`agents/researchAgent.md`](agents/researchAgent.md) | Maps the topic: subtopics, dependencies, key concepts, common pitfalls |
+| [`agents/validationAgent.md`](agents/validationAgent.md) | Checks the research for accuracy, gaps, and bad sequencing before anything is built on top of it |
+| [`agents/curriculumPlanner.md`](agents/curriculumPlanner.md) | Turns validated research into ordered modules with objectives and milestones |
+| [`agents/dayPlanner.md`](agents/dayPlanner.md) | Fits the curriculum into the user's actual day-by-day schedule |
+
+See [orchestrator.md](orchestrator.md) for the sequence, the validation retry loop, and the handoff contract between stages.
+
+## Status
+
+Scaffolded — agent roles and the orchestration contract are defined; prompts haven't been battle-tested on a real topic yet. Expect to tighten each agent's instructions after the first couple of runs.
