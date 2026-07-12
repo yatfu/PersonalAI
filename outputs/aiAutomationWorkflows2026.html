@@ -1,0 +1,147 @@
+<title>What People Are Actually Automating — Jul 2026</title>
+<style>
+  :root {
+    --bg: #F1F1EF;
+    --surface: #FFFFFF;
+    --ink: #1B1B1A;
+    --ink-soft: #5B5B58;
+    --accent: #C97A24;
+    --accent2: #1E7A6C;
+    --line: #D8D8D5;
+    --font-display: 'Bahnschrift', 'SF Compact Display', 'Archivo Narrow', 'Arial Narrow', sans-serif;
+    --font-body: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', serif;
+    --font-mono: 'Cascadia Code', 'SF Mono', Consolas, 'Roboto Mono', monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #161615; --surface: #1E1E1C; --ink: #ECECEA; --ink-soft: #A8A8A4; --accent: #E7A24C; --accent2: #4FC0AC; --line: #333331; }
+  }
+  :root[data-theme="dark"] { --bg: #161615; --surface: #1E1E1C; --ink: #ECECEA; --ink-soft: #A8A8A4; --accent: #E7A24C; --accent2: #4FC0AC; --line: #333331; }
+  :root[data-theme="light"] { --bg: #F1F1EF; --surface: #FFFFFF; --ink: #1B1B1A; --ink-soft: #5B5B58; --accent: #C97A24; --accent2: #1E7A6C; --line: #D8D8D5; }
+
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--font-body); }
+  a { color: var(--accent2); }
+  a:focus-visible { outline: 2px solid var(--accent2); outline-offset: 3px; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 3rem 1.5rem 4rem; display: flex; flex-direction: column; gap: 2.4rem; }
+
+  .eyebrow { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent2); }
+  h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(2rem, 5vw, 2.6rem); line-height: 1.1; margin: 0.5em 0 0.3em; text-wrap: balance; max-width: 14ch; }
+  .dek { font-size: 1.22rem; line-height: 1.6; color: var(--ink-soft); max-width: 54ch; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-soft); padding-top: 1rem; border-top: 1px solid var(--line); }
+  .platform-chip { border: 1px solid var(--line); padding: 0.18em 0.55em; border-radius: 3px; }
+
+  .pipeline { display: flex; flex-direction: column; gap: 1.4rem; }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 1.2rem 1.3rem 1.35rem; display: flex; flex-direction: column; gap: 0.7rem; }
+  .card-head { display: flex; align-items: baseline; gap: 0.65rem; flex-wrap: wrap; }
+  .rank { font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600; color: var(--accent); }
+  .card h2 { font-family: var(--font-display); font-size: 1.24rem; font-weight: 700; line-height: 1.25; margin: 0; text-wrap: balance; flex: 1; }
+  .tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .tag { font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.05em; color: var(--ink-soft); border: 1px solid var(--line); padding: 0.2em 0.5em; border-radius: 3px; }
+
+  .what { font-size: 1.05rem; line-height: 1.65; max-width: 58ch; }
+  .why { font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.55; color: var(--accent2); padding-left: 0.85rem; border-left: 2px solid var(--accent2); }
+  .metric { font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-soft); }
+  .metric strong { color: var(--ink); }
+  .source-row { font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-soft); padding-top: 0.65rem; border-top: 1px dashed var(--line); }
+
+  .method { padding-top: 1.4rem; border-top: 1px solid var(--line); font-size: 0.9rem; line-height: 1.65; color: var(--ink-soft); max-width: 58ch; }
+  .method strong { color: var(--ink); }
+</style>
+
+<div class="wrap">
+
+  <div>
+    <div class="eyebrow">Field scan — Jul 2026</div>
+    <h1>What people are actually automating</h1>
+    <p class="dek">Ten AI workflows builders are running right now, pulled from X, Reddit, YouTube, GitHub, and n8n's template marketplace — ranked by the strongest traction signal each one has: stars, revenue reported, or the size of the conversation it started.</p>
+    <div class="meta-row">
+      <span class="platform-chip">X</span><span class="platform-chip">Reddit</span><span class="platform-chip">YouTube</span><span class="platform-chip">GitHub</span><span class="platform-chip">n8n</span><span class="platform-chip">Hacker News</span>
+      <span>· 2 min read</span>
+    </div>
+  </div>
+
+  <div class="pipeline">
+
+    <div class="card">
+      <div class="card-head"><span class="rank">01</span><h2>Adversarial code review, multi-agent</h2><div class="tags"><span class="tag">X</span></div></div>
+      <p class="what">One Claude instance writes the code and opens a diff. Two more instances receive only that diff, told nothing except to assume it's broken, and go looking for edge cases, bad assumptions, and regressions the author missed. Nothing merges until both reviewers run out of objections, which forces every change through real scrutiny instead of a rubber-stamp pass.</p>
+      <p class="why">// review agents that are rewarded for disagreeing catch what a single reviewer misses</p>
+      <p class="metric">Used to port <strong>1M+ lines</strong> of Bun from Zig to Rust in <strong>~6 days</strong>, passing 99.8% of the test suite.</p>
+      <div class="source-row">source: <a href="https://x.com/jarredsumner/status/2060050578026189172" target="_blank" rel="noopener">x.com/jarredsumner — "dynamic workflows and adversarial code review"</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="rank">02</span><h2>Faceless YouTube production pipeline</h2><div class="tags"><span class="tag">YouTube</span><span class="tag">Reddit</span></div></div>
+      <p class="what">A daily job scans trending topics in the channel's niche, drafts a script built around a retention hook in the first ten seconds, then hands it off to text-to-speech and thumbnail generation. A human spot-checks the output before it goes out, but the research-to-render pipeline runs with no manual steps in between, which is what lets one person out-publish a small production team.</p>
+      <p class="why">// publishing 3-4x more often than manual teams is what actually moves the algorithm</p>
+      <p class="metric">Reported <strong>$2K–$30K/mo</strong> per channel.</p>
+      <div class="source-row">source: <a href="https://www.indiehackers.com/post/5-ai-agent-workflows-actually-making-money-in-2026-with-real-numbers-ea266790ba" target="_blank" rel="noopener">Indie Hackers — "5 AI Agent Workflows Actually Making Money in 2026"</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="rank">03</span><h2>The 280-template n8n starter library</h2><div class="tags"><span class="tag">GitHub</span></div></div>
+      <p class="what">A single open-source GitHub repo collecting 280+ ready-to-run n8n workflows — AI agents, RAG chatbots, email automation, social posting, DevOps pipelines — organized into 18 categories so builders start from the closest match and swap in their own credentials, instead of assembling nodes from a blank canvas every time.</p>
+      <p class="why">// the most reliable popularity signal here isn't a claim, it's 23.8k people starring the repo</p>
+      <p class="metric"><strong>23.8k</strong> GitHub stars · <strong>280+</strong> templates.</p>
+      <div class="source-row">source: <a href="https://github.com/enescingoz/awesome-n8n-templates" target="_blank" rel="noopener">github.com/enescingoz/awesome-n8n-templates</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="rank">04</span><h2>Trend-to-multi-platform content agent</h2><div class="tags"><span class="tag">n8n</span><span class="tag">Reddit</span></div></div>
+      <p class="what">Trending topics get pulled daily from Reddit, X, and Google Trends, scored for relevance with an LLM, then rewritten into a separate draft for each platform — short and punchy for X, longer and story-driven for LinkedIn, a script for Instagram Reels. Every draft lands in a queue for human approval before it's allowed to post anywhere.</p>
+      <p class="why">// the approve-before-post step is the whole reason this is safe to run unattended</p>
+      <div class="source-row">source: <a href="https://n8n.io/workflows/3560-extract-trends-auto-generate-social-content-with-ai-reddit-google-and-post/" target="_blank" rel="noopener">n8n.io — "Extract trends, auto-generate social content"</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="rank">05</span><h2>Voice-cloned ghostwriting agent</h2><div class="tags"><span class="tag">X</span><span class="tag">LinkedIn</span></div></div>
+      <p class="what">The agent ingests a client's past posts to build a running voice profile — tone, sentence rhythm, recurring topics — then drafts a month of content in that voice across formats. Because it tracks which drafts get approved with no edits versus heavily rewritten, the profile keeps tightening the longer it runs for a given client.</p>
+      <p class="why">// it compounds — the longer it runs per client, the less editing each draft needs</p>
+      <p class="metric">One operator running <strong>12 clients</strong> at $1,500/mo on <strong>~3 hrs/week</strong> of review.</p>
+      <div class="source-row">source: <a href="https://www.indiehackers.com/post/5-ai-agent-workflows-actually-making-money-in-2026-with-real-numbers-ea266790ba" target="_blank" rel="noopener">Indie Hackers — "5 AI Agent Workflows Actually Making Money in 2026"</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="rank">06</span><h2>Reddit buyer-intent lead mining</h2><div class="tags"><span class="tag">Reddit</span></div></div>
+      <p class="what">The agent monitors a list of target subreddits for posts that read as genuine buying signals rather than idle chatter, classifies each by urgency, and drafts a reply that actually answers the question instead of pitching. Posts that show real intent get the poster routed into a separate, personalized cold-outreach sequence built from what they actually said.</p>
+      <p class="why">// outreach that starts from something the prospect actually typed beats a cold guess</p>
+      <p class="metric">Reported <strong>30%</strong> reply-to-close rate on outreach sourced this way.</p>
+      <div class="source-row">source: <a href="https://www.indiehackers.com/post/5-ai-agent-workflows-actually-making-money-in-2026-with-real-numbers-ea266790ba" target="_blank" rel="noopener">Indie Hackers — "5 AI Agent Workflows Actually Making Money in 2026"</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="rank">07</span><h2>The CLAUDE.md + skills + subagent harness</h2><div class="tags"><span class="tag">Hacker News</span><span class="tag">Reddit</span></div></div>
+      <p class="what">Instead of retyping the same instructions into every session, developers encode their repeatable steps once as a skill, hook, or CLAUDE.md rule. From there, a single request can fan out into subagents that research, draft, and adversarially review in parallel, with the orchestrating session only seeing the consolidated result — turning one-off prompting into a versioned process.</p>
+      <p class="why">// turning one-off prompting into a versioned process is the upgrade that actually sticks</p>
+      <div class="source-row">source: <a href="https://dev.to/max_quimby/claude-code-just-hit-1-on-hacker-news-heres-everything-you-need-to-know-j74" target="_blank" rel="noopener">dev.to — "Claude Code Just Hit #1 on Hacker News"</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="rank">08</span><h2>Two-agent channel with persistent memory</h2><div class="tags"><span class="tag">YouTube</span><span class="tag">Reddit</span></div></div>
+      <p class="what">One Claude-based agent ("Midnight") handles research, video production, and scheduling; a second ("Dusk") handles cross-platform promotion. Both keep persistent memory across runs — every past decision, experiment, and failure is available to inform the next one, rather than each run starting from a blank slate. The write-up is unusually candid about what didn't work.</p>
+      <p class="why">// a rare honest write-up: real numbers and real failure modes, not a highlight reel</p>
+      <p class="metric"><strong>52 videos</strong>, 30,170 views, 29 subscribers over 6 weeks.</p>
+      <div class="source-row">source: <a href="https://dev.to/wcamon/i-let-ai-agents-run-my-youtube-channel-for-6-weeks-heres-what-actually-happened-21b1" target="_blank" rel="noopener">dev.to — "I Let AI Agents Run My YouTube Channel for 6 Weeks"</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="rank">09</span><h2>Inbox triage &amp; auto-response agent</h2><div class="tags"><span class="tag">n8n</span></div></div>
+      <p class="what">Incoming mail gets read, classified by urgency and type, and routed: routine messages get a drafted or auto-sent reply, ambiguous ones get flagged for a human, and the rest gets filed automatically. It's one of the few automations on this list where the payoff — a shorter inbox — is visible the same day it's turned on, which is why it keeps reappearing as a starter build.</p>
+      <p class="why">// one of the few automations with a payoff you feel the same day you turn it on</p>
+      <div class="source-row">source: <a href="https://n8n.io/workflows/9157-ai-powered-email-triage-and-auto-response-system-with-openai-agents-and-gmail/" target="_blank" rel="noopener">n8n.io — "AI-powered email triage & auto-response system"</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="rank">10</span><h2>"Chat with your docs" RAG agent</h2><div class="tags"><span class="tag">n8n</span></div></div>
+      <p class="what">A watched Drive folder feeds new files into an embedding pipeline that indexes them into a Pinecone vector store as they arrive. A chat interface sits on top, answering questions by retrieving the relevant chunks first — a small enough build for an afternoon, but useful enough as searchable personal or company knowledge that people keep it running long after.</p>
+      <p class="why">// small enough to build in an afternoon, useful enough that people actually keep it running</p>
+      <div class="source-row">source: <a href="https://n8n.io/workflows/9942-rag-powered-document-chat-with-google-drive-openai-and-pinecone-assistant/" target="_blank" rel="noopener">n8n.io — "RAG-powered document chat with Google Drive, OpenAI, and Pinecone"</a></div>
+    </div>
+
+  </div>
+
+  <p class="method"><strong>Methodology.</strong> Ranked by the strongest independent traction signal available per item — reported revenue, GitHub stars, or the size and spread of the discussion (X ➜ Hacker News ➜ blog coverage). Newsletter roundups (The Rundown AI, Ben's Bites, TLDR AI) were checked while researching but mostly point back to these same primary builds rather than publishing distinct ones. No platform or reach numbers were invented — where a figure isn't cited, none was reliably available.</p>
+
+</div>
