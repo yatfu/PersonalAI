@@ -14,6 +14,7 @@ Not an agent itself — the control-flow spec that runs the four agents in order
 
 ```
 researchAgent → validationAgent:
+  - researchedAt: the date this research was run, plus the recency of sources it draws on
   - topicMap: list of subtopics with a short description each
   - dependencies: which subtopics require which others first
   - keyConcepts: per subtopic, the concepts a learner must come away with
@@ -22,7 +23,7 @@ researchAgent → validationAgent:
   - openQuestions: anything the research agent is unsure about
 
 validationAgent → researchAgent (only on rejection):
-  - issues: specific, actionable list — "X is outdated", "dependency order is wrong: A needs B first", "missing: ..."
+  - issues: specific, actionable list — "X is outdated", "dependency order is wrong: A needs B first", "missing: ...", "missing/stale researchedAt: ..."
 
 validationAgent → curriculumPlanner (only on approval):
   - the research brief, unchanged, plus a short note on anything borderline that was approved anyway

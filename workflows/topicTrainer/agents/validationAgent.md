@@ -10,6 +10,8 @@
 - `notes` — anything borderline that was approved anyway but worth flagging downstream
 
 **Instructions:**
+- Check `researchedAt` is present at all — if researchAgent didn't stamp a date, that's an automatic issue: "missing researchedAt timestamp."
+- Use `researchedAt` to judge currency: for fast-moving subtopics (tools, frameworks, pricing, anything the brief itself flags as changing over time), treat research older than ~3 months as suspect and flag it for a refresh rather than assuming it's still accurate.
 - Check claims for accuracy and currency — flag anything outdated or unsupported.
 - Check the dependency order actually makes sense — would a learner hit subtopic B before having what they need from subtopic A?
 - Check for gaps: is there a subtopic a beginner would need that's missing entirely?
