@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Work Tracker</title>
+<style>
+  :root {
+    --bg: #F1F1EF;
+    --surface: #FFFFFF;
+    --ink: #1B1B1A;
+    --ink-soft: #5B5B58;
+    --accent: #C97A24;
+    --accent2: #1E7A6C;
+    --line: #D8D8D5;
+    --heat-0: var(--line);
+    --heat-1: #BFE3DC;
+    --heat-2: #8FCFC1;
+    --heat-3: #4FA895;
+    --heat-4: #1E7A6C;
+    --danger: #B3432E;
+    --font-display: 'Bahnschrift', 'SF Compact Display', 'Archivo Narrow', 'Arial Narrow', sans-serif;
+    --font-body: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', serif;
+    --font-mono: 'Cascadia Code', 'SF Mono', Consolas, 'Roboto Mono', monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161615; --surface: #1E1E1C; --ink: #ECECEA; --ink-soft: #A8A8A4;
+      --accent: #E7A24C; --accent2: #4FC0AC; --line: #333331;
+      --heat-0: var(--line); --heat-1: #1F4A42; --heat-2: #2C6E5F; --heat-3: #3B9782; --heat-4: #4FC0AC;
+      --danger: #D97A63;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #161615; --surface: #1E1E1C; --ink: #ECECEA; --ink-soft: #A8A8A4;
+    --accent: #E7A24C; --accent2: #4FC0AC; --line: #333331;
+    --heat-0: var(--line); --heat-1: #1F4A42; --heat-2: #2C6E5F; --heat-3: #3B9782; --heat-4: #4FC0AC;
+    --danger: #D97A63;
+  }
+  :root[data-theme="light"] {
+    --bg: #F1F1EF; --surface: #FFFFFF; --ink: #1B1B1A; --ink-soft: #5B5B58;
+    --accent: #C97A24; --accent2: #1E7A6C; --line: #D8D8D5;
+    --heat-0: var(--line); --heat-1: #BFE3DC; --heat-2: #8FCFC1; --heat-3: #4FA895; --heat-4: #1E7A6C;
+    --danger: #B3432E;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; overflow-x: hidden; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--font-body); }
+  button { font-family: var(--font-display); cursor: pointer; }
+  input { font-family: var(--font-body); }
+  a { color: var(--accent2); }
+  button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--accent2); outline-offset: 2px; }
+
+  .wrap { max-width: 900px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; display: flex; flex-direction: column; gap: 2rem; min-width: 0; }
+
+  h1 { font-family: var(--font-display); font-size: 1.7rem; font-weight: 700; margin: 0; }
+  .dek { color: var(--ink-soft); font-size: 1rem; margin: 0.3rem 0 0; }
+
+  /* ---------- file status ---------- */
+  .fileStatus {
+    display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
+    font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-soft);
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); flex: none; }
+  .dot.ok { background: var(--accent2); }
+  .dot.warn { background: var(--accent); }
+  .fileStatus button {
+    font-family: var(--font-mono); font-size: 0.75rem; background: none; border: 1px solid var(--line);
+    color: var(--ink-soft); padding: 0.25em 0.6em; border-radius: 4px;
+  }
+  .fileStatus button:hover { border-color: var(--accent2); color: var(--accent2); }
+  #importInput { display: none; }
+
+  /* ---------- timer card ---------- */
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 1.6rem; }
+  .timerDisplay {
+    font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+    font-size: clamp(2.4rem, 8vw, 3.6rem); font-weight: 600; text-align: center;
+    letter-spacing: 0.02em; margin: 0.2rem 0 1.3rem;
+  }
+  .timerDisplay.running { color: var(--accent2); }
+  .controls { display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap; }
+  .btn {
+    font-size: 0.95rem; font-weight: 600; padding: 0.65em 1.5em; border-radius: 6px;
+    border: 1px solid transparent; letter-spacing: 0.01em;
+  }
+  .btn-primary { background: var(--accent2); color: var(--surface); }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .btn-secondary { background: transparent; color: var(--ink); border-color: var(--line); }
+  .btn-secondary:hover { border-color: var(--ink-soft); }
+  .btn-stop { background: var(--danger); color: var(--surface); }
+  .btn-stop:hover { filter: brightness(1.08); }
+  .btn-ghost { background: none; color: var(--ink-soft); border-color: var(--line); }
+  .btn-ghost:hover { color: var(--ink); }
+
+  .saveRow { display: flex; flex-direction: column; gap: 0.9rem; align-items: center; }
+  .saveRow .finalDuration { font-family: var(--font-mono); font-size: 1.1rem; color: var(--ink-soft); }
+  .saveRow input[type="text"] {
+    width: 100%; max-width: 420px; padding: 0.6em 0.8em; border: 1px solid var(--line); border-radius: 6px;
+    background: var(--bg); color: var(--ink); font-size: 0.95rem;
+  }
+  .saveRow input[type="text"]:focus-visible { outline: 2px solid var(--accent2); outline-offset: 1px; }
+
+  /* ---------- this week ---------- */
+  .weekSection { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 1.3rem 1.5rem 1.5rem; }
+  .weekHead { display: flex; align-items: baseline; justify-content: space-between; gap: 0.8rem; margin-bottom: 1rem; }
+  .weekHead h2 { font-family: var(--font-display); font-size: 1.05rem; margin: 0; }
+  .weekTotal { font-family: var(--font-mono); font-size: 0.85rem; color: var(--ink-soft); }
+  .weekTotal strong { color: var(--ink); font-weight: 600; }
+  .weekBars { display: flex; align-items: stretch; gap: 0.7rem; height: 100px; }
+  .weekBarCol { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.3rem; min-width: 0; }
+  .weekBarVal { font-family: var(--font-mono); font-size: 0.64rem; color: var(--ink-soft); flex: none; }
+  .weekBarTrack { flex: 1; width: 100%; max-width: 34px; display: flex; align-items: flex-end; }
+  .weekBarFill { width: 100%; background: var(--line); border-radius: 4px 4px 0 0; }
+  .weekBarFill.hasVal { background: var(--accent2); }
+  .weekBarDay { font-family: var(--font-mono); font-size: 0.68rem; color: var(--ink-soft); flex: none; }
+  .weekBarCol.today .weekBarDay { color: var(--accent2); font-weight: 600; }
+
+  /* ---------- stats ---------- */
+  .stats {
+    font-family: var(--font-mono); font-size: 0.85rem; color: var(--ink-soft);
+    display: flex; gap: 1.5rem; flex-wrap: wrap;
+  }
+  .stats strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------- grid ---------- */
+  .gridSection { min-width: 0; }
+  .gridSection h2 { font-family: var(--font-display); font-size: 1.1rem; margin: 0 0 0.8rem; }
+  .gridScroll { overflow-x: auto; padding-bottom: 0.3rem; min-width: 0; }
+  .gridInner { display: inline-flex; gap: 0.5rem; }
+  .dayLabels { display: grid; grid-template-rows: repeat(7, 13px); gap: 3px; padding-top: 16px; }
+  .dayLabels span { font-family: var(--font-mono); font-size: 0.62rem; color: var(--ink-soft); line-height: 13px; }
+  .gridBody { display: flex; flex-direction: column; }
+  .monthLabels { position: relative; height: 14px; margin-bottom: 2px; }
+  .monthLabels span { position: absolute; top: 0; font-family: var(--font-mono); font-size: 0.66rem; color: var(--ink-soft); }
+  .cellsGrid { display: grid; grid-template-rows: repeat(7, 13px); grid-auto-flow: column; grid-auto-columns: 13px; gap: 3px; }
+  .cell { width: 13px; height: 13px; border-radius: 3px; background: var(--heat-0); }
+  .cell[data-level="1"] { background: var(--heat-1); }
+  .cell[data-level="2"] { background: var(--heat-2); }
+  .cell[data-level="3"] { background: var(--heat-3); }
+  .cell[data-level="4"] { background: var(--heat-4); }
+  .cell.future { background: transparent; }
+  .cell.hasData { cursor: pointer; }
+  .cell.hasData:hover, .cell.hasData:focus-visible { outline: 2px solid var(--accent2); outline-offset: 1px; }
+  .legend { display: flex; align-items: center; gap: 0.35rem; margin-top: 0.6rem; font-family: var(--font-mono); font-size: 0.7rem; color: var(--ink-soft); }
+  .legend .cell { width: 11px; height: 11px; }
+
+  .dayDetail { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+  .dayDetail .dayDetailHead { display: flex; align-items: baseline; justify-content: space-between; gap: 0.8rem; margin-bottom: 0.4rem; }
+  .dayDetail .dayDetailHead h3 { font-family: var(--font-display); font-size: 0.95rem; margin: 0; }
+  .dayDetail .dayDetailHead button { font-family: var(--font-mono); font-size: 0.75rem; background: none; border: 1px solid var(--line); color: var(--ink-soft); padding: 0.2em 0.55em; border-radius: 4px; }
+  .dayDetail .dayDetailHead button:hover { border-color: var(--accent2); color: var(--accent2); }
+  .dayDetail .entryRow { border-top: 1px solid var(--line); border-bottom: none; }
+  .dayDetail .entryRow:first-child { border-top: none; }
+
+  /* ---------- recent entries ---------- */
+  .entriesSection h2 { font-family: var(--font-display); font-size: 1.1rem; margin: 0 0 0.8rem; }
+  .entryList { display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--line); max-height: 340px; overflow-y: auto; }
+  .entryRow {
+    display: flex; align-items: baseline; gap: 0.8rem; padding: 0.55rem 0; border-bottom: 1px solid var(--line);
+    font-size: 0.9rem;
+  }
+  .entryRow .entryDate { font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-soft); flex: none; width: 6.5em; }
+  .entryRow .entryLabel { flex: 1; color: var(--ink); }
+  .entryRow .entryLabel.empty { color: var(--ink-soft); font-style: italic; }
+  .entryRow .entryDur { font-family: var(--font-mono); font-size: 0.82rem; color: var(--accent2); flex: none; }
+  .entryRow .entryDel {
+    flex: none; background: none; border: none; color: var(--ink-soft); font-size: 1rem; line-height: 1;
+    padding: 0.2em 0.3em; border-radius: 4px;
+  }
+  .entryRow .entryDel:hover { color: var(--danger); }
+  .emptyState { color: var(--ink-soft); font-size: 0.9rem; padding: 1rem 0; }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div>
+    <h1>Work Tracker</h1>
+    <p class="dek">Start, pause, and stop a work session. Save it, and it lands on the week view and grid below.</p>
+  </div>
+
+  <div class="fileStatus" id="fileStatus">
+    <span class="dot" id="fileDot"></span>
+    <span id="fileStatusText">Using browser storage only</span>
+    <button id="connectBtn" type="button">Connect times.json</button>
+    <button id="exportBtn" type="button" class="hidden">Export times.json</button>
+    <button id="importBtn" type="button" class="hidden">Import times.json</button>
+    <input type="file" id="importInput" accept="application/json" />
+  </div>
+
+  <div class="card">
+    <div id="timerDisplay" class="timerDisplay">00:00:00</div>
+
+    <div class="controls" id="idleControls">
+      <button class="btn btn-primary" id="startBtn" type="button">Start</button>
+    </div>
+
+    <div class="controls hidden" id="runningControls">
+      <button class="btn btn-secondary" id="pauseBtn" type="button">Pause</button>
+      <button class="btn btn-stop" id="stopBtn1" type="button">Stop</button>
+    </div>
+
+    <div class="controls hidden" id="pausedControls">
+      <button class="btn btn-primary" id="resumeBtn" type="button">Resume</button>
+      <button class="btn btn-stop" id="stopBtn2" type="button">Stop</button>
+    </div>
+
+    <div class="saveRow hidden" id="saveControls">
+      <div class="finalDuration" id="finalDurationText"></div>
+      <input type="text" id="labelInput" placeholder="What did you work on? (optional)" maxlength="140" />
+      <div class="controls">
+        <button class="btn btn-primary" id="saveBtn" type="button">Save</button>
+        <button class="btn btn-ghost" id="discardBtn" type="button">Discard</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="weekSection">
+    <div class="weekHead">
+      <h2>This week</h2>
+      <span class="weekTotal" id="weekTotal"></span>
+    </div>
+    <div class="weekBars" id="weekBars"></div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="gridSection">
+    <h2>Work activity</h2>
+    <div class="gridScroll">
+      <div class="gridInner">
+        <div class="dayLabels"><span></span><span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span></div>
+        <div class="gridBody">
+          <div class="monthLabels" id="monthLabels"></div>
+          <div class="cellsGrid" id="cellsGrid"></div>
+        </div>
+      </div>
+    </div>
+    <div class="legend">
+      Less
+      <span class="cell" data-level="0"></span>
+      <span class="cell" data-level="1"></span>
+      <span class="cell" data-level="2"></span>
+      <span class="cell" data-level="3"></span>
+      <span class="cell" data-level="4"></span>
+      More
+    </div>
+    <div class="dayDetail hidden" id="dayDetail">
+      <div class="dayDetailHead">
+        <h3 id="dayDetailTitle"></h3>
+        <button type="button" id="dayDetailClose">Close</button>
+      </div>
+      <div id="dayDetailList"></div>
+    </div>
+  </div>
+
+  <div class="entriesSection">
+    <h2>Recent work sessions</h2>
+    <div class="entryList" id="entryList"></div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var LS_KEY = 'timeTrackerData';
+  var DB_NAME = 'timeTrackerDB', STORE = 'handles', HANDLE_KEY = 'timesFile';
+
+  var entries = [];
+  var fileHandle = null;
+
+  // timer state
+  var running = false;
+  var accumulatedMs = 0;
+  var segmentStart = null;
+  var startedAtISO = null;
+  var pendingStop = null;
+  var tickHandle = null;
+  var openDayKey = null;
+
+  // ---------- persistence: localStorage ----------
+  function loadLocal() {
+    try {
+      var raw = localStorage.getItem(LS_KEY);
+      if (!raw) return [];
+      var data = JSON.parse(raw);
+      return (data && Array.isArray(data.entries)) ? data.entries : [];
+    } catch (e) { return []; }
+  }
+  function saveLocal() {
+    localStorage.setItem(LS_KEY, JSON.stringify({ version: 1, entries: entries }));
+  }
+
+  // ---------- persistence: File System Access API ----------
+  var fsaSupported = typeof window.showSaveFilePicker === 'function';
+
+  function idbOpen() {
+    return new Promise(function (resolve, reject) {
+      var req = indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = function () { req.result.createObjectStore(STORE); };
+      req.onsuccess = function () { resolve(req.result); };
+      req.onerror = function () { reject(req.error); };
+    });
+  }
+  function idbSaveHandle(handle) {
+    return idbOpen().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        var tx = db.transaction(STORE, 'readwrite');
+        tx.objectStore(STORE).put(handle, HANDLE_KEY);
+        tx.oncomplete = function () { resolve(); };
+        tx.onerror = function () { reject(tx.error); };
+      });
+    });
+  }
+  function idbLoadHandle() {
+    return idbOpen().then(function (db) {
+      return new Promise(function (resolve) {
+        var tx = db.transaction(STORE, 'readonly');
+        var req = tx.objectStore(STORE).get(HANDLE_KEY);
+        req.onsuccess = function () { resolve(req.result || null); };
+        req.onerror = function () { resolve(null); };
+      });
+    });
+  }
+
+  function setFileStatus(mode, text) {
+    var dot = document.getElementById('fileDot');
+    var label = document.getElementById('fileStatusText');
+    dot.className = 'dot' + (mode === 'ok' ? ' ok' : mode === 'warn' ? ' warn' : '');
+    label.textContent = text;
+  }
+
+  function ensurePermission(handle) {
+    var opts = { mode: 'readwrite' };
+    return handle.queryPermission(opts).then(function (state) {
+      if (state === 'granted') return true;
+      return handle.requestPermission(opts).then(function (s2) { return s2 === 'granted'; });
+    });
+  }
+
+  // Union merge by id — used whenever we're about to write, so a save on
+  // this machine can't clobber entries another machine already synced into
+  // the file (e.g. via Dropbox/OneDrive/iCloud). Deletions don't propagate
+  // through this merge — deleting on one machine while another machine adds
+  // a still-unsynced entry can resurrect it. Fine for one-person-at-a-time use.
+  function mergeEntryLists(a, b) {
+    var byId = {};
+    a.forEach(function (e) { byId[e.id] = e; });
+    b.forEach(function (e) { if (!byId[e.id]) byId[e.id] = e; });
+    return Object.keys(byId).map(function (id) { return byId[id]; });
+  }
+  function readFileEntries(handle) {
+    return handle.getFile().then(function (file) { return file.text(); }).then(function (text) {
+      if (!text || !text.trim()) return [];
+      try {
+        var data = JSON.parse(text);
+        return (data && Array.isArray(data.entries)) ? data.entries : [];
+      } catch (e) { return []; }
+    }).catch(function () { return []; });
+  }
+
+  function writeFile() {
+    if (!fileHandle) return Promise.resolve();
+    return ensurePermission(fileHandle).then(function (ok) {
+      if (!ok) { setFileStatus('warn', 'times.json — permission needed'); return; }
+      return readFileEntries(fileHandle).then(function (remoteEntries) {
+        var merged = mergeEntryLists(entries, remoteEntries);
+        var changed = merged.length !== entries.length;
+        entries = merged;
+        saveLocal();
+        var payload = {
+          version: 1,
+          _notes: "Time-tracker session log, written/read by timer.html. Each entry in `entries`: id, startedAt/endedAt (ISO 8601 UTC), durationMs (running time, pauses excluded), label (optional). Bucketed into the grid by the LOCAL calendar date of startedAt.",
+          entries: entries
+        };
+        return fileHandle.createWritable().then(function (writable) {
+          return writable.write(JSON.stringify(payload, null, 2)).then(function () {
+            return writable.close();
+          });
+        }).then(function () {
+          setFileStatus('ok', 'Synced to times.json');
+          if (changed) renderAll();
+        });
+      });
+    }).catch(function () {
+      setFileStatus('warn', 'Could not write times.json');
+    });
+  }
+
+  // Pulls in entries another machine synced into the file since we last
+  // looked, without prompting for permission (only acts if already granted —
+  // this runs on tab focus, outside any click, so requestPermission would
+  // silently do nothing anyway).
+  function refreshFromFile() {
+    if (!fileHandle) return;
+    fileHandle.queryPermission({ mode: 'readwrite' }).then(function (state) {
+      if (state !== 'granted') return;
+      return readFileEntries(fileHandle).then(function (remoteEntries) {
+        var merged = mergeEntryLists(entries, remoteEntries);
+        if (merged.length !== entries.length) {
+          entries = merged;
+          saveLocal();
+          renderAll();
+          setFileStatus('ok', 'Synced to times.json');
+        }
+      });
+    });
+  }
+
+  function useHandle(handle, opts) {
+    opts = opts || {};
+    fileHandle = handle;
+    return idbSaveHandle(handle).then(function () {
+      return handle.getFile();
+    }).then(function (file) {
+      return file.text();
+    }).then(function (text) {
+      if (text && text.trim()) {
+        try {
+          var data = JSON.parse(text);
+          if (data && Array.isArray(data.entries)) {
+            entries = data.entries;
+            saveLocal();
+            setFileStatus('ok', 'Connected to times.json (' + entries.length + ' sessions loaded)');
+            return;
+          }
+        } catch (e) { /* fall through to write current data */ }
+      }
+      return writeFile();
+    }).catch(function () {
+      // file unreadable (new/empty) — write current state to initialize it
+      return writeFile();
+    }).then(renderAll);
+  }
+
+  function connectFile() {
+    if (!fsaSupported) return;
+    window.showSaveFilePicker({
+      suggestedName: 'times.json',
+      types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }]
+    }).then(function (handle) {
+      return useHandle(handle);
+    }).catch(function (e) {
+      if (e && e.name !== 'AbortError') setFileStatus('warn', 'Could not connect file');
+    });
+  }
+
+  function tryReconnectOnLoad() {
+    if (!fsaSupported) return;
+    idbLoadHandle().then(function (handle) {
+      if (!handle) return;
+      handle.queryPermission({ mode: 'readwrite' }).then(function (state) {
+        if (state === 'granted') {
+          useHandle(handle);
+        } else {
+          fileHandle = handle;
+          setFileStatus('warn', 'times.json linked — click to reconnect');
+          document.getElementById('connectBtn').textContent = 'Reconnect times.json';
+        }
+      });
+    });
+  }
+
+  // ---------- export / import fallback (non-Chromium browsers) ----------
+  function exportFile() {
+    var payload = {
+      version: 1,
+      _notes: "Time-tracker session log. Each entry: id, startedAt/endedAt (ISO 8601 UTC), durationMs (running time, pauses excluded), label (optional). Bucketed into the grid by the LOCAL calendar date of startedAt.",
+      entries: entries
+    };
+    var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'times.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+  function importFile(file) {
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        var data = JSON.parse(reader.result);
+        if (data && Array.isArray(data.entries)) {
+          entries = data.entries;
+          saveLocal();
+          renderAll();
+          setFileStatus('ok', 'Imported ' + entries.length + ' sessions from file');
+        }
+      } catch (e) { setFileStatus('warn', 'Could not read that file'); }
+    };
+    reader.readAsText(file);
+  }
+
+  function persistAll() {
+    saveLocal();
+    if (fileHandle) writeFile();
+  }
+
+  // ---------- timer engine ----------
+  function elapsedMs() {
+    return accumulatedMs + (running ? (Date.now() - segmentStart) : 0);
+  }
+  function pad2(n) { return String(n).padStart(2, '0'); }
+  function formatHMS(ms) {
+    var totalSec = Math.floor(ms / 1000);
+    var h = Math.floor(totalSec / 3600); totalSec -= h * 3600;
+    var m = Math.floor(totalSec / 60); var s = totalSec % 60;
+    return pad2(h) + ':' + pad2(m) + ':' + pad2(s);
+  }
+  function formatDurationShort(ms) {
+    if (ms < 60000) return Math.round(ms / 1000) + 's';
+    var totalMin = Math.round(ms / 60000);
+    var h = Math.floor(totalMin / 60), m = totalMin % 60;
+    return h > 0 ? (h + 'h ' + m + 'm') : (m + 'm');
+  }
+
+  function tick() {
+    var display = document.getElementById('timerDisplay');
+    display.textContent = formatHMS(elapsedMs());
+  }
+  function startTicking() {
+    stopTicking();
+    tickHandle = setInterval(tick, 1000);
+    tick();
+  }
+  function stopTicking() {
+    if (tickHandle) { clearInterval(tickHandle); tickHandle = null; }
+  }
+
+  var UI_STATE = { IDLE: 'idle', RUNNING: 'running', PAUSED: 'paused', STOPPED: 'stopped' };
+  function currentUiState() {
+    if (pendingStop) return UI_STATE.STOPPED;
+    if (running) return UI_STATE.RUNNING;
+    if (accumulatedMs > 0) return UI_STATE.PAUSED;
+    return UI_STATE.IDLE;
+  }
+  function renderControls() {
+    var state = currentUiState();
+    document.getElementById('idleControls').classList.toggle('hidden', state !== UI_STATE.IDLE);
+    document.getElementById('runningControls').classList.toggle('hidden', state !== UI_STATE.RUNNING);
+    document.getElementById('pausedControls').classList.toggle('hidden', state !== UI_STATE.PAUSED);
+    document.getElementById('saveControls').classList.toggle('hidden', state !== UI_STATE.STOPPED);
+    document.getElementById('timerDisplay').classList.toggle('running', state === UI_STATE.RUNNING);
+    if (state === UI_STATE.STOPPED) {
+      document.getElementById('timerDisplay').textContent = formatHMS(pendingStop.durationMs);
+      document.getElementById('finalDurationText').textContent =
+        'Time worked: ' + formatDurationShort(pendingStop.durationMs);
+    }
+  }
+
+  function doStart() {
+    segmentStart = Date.now();
+    if (!startedAtISO) startedAtISO = new Date(segmentStart).toISOString();
+    running = true;
+    startTicking();
+    renderControls();
+  }
+  function doPause() {
+    accumulatedMs += Date.now() - segmentStart;
+    running = false;
+    stopTicking();
+    tick();
+    renderControls();
+  }
+  function doStop() {
+    if (running) {
+      accumulatedMs += Date.now() - segmentStart;
+      running = false;
+    }
+    stopTicking();
+    pendingStop = {
+      startedAt: startedAtISO,
+      endedAt: new Date().toISOString(),
+      durationMs: accumulatedMs
+    };
+    renderControls();
+  }
+  function doSave() {
+    var label = document.getElementById('labelInput').value.trim();
+    var entry = {
+      id: (crypto.randomUUID ? crypto.randomUUID() : ('e_' + Date.now() + '_' + Math.random().toString(36).slice(2))),
+      startedAt: pendingStop.startedAt,
+      endedAt: pendingStop.endedAt,
+      durationMs: pendingStop.durationMs,
+      label: label
+    };
+    entries.push(entry);
+    persistAll();
+    resetTimer();
+    document.getElementById('labelInput').value = '';
+    renderAll();
+  }
+  function doDiscard() {
+    resetTimer();
+    renderControls();
+  }
+  function resetTimer() {
+    accumulatedMs = 0;
+    startedAtISO = null;
+    pendingStop = null;
+    document.getElementById('timerDisplay').textContent = '00:00:00';
+  }
+  function deleteEntry(id) {
+    entries = entries.filter(function (e) { return e.id !== id; });
+    persistAll();
+    renderAll();
+  }
+
+  // ---------- grid ----------
+  function localDateKey(date) {
+    return date.getFullYear() + '-' + pad2(date.getMonth() + 1) + '-' + pad2(date.getDate());
+  }
+  function dateLabel(date) {
+    return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+  function levelFor(count) {
+    if (count <= 0) return 0;
+    if (count === 1) return 1;
+    if (count <= 3) return 2;
+    if (count <= 6) return 3;
+    return 4;
+  }
+  function buildCounts() {
+    var counts = {};
+    var durations = {};
+    entries.forEach(function (e) {
+      var d = new Date(e.startedAt);
+      var key = localDateKey(d);
+      counts[key] = (counts[key] || 0) + 1;
+      durations[key] = (durations[key] || 0) + e.durationMs;
+    });
+    return { counts: counts, durations: durations };
+  }
+  function renderGrid() {
+    var agg = buildCounts();
+    var counts = agg.counts, durations = agg.durations;
+
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    var start = new Date(today); start.setDate(start.getDate() - 370);
+    start.setDate(start.getDate() - start.getDay()); // back up to Sunday
+
+    var weeks = [];
+    var cur = new Date(start);
+    while (cur <= today) {
+      var week = [];
+      for (var i = 0; i < 7; i++) {
+        week.push(new Date(cur));
+        cur.setDate(cur.getDate() + 1);
+      }
+      weeks.push(week);
+    }
+
+    var cellsGrid = document.getElementById('cellsGrid');
+    var monthLabels = document.getElementById('monthLabels');
+    cellsGrid.innerHTML = '';
+    monthLabels.innerHTML = '';
+
+    var lastMonth = -1;
+    weeks.forEach(function (week, wi) {
+      var firstDay = week[0];
+      if (firstDay.getMonth() !== lastMonth) {
+        lastMonth = firstDay.getMonth();
+        var lbl = document.createElement('span');
+        lbl.textContent = firstDay.toLocaleDateString(undefined, { month: 'short' });
+        lbl.style.left = (wi * 16) + 'px';
+        monthLabels.appendChild(lbl);
+      }
+      week.forEach(function (day) {
+        var cell = document.createElement('div');
+        if (day > today) {
+          cell.className = 'cell future';
+        } else {
+          var key = localDateKey(day);
+          var count = counts[key] || 0;
+          var level = levelFor(count);
+          cell.className = 'cell' + (count > 0 ? ' hasData' : '');
+          cell.setAttribute('data-level', String(level));
+          var durText = count > 0 ? (' — ' + formatDurationShort(durations[key])) : '';
+          cell.title = (count === 0 ? 'No work logged' : (count + (count === 1 ? ' work session' : ' work sessions') + durText)) + ' on ' + dateLabel(day);
+          if (count > 0) {
+            cell.tabIndex = 0;
+            cell.addEventListener('click', function () { showDayDetail(key); });
+            cell.addEventListener('keydown', function (ev) {
+              if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); showDayDetail(key); }
+            });
+          }
+        }
+        cellsGrid.appendChild(cell);
+      });
+    });
+  }
+
+  function currentStreak(counts) {
+    var streak = 0;
+    var d = new Date(); d.setHours(0, 0, 0, 0);
+    if (!counts[localDateKey(d)]) d.setDate(d.getDate() - 1);
+    while (counts[localDateKey(d)]) {
+      streak++;
+      d.setDate(d.getDate() - 1);
+    }
+    return streak;
+  }
+
+  function renderStats() {
+    var agg = buildCounts();
+    var totalMs = entries.reduce(function (sum, e) { return sum + e.durationMs; }, 0);
+    var streak = currentStreak(agg.counts);
+    var el = document.getElementById('stats');
+    el.innerHTML =
+      '<span><strong>' + entries.length + '</strong> work sessions</span>' +
+      '<span><strong>' + formatDurationShort(totalMs) + '</strong> tracked total</span>' +
+      '<span><strong>' + streak + '</strong> day streak</span>';
+  }
+
+  function renderEntryList() {
+    var list = document.getElementById('entryList');
+    list.innerHTML = '';
+    if (entries.length === 0) {
+      list.innerHTML = '<div class="emptyState">No work sessions saved yet — start the timer above.</div>';
+      return;
+    }
+    var sorted = entries.slice().sort(function (a, b) {
+      return new Date(b.startedAt) - new Date(a.startedAt);
+    }).slice(0, 30);
+    sorted.forEach(function (e) {
+      var row = document.createElement('div');
+      row.className = 'entryRow';
+      var dateSpan = document.createElement('span');
+      dateSpan.className = 'entryDate';
+      dateSpan.textContent = dateLabel(new Date(e.startedAt));
+      var labelSpan = document.createElement('span');
+      labelSpan.className = 'entryLabel' + (e.label ? '' : ' empty');
+      labelSpan.textContent = e.label || 'Untitled work session';
+      var durSpan = document.createElement('span');
+      durSpan.className = 'entryDur';
+      durSpan.textContent = formatDurationShort(e.durationMs);
+      var delBtn = document.createElement('button');
+      delBtn.className = 'entryDel';
+      delBtn.type = 'button';
+      delBtn.textContent = '×';
+      delBtn.title = 'Delete this work session';
+      delBtn.addEventListener('click', function () { deleteEntry(e.id); });
+      row.appendChild(dateSpan);
+      row.appendChild(labelSpan);
+      row.appendChild(durSpan);
+      row.appendChild(delBtn);
+      list.appendChild(row);
+    });
+  }
+
+  function dayEntriesFor(key) {
+    return entries.filter(function (e) { return localDateKey(new Date(e.startedAt)) === key; });
+  }
+  function showDayDetail(key) {
+    openDayKey = key;
+    updateDayDetailPanel();
+  }
+  function updateDayDetailPanel() {
+    var panel = document.getElementById('dayDetail');
+    if (!openDayKey) { panel.classList.add('hidden'); return; }
+    var dayEntries = dayEntriesFor(openDayKey);
+    if (dayEntries.length === 0) { openDayKey = null; panel.classList.add('hidden'); return; }
+    panel.classList.remove('hidden');
+    var parts = openDayKey.split('-').map(Number);
+    var d = new Date(parts[0], parts[1] - 1, parts[2]);
+    document.getElementById('dayDetailTitle').textContent =
+      dateLabel(d) + ' — ' + dayEntries.length + (dayEntries.length === 1 ? ' work session' : ' work sessions');
+    var list = document.getElementById('dayDetailList');
+    list.innerHTML = '';
+    dayEntries.sort(function (a, b) { return new Date(a.startedAt) - new Date(b.startedAt); }).forEach(function (e) {
+      var row = document.createElement('div');
+      row.className = 'entryRow';
+      var labelSpan = document.createElement('span');
+      labelSpan.className = 'entryLabel' + (e.label ? '' : ' empty');
+      labelSpan.textContent = e.label || 'Untitled work session';
+      var durSpan = document.createElement('span');
+      durSpan.className = 'entryDur';
+      durSpan.textContent = formatDurationShort(e.durationMs);
+      var delBtn = document.createElement('button');
+      delBtn.className = 'entryDel';
+      delBtn.type = 'button';
+      delBtn.textContent = '×';
+      delBtn.title = 'Delete this work session';
+      delBtn.addEventListener('click', function () { deleteEntry(e.id); });
+      row.appendChild(labelSpan);
+      row.appendChild(durSpan);
+      row.appendChild(delBtn);
+      list.appendChild(row);
+    });
+  }
+
+  function renderWeekChart() {
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    var todayKey = localDateKey(today);
+    var agg = buildCounts();
+    var durations = agg.durations;
+
+    var days = [];
+    for (var i = 6; i >= 0; i--) {
+      var d = new Date(today); d.setDate(d.getDate() - i);
+      days.push(d);
+    }
+    var values = days.map(function (d) { return durations[localDateKey(d)] || 0; });
+    var totalWeekMs = values.reduce(function (sum, v) { return sum + v; }, 0);
+    var maxVal = Math.max.apply(null, values.concat([1]));
+
+    document.getElementById('weekTotal').innerHTML =
+      '<strong>' + formatDurationShort(totalWeekMs) + '</strong> worked this week';
+
+    var container = document.getElementById('weekBars');
+    container.innerHTML = '';
+    days.forEach(function (d, i) {
+      var ms = values[i];
+      var key = localDateKey(d);
+      var col = document.createElement('div');
+      col.className = 'weekBarCol' + (key === todayKey ? ' today' : '');
+      col.title = ms > 0 ? (formatDurationShort(ms) + ' worked on ' + dateLabel(d)) : ('No work logged on ' + dateLabel(d));
+
+      var val = document.createElement('div');
+      val.className = 'weekBarVal';
+      val.textContent = ms > 0 ? formatDurationShort(ms) : ' ';
+
+      var track = document.createElement('div');
+      track.className = 'weekBarTrack';
+      var fill = document.createElement('div');
+      fill.className = 'weekBarFill' + (ms > 0 ? ' hasVal' : '');
+      fill.style.height = (ms > 0 ? Math.max(6, Math.round((ms / maxVal) * 100)) : 2) + '%';
+      track.appendChild(fill);
+
+      var dayLbl = document.createElement('div');
+      dayLbl.className = 'weekBarDay';
+      dayLbl.textContent = d.toLocaleDateString(undefined, { weekday: 'short' });
+
+      col.appendChild(val);
+      col.appendChild(track);
+      col.appendChild(dayLbl);
+      container.appendChild(col);
+    });
+  }
+
+  function renderAll() {
+    renderControls();
+    renderWeekChart();
+    renderGrid();
+    renderStats();
+    renderEntryList();
+    updateDayDetailPanel();
+  }
+
+  // ---------- wire up ----------
+  document.getElementById('startBtn').addEventListener('click', doStart);
+  document.getElementById('resumeBtn').addEventListener('click', doStart);
+  document.getElementById('pauseBtn').addEventListener('click', doPause);
+  document.getElementById('stopBtn1').addEventListener('click', doStop);
+  document.getElementById('stopBtn2').addEventListener('click', doStop);
+  document.getElementById('saveBtn').addEventListener('click', doSave);
+  document.getElementById('discardBtn').addEventListener('click', doDiscard);
+  document.getElementById('dayDetailClose').addEventListener('click', function () {
+    openDayKey = null;
+    updateDayDetailPanel();
+  });
+
+  document.getElementById('connectBtn').addEventListener('click', connectFile);
+  document.getElementById('exportBtn').addEventListener('click', exportFile);
+  document.getElementById('importBtn').addEventListener('click', function () {
+    document.getElementById('importInput').click();
+  });
+  document.getElementById('importInput').addEventListener('change', function (e) {
+    if (e.target.files && e.target.files[0]) importFile(e.target.files[0]);
+    e.target.value = '';
+  });
+
+  if (!fsaSupported) {
+    document.getElementById('connectBtn').classList.add('hidden');
+    document.getElementById('exportBtn').classList.remove('hidden');
+    document.getElementById('importBtn').classList.remove('hidden');
+    setFileStatus('warn', 'This browser can\'t sync a file automatically — export/import manually');
+  }
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible') refreshFromFile();
+  });
+
+  // ---------- init ----------
+  entries = loadLocal();
+  renderAll();
+  tryReconnectOnLoad();
+})();
+</script>
+</body>
+</html>
