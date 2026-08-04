@@ -1,13 +1,13 @@
 {
   "version": 1,
-  "_notes": "Time-tracker session log, written/read by timer.html. Each entry in `entries`: id, startedAt/endedAt (ISO 8601 UTC), durationMs (running time, pauses excluded), label (optional). Bucketed into the grid by the LOCAL calendar date of startedAt.",
+  "_notes": "Time-tracker session log, written/read by timer.html. Each entry in `entries`: id, startedAt (ISO 8601 UTC), durationMs (elapsed time, hand-editable on save — not derived from wall-clock start/end), label (optional, short title), commentary (optional, longer free-text note). Bucketed into the grid by the LOCAL calendar date of startedAt.",
   "entries": [
     {
-      "id": "6384f198-f7ae-4be8-b672-4bdc89a102b5",
-      "startedAt": "2026-07-19T07:19:29.520Z",
-      "endedAt": "2026-07-19T07:19:31.409Z",
-      "durationMs": 1889,
-      "label": "test"
+      "id": "89185e8b-041a-413e-9feb-c5a8b00c295f",
+      "startedAt": "2026-07-21T06:01:25.494Z",
+      "endedAt": "2026-07-21T06:01:26.024Z",
+      "durationMs": 5880000,
+      "label": "budget vis next website"
     },
     {
       "id": "30c8ed0a-25e8-47bb-b220-eb05bace993a",
@@ -15,6 +15,32 @@
       "endedAt": "2026-07-19T07:19:45.562Z",
       "durationMs": 620,
       "label": ""
+    },
+    {
+      "id": "1a0212a1-f854-429f-939a-322567201b45",
+      "startedAt": "2026-07-21T06:29:16.283Z",
+      "endedAt": "2026-07-21T06:29:17.288Z",
+      "durationMs": 1800000,
+      "label": "budget vis next: history chart"
+    },
+    {
+      "id": "3e9f81a3-358f-4616-a49f-1ba8af5b09b3",
+      "startedAt": "2026-07-21T06:41:44.128Z",
+      "durationMs": 633000,
+      "label": ""
+    },
+    {
+      "id": "6384f198-f7ae-4be8-b672-4bdc89a102b5",
+      "startedAt": "2026-07-19T07:19:29.520Z",
+      "durationMs": 1889,
+      "label": "test"
+    },
+    {
+      "id": "3b378569-55d1-4b9a-9de9-539ba9f1768d",
+      "startedAt": "2026-07-22T01:26:26.174Z",
+      "durationMs": 3677000,
+      "label": "history charts",
+      "commentary": ""
     }
   ]
 }

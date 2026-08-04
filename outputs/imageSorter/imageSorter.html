@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Image Sorter</title>
+<style>
+  :root {
+    --bg: #F1F1EF;
+    --surface: #FFFFFF;
+    --ink: #1B1B1A;
+    --ink-soft: #5B5B58;
+    --accent: #C97A24;
+    --accent2: #1E7A6C;
+    --line: #D8D8D5;
+    --danger: #B3432E;
+    --font-display: 'Bahnschrift', 'SF Compact Display', 'Archivo Narrow', 'Arial Narrow', sans-serif;
+    --font-body: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', serif;
+    --font-mono: 'Cascadia Code', 'SF Mono', Consolas, 'Roboto Mono', monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161615; --surface: #1E1E1C; --ink: #ECECEA; --ink-soft: #A8A8A4;
+      --accent: #E7A24C; --accent2: #4FC0AC; --line: #333331;
+      --danger: #D97A63;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #161615; --surface: #1E1E1C; --ink: #ECECEA; --ink-soft: #A8A8A4;
+    --accent: #E7A24C; --accent2: #4FC0AC; --line: #333331;
+    --danger: #D97A63;
+  }
+  :root[data-theme="light"] {
+    --bg: #F1F1EF; --surface: #FFFFFF; --ink: #1B1B1A; --ink-soft: #5B5B58;
+    --accent: #C97A24; --accent2: #1E7A6C; --line: #D8D8D5;
+    --danger: #B3432E;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; overflow-x: hidden; height: 100%; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--font-body); }
+  button { font-family: var(--font-display); cursor: pointer; }
+  button:disabled { cursor: not-allowed; opacity: 0.5; }
+  button:focus-visible { outline: 2px solid var(--accent2); outline-offset: 2px; }
+
+  .wrap { max-width: 900px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; display: flex; flex-direction: column; gap: 2rem; min-width: 0; }
+
+  h1 { font-family: var(--font-display); font-size: 1.7rem; font-weight: 700; margin: 0; }
+  .dek { color: var(--ink-soft); font-size: 1rem; margin: 0.3rem 0 0; }
+
+  /* ---------- setup screen ---------- */
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 1.6rem; }
+
+  .pickerRow {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    padding: 1rem 0; border-bottom: 1px solid var(--line);
+  }
+  .pickerRow:last-child { border-bottom: none; }
+  .pickerInfo { display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; }
+  .pickerLabel { font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; }
+  .pickerValue { font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pickerValue.unset { font-style: italic; }
+
+  .btn {
+    font-size: 0.85rem; background: none; border: 1px solid var(--line); color: var(--ink);
+    padding: 0.5em 1em; border-radius: 6px; flex: none; white-space: nowrap;
+  }
+  .btn:hover:not(:disabled) { border-color: var(--accent2); color: var(--accent2); }
+  .btn.primary { background: var(--accent2); border-color: var(--accent2); color: var(--surface); }
+  .btn.primary:hover:not(:disabled) { opacity: 0.9; }
+
+  .startRow { display: flex; justify-content: flex-end; margin-top: 1.6rem; }
+
+  .warning { color: var(--danger); font-size: 0.9rem; }
+
+  /* ---------- sorting screen ---------- */
+  .sortScreen { display: none; flex-direction: column; gap: 1.2rem; }
+  .sortScreen.active { display: flex; }
+  #setupScreen.hidden, .doneScreen.hidden { display: none; }
+
+  .progressLine {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-soft);
+  }
+
+  .stage {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 55vh; padding: 1rem; overflow: hidden;
+  }
+  .stage img { max-width: 100%; max-height: 65vh; object-fit: contain; border-radius: 4px; }
+  .stage .stageMsg { color: var(--ink-soft); font-size: 0.95rem; }
+
+  .filename { font-family: var(--font-mono); font-size: 0.85rem; color: var(--ink-soft); text-align: center; word-break: break-all; }
+
+  .arrowRow { display: flex; gap: 1rem; }
+  .arrowBtn {
+    flex: 1; background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+    padding: 1rem; display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+    font-family: var(--font-body); color: var(--ink);
+  }
+  .arrowBtn:hover:not(:disabled) { border-color: var(--accent2); }
+  .arrowBtn .glyph { font-family: var(--font-display); font-size: 1.4rem; }
+  .arrowBtn .dest { font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+  .arrowBtn.left .glyph::before { content: "\2190"; }
+  .arrowBtn.right .glyph::before { content: "\2192"; }
+
+  .hint { text-align: center; color: var(--ink-soft); font-size: 0.8rem; }
+
+  .doneScreen { display: none; flex-direction: column; align-items: center; gap: 1rem; text-align: center; padding: 3rem 1rem; }
+  .doneScreen.active { display: flex; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div>
+    <h1>Image Sorter</h1>
+    <p class="dek">Pick the old folder with the pictures, and the new folder to copy keepers into. Then go through each image with the left and right arrows.</p>
+  </div>
+
+  <div id="unsupported" class="card" style="display:none;">
+    <p class="warning">This browser doesn't support the File System Access API needed to read and move files. Open this page in a recent version of Chrome or Edge.</p>
+  </div>
+
+  <div id="setupScreen">
+    <div class="card">
+      <div class="pickerRow">
+        <div class="pickerInfo">
+          <span class="pickerLabel">&#8592; Old folder (pictures to sort)</span>
+          <span id="sourceValue" class="pickerValue unset">not chosen</span>
+        </div>
+        <button class="btn" id="sourceBtn">Choose folder</button>
+      </div>
+      <div class="pickerRow">
+        <div class="pickerInfo">
+          <span class="pickerLabel">&#8594; New folder (copy destination)</span>
+          <span id="destValue" class="pickerValue unset">not chosen</span>
+        </div>
+        <button class="btn" id="destBtn">Choose folder</button>
+      </div>
+      <div class="startRow">
+        <button class="btn primary" id="startBtn" disabled>Start sorting</button>
+      </div>
+    </div>
+    <p id="setupMsg" class="warning" style="margin-top: 0.8rem;"></p>
+  </div>
+
+  <div class="sortScreen" id="sortScreen">
+    <div class="progressLine">
+      <span id="progressText">0 / 0</span>
+      <span id="remainingText"></span>
+    </div>
+    <div class="stage" id="stage">
+      <span class="stageMsg">Loading&hellip;</span>
+    </div>
+    <div class="filename" id="filenameLabel"></div>
+    <div class="arrowRow">
+      <button class="arrowBtn left" id="skipBtn">
+        <span class="glyph"></span>
+        <span class="dest" id="oldDestLabel"></span>
+      </button>
+      <button class="arrowBtn right" id="copyBtn">
+        <span class="glyph"></span>
+        <span class="dest" id="newDestLabel"></span>
+      </button>
+    </div>
+    <p class="hint">&#8592; leaves it where it is &mdash; &#8594; copies it into the new folder. Arrow keys or buttons both work.</p>
+  </div>
+
+  <div class="doneScreen" id="doneScreen">
+    <h1>All done</h1>
+    <p class="dek">Every image has been reviewed.</p>
+    <button class="btn primary" id="restartBtn">Sort another folder</button>
+  </div>
+</div>
+
+<script>
+const IMAGE_EXT = new Set(['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'avif', 'svg']);
+
+let sourceHandle = null;
+let destHandle = null;
+let queue = [];      // array of { name, handle }
+let cursor = 0;
+let totalCount = 0;
+let currentObjectUrl = null;
+let busy = false;
+
+const el = (id) => document.getElementById(id);
+
+function supportsFSA() {
+  return 'showDirectoryPicker' in window;
+}
+
+async function pickFolder() {
+  return await window.showDirectoryPicker({ mode: 'readwrite' });
+}
+
+function setPickerLabel(valueEl, handle) {
+  valueEl.textContent = handle ? handle.name : 'not chosen';
+  valueEl.classList.toggle('unset', !handle);
+}
+
+function refreshStartState() {
+  el('startBtn').disabled = !(sourceHandle && destHandle);
+}
+
+el('sourceBtn').addEventListener('click', async () => {
+  try {
+    sourceHandle = await pickFolder();
+    setPickerLabel(el('sourceValue'), sourceHandle);
+    refreshStartState();
+  } catch (e) { /* user cancelled */ }
+});
+
+el('destBtn').addEventListener('click', async () => {
+  try {
+    destHandle = await pickFolder();
+    setPickerLabel(el('destValue'), destHandle);
+    refreshStartState();
+  } catch (e) { /* user cancelled */ }
+});
+
+async function buildQueue() {
+  const items = [];
+  for await (const [name, handle] of sourceHandle.entries()) {
+    if (handle.kind !== 'file') continue;
+    const ext = name.split('.').pop().toLowerCase();
+    if (!IMAGE_EXT.has(ext)) continue;
+    items.push({ name, handle });
+  }
+  items.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
+  return items;
+}
+
+el('startBtn').addEventListener('click', async () => {
+  el('setupMsg').textContent = '';
+  try {
+    queue = await buildQueue();
+  } catch (e) {
+    el('setupMsg').textContent = 'Could not read the source folder: ' + e.message;
+    return;
+  }
+  if (queue.length === 0) {
+    el('setupMsg').textContent = 'No image files found in the source folder.';
+    return;
+  }
+  cursor = 0;
+  totalCount = queue.length;
+  el('oldDestLabel').textContent = sourceHandle.name;
+  el('newDestLabel').textContent = destHandle.name;
+  el('setupScreen').classList.add('hidden');
+  el('sortScreen').classList.add('active');
+  showCurrentImage();
+});
+
+function releaseObjectUrl() {
+  if (currentObjectUrl) {
+    URL.revokeObjectURL(currentObjectUrl);
+    currentObjectUrl = null;
+  }
+}
+
+async function showCurrentImage() {
+  releaseObjectUrl();
+  const stage = el('stage');
+  const item = queue[cursor];
+
+  el('progressText').textContent = `${cursor + 1} / ${totalCount}`;
+  el('remainingText').textContent = `${totalCount - cursor - 1} remaining`;
+  el('filenameLabel').textContent = item.name;
+
+  stage.innerHTML = '<span class="stageMsg">Loading&hellip;</span>';
+  try {
+    const file = await item.handle.getFile();
+    currentObjectUrl = URL.createObjectURL(file);
+    const img = new Image();
+    img.alt = item.name;
+    img.onload = () => { stage.innerHTML = ''; stage.appendChild(img); };
+    img.onerror = () => { stage.innerHTML = '<span class="stageMsg">Preview unavailable, but you can still sort this file.</span>'; };
+    img.src = currentObjectUrl;
+  } catch (e) {
+    stage.innerHTML = '<span class="stageMsg">Could not open this file: ' + e.message + '</span>';
+  }
+}
+
+function setButtonsDisabled(disabled) {
+  el('skipBtn').disabled = disabled;
+  el('copyBtn').disabled = disabled;
+}
+
+function advance() {
+  cursor += 1;
+  if (cursor >= queue.length) {
+    finishSorting();
+  } else {
+    showCurrentImage();
+  }
+}
+
+function skipCurrent() {
+  if (busy || cursor >= queue.length) return;
+  advance();
+}
+
+async function copyCurrentToDest() {
+  if (busy || cursor >= queue.length) return;
+  busy = true;
+  setButtonsDisabled(true);
+
+  const item = queue[cursor];
+  try {
+    const file = await item.handle.getFile();
+    const destFile = await destHandle.getFileHandle(item.name, { create: true });
+    const writable = await destFile.createWritable();
+    await writable.write(file);
+    await writable.close();
+  } catch (e) {
+    alert(`Could not copy "${item.name}": ${e.message}`);
+    busy = false;
+    setButtonsDisabled(false);
+    return;
+  }
+
+  busy = false;
+  setButtonsDisabled(false);
+  advance();
+}
+
+function finishSorting() {
+  releaseObjectUrl();
+  el('sortScreen').classList.remove('active');
+  el('doneScreen').classList.add('active');
+}
+
+el('skipBtn').addEventListener('click', skipCurrent);
+el('copyBtn').addEventListener('click', copyCurrentToDest);
+
+document.addEventListener('keydown', (e) => {
+  if (!el('sortScreen').classList.contains('active')) return;
+  if (e.key === 'ArrowLeft') { e.preventDefault(); skipCurrent(); }
+  if (e.key === 'ArrowRight') { e.preventDefault(); copyCurrentToDest(); }
+});
+
+el('restartBtn').addEventListener('click', () => {
+  sourceHandle = null; destHandle = null;
+  queue = []; cursor = 0; totalCount = 0;
+  setPickerLabel(el('sourceValue'), null);
+  setPickerLabel(el('destValue'), null);
+  refreshStartState();
+  el('setupMsg').textContent = '';
+  el('doneScreen').classList.remove('active');
+  el('setupScreen').classList.remove('hidden');
+});
+
+if (!supportsFSA()) {
+  el('unsupported').style.display = 'block';
+  el('setupScreen').style.display = 'none';
+}
+</script>
+</body>
+</html>

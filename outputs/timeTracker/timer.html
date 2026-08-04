@@ -95,12 +95,23 @@
   .btn-ghost:hover { color: var(--ink); }
 
   .saveRow { display: flex; flex-direction: column; gap: 0.9rem; align-items: center; }
-  .saveRow .finalDuration { font-family: var(--font-mono); font-size: 1.1rem; color: var(--ink-soft); }
-  .saveRow input[type="text"] {
-    width: 100%; max-width: 420px; padding: 0.6em 0.8em; border: 1px solid var(--line); border-radius: 6px;
-    background: var(--bg); color: var(--ink); font-size: 0.95rem;
+  .editDuration { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+  .editDuration .editDurationLabel {
+    font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--ink-soft);
   }
-  .saveRow input[type="text"]:focus-visible { outline: 2px solid var(--accent2); outline-offset: 1px; }
+  .editDurationFields { display: flex; align-items: baseline; gap: 0.3rem; font-family: var(--font-mono); font-size: 0.95rem; color: var(--ink-soft); }
+  .editDurationFields input[type="number"] {
+    width: 3em; text-align: center; padding: 0.3em 0.2em; border: 1px solid var(--line); border-radius: 4px;
+    background: var(--bg); color: var(--ink); font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+    font-size: 0.95rem;
+  }
+  .saveRow input[type="text"], .saveRow textarea {
+    width: 100%; max-width: 420px; padding: 0.6em 0.8em; border: 1px solid var(--line); border-radius: 6px;
+    background: var(--bg); color: var(--ink); font-size: 0.95rem; font-family: var(--font-body);
+  }
+  .saveRow textarea { resize: vertical; min-height: 3.2em; }
+  .saveRow input[type="text"]:focus-visible, .saveRow textarea:focus-visible { outline: 2px solid var(--accent2); outline-offset: 1px; }
 
   /* ---------- this week ---------- */
   .weekSection { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 1.3rem 1.5rem 1.5rem; }
@@ -151,17 +162,19 @@
   .dayDetail .dayDetailHead h3 { font-family: var(--font-display); font-size: 0.95rem; margin: 0; }
   .dayDetail .dayDetailHead button { font-family: var(--font-mono); font-size: 0.75rem; background: none; border: 1px solid var(--line); color: var(--ink-soft); padding: 0.2em 0.55em; border-radius: 4px; }
   .dayDetail .dayDetailHead button:hover { border-color: var(--accent2); color: var(--accent2); }
-  .dayDetail .entryRow { border-top: 1px solid var(--line); border-bottom: none; }
-  .dayDetail .entryRow:first-child { border-top: none; }
+  .dayDetail .entryItem { border-top: 1px solid var(--line); border-bottom: none; }
+  .dayDetail .entryItem:first-child { border-top: none; }
 
   /* ---------- recent entries ---------- */
   .entriesSection h2 { font-family: var(--font-display); font-size: 1.1rem; margin: 0 0 0.8rem; }
   .entryList { display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--line); max-height: 340px; overflow-y: auto; }
+  .entryItem { padding: 0.55rem 0; border-bottom: 1px solid var(--line); }
   .entryRow {
-    display: flex; align-items: baseline; gap: 0.8rem; padding: 0.55rem 0; border-bottom: 1px solid var(--line);
+    display: flex; align-items: baseline; gap: 0.8rem;
     font-size: 0.9rem;
   }
-  .entryRow .entryDate { font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-soft); flex: none; width: 6.5em; }
+  .entryRow .entryDate { font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-soft); flex: none; width: 8em; }
+  .entryRow .entryTime { font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-soft); flex: none; width: 4.5em; }
   .entryRow .entryLabel { flex: 1; color: var(--ink); }
   .entryRow .entryLabel.empty { color: var(--ink-soft); font-style: italic; }
   .entryRow .entryDur { font-family: var(--font-mono); font-size: 0.82rem; color: var(--accent2); flex: none; }
@@ -170,6 +183,7 @@
     padding: 0.2em 0.3em; border-radius: 4px;
   }
   .entryRow .entryDel:hover { color: var(--danger); }
+  .entryCommentary { margin-top: 0.35rem; font-size: 0.82rem; line-height: 1.45; color: var(--ink-soft); font-style: italic; }
   .emptyState { color: var(--ink-soft); font-size: 0.9rem; padding: 1rem 0; }
 
   .hidden { display: none !important; }
@@ -210,8 +224,16 @@
     </div>
 
     <div class="saveRow hidden" id="saveControls">
-      <div class="finalDuration" id="finalDurationText"></div>
+      <div class="editDuration">
+        <span class="editDurationLabel">Time worked (edit if needed)</span>
+        <div class="editDurationFields">
+          <input type="number" id="editHours" min="0" max="99" inputmode="numeric" /> h
+          <input type="number" id="editMinutes" min="0" max="59" inputmode="numeric" /> m
+          <input type="number" id="editSeconds" min="0" max="59" inputmode="numeric" /> s
+        </div>
+      </div>
       <input type="text" id="labelInput" placeholder="What did you work on? (optional)" maxlength="140" />
+      <textarea id="commentaryInput" placeholder="Any notes on this session? (optional)" maxlength="1000" rows="2"></textarea>
       <div class="controls">
         <button class="btn btn-primary" id="saveBtn" type="button">Save</button>
         <button class="btn btn-ghost" id="discardBtn" type="button">Discard</button>
@@ -376,7 +398,7 @@
         saveLocal();
         var payload = {
           version: 1,
-          _notes: "Time-tracker session log, written/read by timer.html. Each entry in `entries`: id, startedAt/endedAt (ISO 8601 UTC), durationMs (running time, pauses excluded), label (optional). Bucketed into the grid by the LOCAL calendar date of startedAt.",
+          _notes: "Time-tracker session log, written/read by timer.html. Each entry in `entries`: id, startedAt (ISO 8601 UTC), durationMs (elapsed time, hand-editable on save — not derived from wall-clock start/end), label (optional, short title), commentary (optional, longer free-text note). Bucketed into the grid by the LOCAL calendar date of startedAt.",
           entries: entries
         };
         return fileHandle.createWritable().then(function (writable) {
@@ -471,7 +493,7 @@
   function exportFile() {
     var payload = {
       version: 1,
-      _notes: "Time-tracker session log. Each entry: id, startedAt/endedAt (ISO 8601 UTC), durationMs (running time, pauses excluded), label (optional). Bucketed into the grid by the LOCAL calendar date of startedAt.",
+      _notes: "Time-tracker session log. Each entry: id, startedAt (ISO 8601 UTC), durationMs (elapsed time, hand-editable on save — not derived from wall-clock start/end), label (optional, short title), commentary (optional, longer free-text note). Bucketed into the grid by the LOCAL calendar date of startedAt.",
       entries: entries
     };
     var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
@@ -540,6 +562,34 @@
     if (accumulatedMs > 0) return UI_STATE.PAUSED;
     return UI_STATE.IDLE;
   }
+  // ---------- editable duration (save step) ----------
+  function msToHMSParts(ms) {
+    var totalSec = Math.floor(ms / 1000);
+    var h = Math.floor(totalSec / 3600); totalSec -= h * 3600;
+    var m = Math.floor(totalSec / 60); var s = totalSec % 60;
+    return { h: h, m: m, s: s };
+  }
+  function populateEditFields(ms) {
+    var parts = msToHMSParts(ms);
+    document.getElementById('editHours').value = parts.h;
+    document.getElementById('editMinutes').value = parts.m;
+    document.getElementById('editSeconds').value = parts.s;
+  }
+  function getEditedDurationMs() {
+    var h = Math.max(0, parseInt(document.getElementById('editHours').value, 10) || 0);
+    var m = Math.max(0, Math.min(59, parseInt(document.getElementById('editMinutes').value, 10) || 0));
+    var s = Math.max(0, Math.min(59, parseInt(document.getElementById('editSeconds').value, 10) || 0));
+    return (h * 3600 + m * 60 + s) * 1000;
+  }
+  function updateEditedDisplay() {
+    document.getElementById('timerDisplay').textContent = formatHMS(getEditedDurationMs());
+  }
+  function normalizeEditFields() {
+    // snaps out-of-range values (e.g. "75" minutes) back to a clean H/M/S split on blur
+    populateEditFields(getEditedDurationMs());
+    updateEditedDisplay();
+  }
+
   function renderControls() {
     var state = currentUiState();
     document.getElementById('idleControls').classList.toggle('hidden', state !== UI_STATE.IDLE);
@@ -548,9 +598,8 @@
     document.getElementById('saveControls').classList.toggle('hidden', state !== UI_STATE.STOPPED);
     document.getElementById('timerDisplay').classList.toggle('running', state === UI_STATE.RUNNING);
     if (state === UI_STATE.STOPPED) {
-      document.getElementById('timerDisplay').textContent = formatHMS(pendingStop.durationMs);
-      document.getElementById('finalDurationText').textContent =
-        'Time worked: ' + formatDurationShort(pendingStop.durationMs);
+      populateEditFields(pendingStop.durationMs);
+      updateEditedDisplay();
     }
   }
 
@@ -576,24 +625,25 @@
     stopTicking();
     pendingStop = {
       startedAt: startedAtISO,
-      endedAt: new Date().toISOString(),
       durationMs: accumulatedMs
     };
     renderControls();
   }
   function doSave() {
     var label = document.getElementById('labelInput').value.trim();
+    var commentary = document.getElementById('commentaryInput').value.trim();
     var entry = {
       id: (crypto.randomUUID ? crypto.randomUUID() : ('e_' + Date.now() + '_' + Math.random().toString(36).slice(2))),
       startedAt: pendingStop.startedAt,
-      endedAt: pendingStop.endedAt,
-      durationMs: pendingStop.durationMs,
-      label: label
+      durationMs: getEditedDurationMs(),
+      label: label,
+      commentary: commentary
     };
     entries.push(entry);
     persistAll();
     resetTimer();
     document.getElementById('labelInput').value = '';
+    document.getElementById('commentaryInput').value = '';
     renderAll();
   }
   function doDiscard() {
@@ -618,6 +668,12 @@
   }
   function dateLabel(date) {
     return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+  function timeLabel(date) {
+    return date.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+  }
+  function dateTimeLabel(date) {
+    return date.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
   }
   function levelFor(count) {
     if (count <= 0) return 0;
@@ -729,11 +785,14 @@
       return new Date(b.startedAt) - new Date(a.startedAt);
     }).slice(0, 30);
     sorted.forEach(function (e) {
+      var item = document.createElement('div');
+      item.className = 'entryItem';
+
       var row = document.createElement('div');
       row.className = 'entryRow';
       var dateSpan = document.createElement('span');
       dateSpan.className = 'entryDate';
-      dateSpan.textContent = dateLabel(new Date(e.startedAt));
+      dateSpan.textContent = dateTimeLabel(new Date(e.startedAt));
       var labelSpan = document.createElement('span');
       labelSpan.className = 'entryLabel' + (e.label ? '' : ' empty');
       labelSpan.textContent = e.label || 'Untitled work session';
@@ -750,7 +809,16 @@
       row.appendChild(labelSpan);
       row.appendChild(durSpan);
       row.appendChild(delBtn);
-      list.appendChild(row);
+      item.appendChild(row);
+
+      if (e.commentary) {
+        var commentaryDiv = document.createElement('div');
+        commentaryDiv.className = 'entryCommentary';
+        commentaryDiv.textContent = e.commentary;
+        item.appendChild(commentaryDiv);
+      }
+
+      list.appendChild(item);
     });
   }
 
@@ -774,8 +842,14 @@
     var list = document.getElementById('dayDetailList');
     list.innerHTML = '';
     dayEntries.sort(function (a, b) { return new Date(a.startedAt) - new Date(b.startedAt); }).forEach(function (e) {
+      var item = document.createElement('div');
+      item.className = 'entryItem';
+
       var row = document.createElement('div');
       row.className = 'entryRow';
+      var timeSpan = document.createElement('span');
+      timeSpan.className = 'entryTime';
+      timeSpan.textContent = timeLabel(new Date(e.startedAt));
       var labelSpan = document.createElement('span');
       labelSpan.className = 'entryLabel' + (e.label ? '' : ' empty');
       labelSpan.textContent = e.label || 'Untitled work session';
@@ -788,10 +862,20 @@
       delBtn.textContent = '×';
       delBtn.title = 'Delete this work session';
       delBtn.addEventListener('click', function () { deleteEntry(e.id); });
+      row.appendChild(timeSpan);
       row.appendChild(labelSpan);
       row.appendChild(durSpan);
       row.appendChild(delBtn);
-      list.appendChild(row);
+      item.appendChild(row);
+
+      if (e.commentary) {
+        var commentaryDiv = document.createElement('div');
+        commentaryDiv.className = 'entryCommentary';
+        commentaryDiv.textContent = e.commentary;
+        item.appendChild(commentaryDiv);
+      }
+
+      list.appendChild(item);
     });
   }
 
@@ -864,6 +948,12 @@
   document.getElementById('dayDetailClose').addEventListener('click', function () {
     openDayKey = null;
     updateDayDetailPanel();
+  });
+
+  ['editHours', 'editMinutes', 'editSeconds'].forEach(function (id) {
+    var el = document.getElementById(id);
+    el.addEventListener('input', updateEditedDisplay);
+    el.addEventListener('change', normalizeEditFields);
   });
 
   document.getElementById('connectBtn').addEventListener('click', connectFile);

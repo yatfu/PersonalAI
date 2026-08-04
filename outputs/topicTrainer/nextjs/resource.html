@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Next.js — Complete Reference</title>
+<style>
+  :root {
+    --bg: #F1F0ED;
+    --surface: #FFFFFF;
+    --ink: #1A1A18;
+    --ink-soft: #5C5C58;
+    --accent: #C2622A;
+    --accent2: #1E7A6C;
+    --line: #DEDEDA;
+    --font-display: 'Bahnschrift', 'SF Compact Display', 'Archivo Narrow', 'Arial Narrow', sans-serif;
+    --font-body: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', serif;
+    --font-mono: 'Cascadia Code', 'SF Mono', Consolas, 'Roboto Mono', monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#151513; --surface:#1D1D1B; --ink:#EDEDEA; --ink-soft:#A7A7A2; --accent:#E58A4B; --accent2:#4FBFA8; --line:#33332F; }
+  }
+  :root[data-theme="dark"]  { --bg:#151513; --surface:#1D1D1B; --ink:#EDEDEA; --ink-soft:#A7A7A2; --accent:#E58A4B; --accent2:#4FBFA8; --line:#33332F; }
+  :root[data-theme="light"] { --bg:#F1F0ED; --surface:#FFFFFF; --ink:#1A1A18; --ink-soft:#5C5C58; --accent:#C2622A; --accent2:#1E7A6C; --line:#DEDEDA; }
+
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.6;
+  }
+  a { color: var(--accent2); }
+  a:hover { color: var(--accent); }
+
+  .theme-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 50;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: var(--surface);
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 0.4rem 0.65rem;
+    cursor: pointer;
+  }
+  .theme-toggle:hover { color: var(--ink); border-color: var(--accent2); }
+
+  header.page-header {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 0;
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2rem, 5vw, 2.6rem);
+    text-wrap: balance;
+    max-width: 22ch;
+    margin: 0 0 0.6rem;
+  }
+  .lede {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 68ch;
+    margin: 0 0 0.9rem;
+  }
+  .meta-line {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    margin: 0 0 2rem;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 2.5rem;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 1.5rem 5rem;
+    align-items: start;
+  }
+
+  nav.toc {
+    position: sticky;
+    top: 1.25rem;
+    align-self: start;
+    max-height: calc(100vh - 2.5rem);
+    overflow-y: auto;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--surface);
+    padding: 0.9rem 1rem;
+  }
+  nav.toc summary {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+  }
+  nav.toc ol {
+    list-style: none;
+    margin: 0.9rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    counter-reset: none;
+  }
+  nav.toc li a {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--ink);
+    font-size: 0.85rem;
+    line-height: 1.35;
+  }
+  nav.toc li a:hover { color: var(--accent); }
+  nav.toc .toc-num {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    min-width: 1.3em;
+  }
+  nav.toc .toc-flag {
+    color: var(--accent2);
+    font-size: 0.7rem;
+  }
+
+  main { min-width: 0; }
+
+  details.module {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--surface);
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+  }
+  details.module > summary {
+    padding: 1.1rem 1.4rem;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+  details.module > summary::-webkit-details-marker { display: none; }
+  details.module > summary::before {
+    content: "▸";
+    font-family: var(--font-mono);
+    color: var(--ink-soft);
+    transition: transform 0.15s ease;
+    flex-shrink: 0;
+  }
+  details.module[open] > summary::before { transform: rotate(90deg); }
+  .mod-num {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  .mod-name {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+  .module-body { padding: 0 1.4rem 1.5rem; }
+  p.objective {
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    max-width: 70ch;
+    margin: 0 0 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .section { padding: 1.1rem 0; border-top: 1px solid var(--line); }
+  .section:first-of-type { border-top: none; padding-top: 0; }
+  h3.subtopic {
+    font-family: var(--font-display);
+    font-size: 1.08rem;
+    margin: 0 0 0.5rem;
+  }
+  .section p { font-size: 1.05rem; max-width: 72ch; margin: 0.85rem 0; }
+  .section ul { margin: 0.85rem 0; padding-left: 1.3rem; max-width: 72ch; }
+  .section li { margin: 0.35rem 0; font-size: 1.05rem; }
+
+  pre.code-block {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    line-height: 1.55;
+    margin: 0.9rem 0;
+  }
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background: var(--bg);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+  }
+  pre.code-block code { background: none; padding: 0; }
+
+  .concepts-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0.9rem 0 0.5rem;
+  }
+  .concepts { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0 0 0.5rem; }
+  .concepts .chip {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.01em;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 0.28rem 0.55rem;
+    color: var(--ink-soft);
+    background: var(--bg);
+  }
+
+  .pitfall {
+    border-left: 3px solid var(--accent);
+    background: var(--bg);
+    padding: 0.85rem 1rem;
+    border-radius: 4px;
+    margin: 0.85rem 0;
+    font-size: 1rem;
+    max-width: 72ch;
+  }
+  .pitfall .label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+
+  .milestone {
+    border: 1px solid var(--accent2);
+    border-left: 4px solid var(--accent2);
+    border-radius: 6px;
+    padding: 1.1rem 1.3rem;
+    margin-top: 1.5rem;
+    background: var(--bg);
+  }
+  .milestone .label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--accent2);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  .milestone p { max-width: none; }
+
+  .viz { margin: 1.25rem 0; }
+  .viz-caption { font-size: 0.92rem; color: var(--ink-soft); margin: 0 0 0.75rem; max-width: 72ch; }
+
+  .table-wrap { overflow-x: auto; border-radius: 6px; border: 1px solid var(--line); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 560px; }
+  th, td { border: 1px solid var(--line); padding: 0.6rem 0.75rem; text-align: left; vertical-align: top; }
+  th { font-family: var(--font-display); background: var(--bg); font-weight: 700; }
+  tr:nth-child(even) td { background: color-mix(in srgb, var(--bg) 55%, transparent); }
+
+  .dag-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); padding: 0.5rem; }
+  .dag-node rect { fill: var(--surface); stroke: var(--ink-soft); stroke-width: 1; }
+  .dag-node text { fill: var(--ink); }
+  .dag-edge { stroke: var(--ink-soft); stroke-width: 1.3; fill: none; }
+  .dag-notes-wrap { margin-top: 0.75rem; }
+  ul.dag-notes { margin: 0.4rem 0 0; padding-left: 1.2rem; }
+  ul.dag-notes li { font-size: 0.92rem; margin: 0.35rem 0; max-width: 72ch; color: var(--ink-soft); }
+  ul.dag-notes li strong { color: var(--ink); }
+
+  section.sources {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+  section.sources h2 {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+  }
+  ul.sources-list { list-style: none; margin: 1rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+  ul.sources-list li {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--surface);
+    padding: 0.7rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  ul.sources-list a { font-family: var(--font-mono); font-size: 0.85rem; word-break: break-word; }
+  .source-note { font-size: 0.92rem; color: var(--ink-soft); }
+
+  footer.page-footer {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 1.5rem 3rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; }
+    nav.toc { position: static; max-height: none; }
+  }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="theme-toggle" type="button">Toggle theme</button>
+
+<header class="page-header">
+  <h1>Next.js — Complete Reference</h1>
+  <p class="lede">A thirteen-module, milestone-checkpointed course covering the App Router, Server/Client Components, caching, mutations, auth, and deployment on Next.js 16 — built to work through in order and come back to as reference.</p>
+  <p class="meta-line" id="stats"></p>
+</header>
+
+<div class="layout">
+  <nav class="toc">
+    <details open>
+      <summary>Contents</summary>
+      <ol id="toc-list"></ol>
+    </details>
+  </nav>
+  <main id="modules"></main>
+</div>
+
+<section class="sources">
+  <h2>Sources</h2>
+  <ul class="sources-list" id="sources-list"></ul>
+</section>
+
+<footer class="page-footer">Generated reference page — content by contentBuilder, approved by contentValidator, rendered by siteGenerator.</footer>
+
+<script type="application/json" id="content-data">
+{
+  "modules": [
+    {
+      "name": "Foundations & Setup",
+      "objective": "Know what Next.js adds over plain React and stand up a correctly-configured project.",
+      "sections": [
+        {
+          "subtopic": "What Next.js is & when to reach for it",
+          "explanation": "Plain React (via Vite or Create React App) gives you components and a rendering engine, but it stops there — you bring your own router, your own data-fetching strategy, your own bundler config, and your own server if you need one. Next.js is a *meta-framework*: it takes React and wraps it with four things a real production app needs — file-system routing, multiple rendering strategies (server-side rendering, static generation, and streaming), a production-grade bundler (Turbopack), and an actual server runtime that can run your own backend code (Route Handlers, Server Actions) alongside your UI.\n\nThe practical decision test: if your app is a client-only dashboard behind a login wall where SEO doesn't matter and there's no first-load performance requirement (e.g., an internal admin tool), a plain React SPA is simpler and you shouldn't pay for a framework you don't need. Reach for Next.js when any of these are true: (1) you need pages indexed by Google or unfurled nicely on social media — that requires server-rendered HTML with real `<title>`/`<meta>` tags present on first response, which a client-only SPA can't do without extra work; (2) you care about first-paint speed for real users, not just developers on fast laptops — server rendering sends usable HTML immediately instead of a blank div that fills in after a JS bundle downloads and runs; (3) you're building full-stack — you want your UI and your backend (data fetching, mutations, auth) in one codebase instead of stitching a separate API server together; (4) you're deploying to Vercel and want the platform and framework co-designed (though this is a nice-to-have, not a requirement — Next.js runs elsewhere too).\n\nWorth knowing there are alternatives solving similar problems: Remix and TanStack Start take a similar server-rendering-first approach with different data-loading philosophies; Astro leans toward content-heavy, mostly-static sites with islands of interactivity. None of that changes what you'll build in this course, but it's useful vocabulary for the 'why Next.js and not X' conversation.\n\nVersion note for this course: Next.js **16.2.10** is the current stable release and what everything here targets. You may see `next@preview` referenced online (currently at 16.3) — that's a preview channel for an unreleased version, not something to install or follow for real work: it exists only as a preview (`npm install next@preview`), with a stable release described as 'expected in the coming weeks' but not shipped as of this writing. Building against a preview channel means building against something that can still change before it stabilizes — if you see `next@preview` mentioned in a blog post or a `package.json`, treat its contents as forward-looking, not as instructions to follow for real work today.",
+          "keyConceptsCovered": [
+            "Next.js = React + routing + rendering strategies + bundler + server runtime",
+            "Decision criteria vs. plain React SPA and vs. alternatives (Remix, TanStack Start, Astro)",
+            "Current stable version 16 (16.2.10); App Router is the default paradigm"
+          ],
+          "pitfallsCovered": [
+            "Installing/following next@preview (16.3) content as if it were stable"
+          ]
+        },
+        {
+          "subtopic": "Project setup & conventions",
+          "explanation": "Every Next.js project starts the same way:\n\n```bash\nnpx create-next-app@latest my-app\n```\n\nThe interactive prompts (or flags, if you script it) set up TypeScript, ESLint, and — critically for this course — the **`app/` directory**, which is the App Router convention this entire curriculum teaches (as opposed to the older `pages/` directory, covered only as legacy context in Module 13). TypeScript is the default, not an add-on you bolt on afterward; the scaffolded project ships `.tsx` files and a `tsconfig.json` out of the box.\n\nInside `app/`, certain filenames are *reserved* — the framework looks for them by name and treats them specially rather than as ordinary components you import yourself:\n\n- `page.tsx` — makes a folder a navigable route (covered in depth in Module 2)\n- `layout.tsx` — wraps a segment and everything under it\n- `loading.tsx` — an automatic loading UI for a segment\n- `error.tsx` — an automatic error boundary for a segment\n- `route.ts` — defines an API endpoint instead of a page (Module 7)\n- `template.tsx` — like layout, but re-mounts on every navigation instead of persisting\n- `default.tsx` — fallback for parallel routes\n\nYou don't need to memorize what each does yet (routing files are Module 2's job) — the important mental shift right now is: **filenames in `app/` are not just organizational, they're API**. Naming a file `page.tsx` versus `Page.tsx` versus `mypage.tsx` has real behavioral consequences, which is different from plain React where component filenames are just for humans.\n\nThe other default worth knowing from day one: **Turbopack is the default bundler** for both `next dev` and `next build` in v16 — you don't configure it, it's what runs when you type `npm run dev`. (Its performance characteristics are covered properly in Module 9; for now, just know it's there and it's not Webpack.)\n\nConfiguration lives in `next.config.ts` at the project root — a typed config file (TypeScript, matching the rest of the scaffold) where you'll later turn on things like `cacheComponents` (Module 6) or `reactCompiler` (Module 9).",
+          "keyConceptsCovered": [
+            "npx create-next-app@latest scaffolds TypeScript + app/ by default",
+            "Reserved file names (page, layout, loading, error, route, template, default)",
+            "Turbopack is the default bundler for next dev and next build in v16"
+          ],
+          "pitfallsCovered": []
+        }
+      ],
+      "milestoneNote": null
+    },
+    {
+      "name": "Routing (App Router)",
+      "objective": "Build a multi-page app using file-system routing, including dynamic and grouped routes.",
+      "sections": [
+        {
+          "subtopic": "File-system routing: page.tsx and layout.tsx",
+          "explanation": "In the App Router, **folders define URL structure, and `page.tsx` is what makes a folder actually reachable as a page**. A folder with no `page.tsx` in it is not a route — it's just a folder, possibly used for organization or as a place to put a shared `layout.tsx`.\n\n```\napp/\n  page.tsx           →  /\n  about/\n    page.tsx         →  /about\n  blog/\n    page.tsx         →  /blog\n    [slug]/\n      page.tsx       →  /blog/hello-world  (slug = \"hello-world\")\n```\n\n`layout.tsx` is the other half of this system, and it has a property that regularly surprises people coming from plain React routers: **a layout wraps its children and persists across navigations between those children — it does not re-render when you navigate from one child page to another.**\n\n```tsx\n// app/blog/layout.tsx\nexport default function BlogLayout({ children }: { children: React.ReactNode }) {\n  return (\n    <div>\n      <BlogSidebar />\n      {children}\n    </div>\n  );\n}\n```\n\nIf you navigate from `/blog/post-a` to `/blog/post-b`, `BlogLayout` is **not** torn down and remounted — only `children` (the page content) swaps out. Any component state inside the layout (a scroll position, an open/closed sidebar toggle, a client-side subscription) survives the navigation untouched. This is a deliberate design choice for performance and continuity (think: a persistent audio player in a layout that shouldn't restart every time you click a link), but it also means **a layout will not automatically re-fetch data on every navigation** the way you might expect if you're used to a client router re-running route-level loaders on every transition. If you need fresh data on each navigation, that data needs to live in the page, not assumed to refresh via the layout.",
+          "keyConceptsCovered": [
+            "Folders = route segments; page.tsx makes a segment reachable",
+            "layout.tsx wraps children and persists across navigations (no re-render)"
+          ],
+          "pitfallsCovered": [
+            "Expecting layouts to re-fetch on navigation — layout.tsx persists by design; state is preserved, no re-render"
+          ]
+        },
+        {
+          "subtopic": "Dynamic segments, catch-alls, and route groups",
+          "explanation": "Beyond static folder names, the App Router supports pattern-based segments using bracket syntax:\n\n- **Dynamic segment** `[param]` — matches exactly one path segment. `app/blog/[slug]/page.tsx` matches `/blog/anything` and gives you `slug` as a parameter.\n- **Catch-all** `[...param]` — matches one or more segments as an array. `app/docs/[...path]/page.tsx` matches `/docs/a`, `/docs/a/b`, `/docs/a/b/c`, giving `path` as `['a']`, `['a','b']`, etc.\n- **Optional catch-all** `[[...param]]` — like catch-all, but also matches the base route with zero segments. `app/docs/[[...path]]/page.tsx` matches `/docs` itself as well as everything catch-all would.\n- **Route groups** `(name)` — parentheses around a folder name **exclude it from the URL** entirely. `app/(marketing)/about/page.tsx` still serves at `/about`, not `/marketing/about`. Route groups exist purely for organizing files and applying a shared layout to a subset of routes without that grouping leaking into the URL — e.g., grouping `(marketing)` pages under one layout and `(app)` pages under a completely different one, both mounted at the same URL depth.\n\nThere are also **parallel routes** (`@slot` folders, rendering more than one page in the same layout simultaneously — think a dashboard with independently-navigable panels) and **intercepting routes** (`(.)folder` syntax, for things like a photo opening in a modal over the feed but as a full page on direct navigation/refresh). Flagging these as advanced/optional for a beginner curriculum: know they exist and what problem they solve, but you won't need them for most apps starting out, and reaching for them before you need them adds real complexity.\n\nReading dynamic values: in current Next.js, **`params` (and `searchParams`) are asynchronous** — they arrive as a `Promise`, not a plain object, and must be awaited:\n\n```tsx\n// app/blog/[slug]/page.tsx\nexport default async function BlogPost({\n  params,\n}: {\n  params: Promise<{ slug: string }>;\n}) {\n  const { slug } = await params;\n  return <h1>Post: {slug}</h1>;\n}\n```\n\nThis is a hard breaking-change point relative to older tutorials and even older Next.js versions, where `params` was a synchronous plain object you could destructure directly (`{ params: { slug } }`). If you copy a code sample from an older guide and it destructures `params` directly without `await`, it will fail (usually with a runtime warning, sometimes silently returning `undefined`-shaped data) under current Next.js — the fix is always to type it as a `Promise` and `await` it, whether in `page.tsx`, `generateMetadata`, or anywhere else params/searchParams are consumed.",
+          "keyConceptsCovered": [
+            "Dynamic segments [param], catch-all [...param], optional catch-all [[...param]], route groups (name)",
+            "Parallel/intercepting routes flagged as advanced/optional for beginners",
+            "params/searchParams are async — must be awaited"
+          ],
+          "pitfallsCovered": [
+            "Forgetting params/searchParams are async (sync access was fully removed in v16)"
+          ]
+        },
+        {
+          "subtopic": "Route-level file conventions (existence only)",
+          "explanation": "Three more reserved filenames live alongside `page.tsx` in any route segment: `loading.tsx`, `error.tsx`, and `not-found.tsx`. At this stage, just know what triggers each:\n\n- `loading.tsx` in a folder automatically wraps that segment's `page.tsx` in a `<Suspense>` boundary and renders as the fallback while the page's data is being fetched.\n- `error.tsx` automatically catches errors thrown during rendering of that segment and renders instead of crashing the whole app.\n- `not-found.tsx` renders when a route doesn't match, or when code explicitly calls the `notFound()` function.\n\nThe mechanics of *when these files exist and get picked up* belong here, in routing. The *design* of good loading skeletons, error reset/recovery patterns, and the difference between a segment-level `error.tsx` and root `global-error.tsx` is genuinely deeper material and is deliberately deferred to Module 12, which revisits these same three files with that behavioral depth. You're not missing anything by not building a polished loading skeleton yet — that's coming.",
+          "keyConceptsCovered": [],
+          "pitfallsCovered": []
+        }
+      ],
+      "milestoneNote": null,
+      "vizData": {
+        "type": "dependencyGraph",
+        "data": {
+          "description": "Overall module/subtopic dependency graph for this curriculum. Nodes are curriculum modules; edges show hard prerequisites per the research brief's dependency chain.",
+          "nodes": [
+            { "id": "m1", "label": "1. Foundations & Setup" },
+            { "id": "m2", "label": "2. Routing (App Router)" },
+            { "id": "m3", "label": "3. Proxy" },
+            { "id": "m4", "label": "4. Server vs Client Components" },
+            { "id": "m5", "label": "5. Metadata & SEO" },
+            { "id": "m6", "label": "6. Data Fetching & Caching" },
+            { "id": "m7", "label": "7. Mutations: Server Actions & Route Handlers" },
+            { "id": "m8", "label": "8. Styling, Assets & Optimization" },
+            { "id": "m9", "label": "9. Build & Performance Tooling" },
+            { "id": "m10", "label": "10. Auth & Authorization" },
+            { "id": "m11", "label": "11. Deployment" },
+            { "id": "m12", "label": "12. Error Handling, Loading States & Testing" },
+            { "id": "m13", "label": "13. Pages Router: Legacy Recognition" }
+          ],
+          "edges": [
+            { "from": "m1", "to": "m2" },
+            { "from": "m2", "to": "m3", "note": "Proxy only hard-depends on Routing; moved earlier than the brief's default position as a pedagogical judgment call" },
+            { "from": "m2", "to": "m4" },
+            { "from": "m4", "to": "m5" },
+            { "from": "m5", "to": "m6" },
+            { "from": "m5", "to": "m7" },
+            { "from": "m6", "to": "m8" },
+            { "from": "m7", "to": "m8" },
+            { "from": "m8", "to": "m9" },
+            { "from": "m9", "to": "m10" },
+            { "from": "m4", "to": "m10", "note": "auth reads session state in Server Components" },
+            { "from": "m7", "to": "m10", "note": "auth mutates session state via Server Actions" },
+            { "from": "m10", "to": "m11" },
+            { "from": "m11", "to": "m12" },
+            { "from": "m2", "to": "m12", "note": "Module 12 revisits loading/error/not-found file conventions introduced in Module 2" },
+            { "from": "m4", "to": "m13", "note": "no hard dependency; insertable any time after Module 4, placed last as a low-stakes capstone" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Proxy: Rewrites & Redirects",
+      "objective": "Use proxy.ts for rewrites/redirects/header manipulation, and know its one hard boundary: it is not where auth lives.",
+      "sections": [
+        {
+          "subtopic": "The middleware.ts → proxy.ts rename",
+          "explanation": "In Next.js v16, the file you'd have known as `middleware.ts` (function `middleware`) was renamed to `proxy.ts` (function `proxy`). If you've used Next.js before v16 or you're reading an older tutorial, mentally substitute the name — the mechanics are the same, only the name changed. A codemod is available if you're upgrading an existing project: `npx @next/codemod` handles the rename automatically.\n\nThis wasn't a cosmetic rebrand. Vercel's own stated rationale is that the name \"middleware\" invited comparisons to Express-style middleware — chains of general-purpose request handlers that developers reflexively use for things like authentication checks — when what this file actually does is much narrower: it's **request-level rewriting/redirecting that runs before rendering**, on the edge, before your app's actual rendering logic ever executes. The rename to \"proxy\" is meant to make that narrower scope obvious from the name alone.",
+          "keyConceptsCovered": [
+            "middleware.ts → proxy.ts rename in v16 (function middleware → proxy); codemod available via npx @next/codemod",
+            "Vercel's rationale: old name invited Express-style-middleware assumptions and misuse as an auth boundary"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "What Proxy is for: rewrites, redirects, headers",
+          "explanation": "A `proxy.ts` file at your project root exports a function that runs on (nearly) every incoming request before it reaches a route. It's the right tool for things that need to happen based on the request itself — before you know or care what page is about to render:\n\n```ts\n// proxy.ts\nimport { NextResponse } from 'next/server';\nimport type { NextRequest } from 'next/server';\n\nexport function proxy(request: NextRequest) {\n  // Redirect: send the browser to a different URL\n  if (request.nextUrl.pathname === '/old-page') {\n    return NextResponse.redirect(new URL('/new-page', request.url));\n  }\n\n  // Rewrite: serve different content without changing the URL bar\n  if (request.nextUrl.pathname === '/dashboard') {\n    return NextResponse.rewrite(new URL('/dashboard/overview', request.url));\n  }\n\n  // Header manipulation: e.g., attach a request id for logging\n  const response = NextResponse.next();\n  response.headers.set('x-request-id', crypto.randomUUID());\n  return response;\n}\n\nexport const config = {\n  matcher: ['/dashboard/:path*', '/old-page'],\n};\n```\n\nGood use cases: A/B test bucketing via cookie + rewrite, geolocation-based redirects, stripping/adding headers for logging or feature flags, redirecting legacy URLs. The common thread: these are decisions that don't require rendering anything, and are cheap to make on every request.",
+          "keyConceptsCovered": [],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "Why Proxy is not an auth boundary (flagged for full resolution in Module 10)",
+          "explanation": "This is the single most important thing to take from this module, and it's placed this early specifically so you never reach for Proxy as your first instinct for \"protect this route.\"\n\n**Proxy is not, and cannot safely be, your authorization boundary.** This isn't a style opinion — it's backed by two confirmed real-world CVEs from Next.js's May 2026 security release. **CVE-2026-44573** affected Pages Router apps using i18n: an unprefixed request to `/_next/data/<buildId>/<page>.json` could bypass the Proxy/middleware matcher entirely, because the matcher pattern assumed a locale segment would always be present — it wasn't, and the request slipped through unchecked. **CVE-2026-44574** showed that injecting parameters into a dynamic route via query string could alter the *effective* route in a way Proxy's matcher never saw, again bypassing whatever authorization logic lived there. Both were fixed as of **16.2.6** (the initial 16.2.5 patch was incomplete for Turbopack-enabled apps specifically, tracked as a separate CVE) — and since this course teaches Turbopack as the default bundler, 16.2.6+ is the version that actually closes the gap for you.\n\nThe underlying lesson generalizes past these specific CVEs: Proxy operates on a **matcher pattern matched against the raw incoming URL**, before your app's actual routing and rendering logic runs. Any mismatch between what the matcher thinks a URL means and what your app's router actually resolves it to is a gap an attacker can walk through. A matcher is fundamentally a pattern-matching approximation of your routes, not the routes themselves — and approximations can be wrong in ways that are invisible until someone probes for the edge case.\n\n**Real authorization checks belong inside Server Components, Server Actions, and Route Handlers — ideally centralized behind a Data Access Layer (DAL)** — where the check happens against the actual resolved request, with full knowledge of session state, right before the protected work happens. You haven't built Server Components, Server Actions, or a DAL yet (that's Modules 4, 7, and 10), so for now this is necessarily a forward reference: file it away as \"Proxy can redirect an unauthenticated user toward a login page as a *convenience*, but the page/action/handler on the other end must independently verify the user is allowed to be there, every time, regardless of how they arrived.\" Module 10 closes this loop with the full DAL pattern once you have the pieces to implement it.",
+          "keyConceptsCovered": [
+            "Backed by two confirmed 2026 CVEs, not just a style preference"
+          ],
+          "pitfallsCovered": [
+            "Treating Proxy as an auth boundary — confirmed real-world failure (CVE-2026-44573, CVE-2026-44574), fixed as of 16.2.6; real auth checks belong in Server Components/Server Actions/Route Handlers behind a DAL, never solely in Proxy"
+          ]
+        }
+      ],
+      "milestoneNote": null
+    },
+    {
+      "name": "Server vs Client Components",
+      "objective": "Correctly decide, for any piece of UI, whether it's a Server or Client Component, and understand the consequences of that boundary.",
+      "sections": [
+        {
+          "subtopic": "Server Components as the default",
+          "explanation": "This is the single biggest conceptual shift from plain React, so it's worth being explicit about what changes. In a plain React app (Vite, CRA), every component you write is a \"client component\" in the sense that it ships to the browser as JavaScript and runs there. There's no other option.\n\nIn the Next.js App Router, **every component inside `app/` is a Server Component by default** — meaning it renders on the server, produces HTML (and a compact serialized description of the component tree), and **ships zero JavaScript for that component to the browser**. The browser receives finished markup, not a bundle it has to execute to produce that markup. This matters for performance (smaller JS bundles, faster interactivity) and for capability (a Server Component can directly `await` a database call or read a server-only secret, because it never runs in the browser where that code or secret would be exposed).\n\n```tsx\n// app/posts/page.tsx — a Server Component, no directive needed, this is the default\nasync function getPosts() {\n  const res = await fetch('https://api.example.com/posts');\n  return res.json();\n}\n\nexport default async function PostsPage() {\n  const posts = await getPosts();\n  return (\n    <ul>\n      {posts.map((p: { id: string; title: string }) => (\n        <li key={p.id}>{p.title}</li>\n      ))}\n    </ul>\n  );\n}\n```\n\nNotice this component is `async` and directly `await`s data — no `useEffect`, no `useState`, no loading spinner logic. That directness is only possible because it's a Server Component; a Client Component cannot be `async` in this way (React doesn't support async client function components as of this writing).",
+          "keyConceptsCovered": [
+            "Everything in app/ is a Server Component by default (zero JS shipped)"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "\"use client\" and import-infection",
+          "explanation": "The moment a piece of UI needs something only the browser can do — `onClick` and other event handlers, `useState`/`useEffect` and other hooks, browser-only APIs like `localStorage` or `window` — that module needs to opt into being a Client Component with the `\"use client\"` directive at the very top of the file:\n\n```tsx\n// app/components/Counter.tsx\n\"use client\";\n\nimport { useState } from 'react';\n\nexport default function Counter() {\n  const [count, setCount] = useState(0);\n  return <button onClick={() => setCount(count + 1)}>{count}</button>;\n}\n```\n\nHere's the part that trips people up: **`\"use client\"` doesn't just mark this one file — everything this file imports gets pulled into the client bundle too.** This is called import-infection. If `Counter.tsx` imports a large date-formatting utility or a big component tree, all of that now ships to the browser as JavaScript, even if none of *that* code individually needs `\"use client\"`. The directive marks a **boundary**, and the client bundle grows to include the whole subtree that boundary encloses, not just the one file where you wrote it.\n\nThis is exactly why **pitfall: overusing `\"use client\"`** is such a common and costly mistake. A very common beginner pattern is to slap `\"use client\"` at the top of a whole page just because *one* button on that page needs an `onClick` handler — which drags the entire page's component tree, including parts that never touch interactivity, into the client bundle. The fix is architectural: **push `\"use client\"` down to the smallest leaf component that actually needs it**, and let everything else stay a Server Component. In practice this often means: keep the page and its data-fetching as a Server Component, and extract just the interactive widget (the counter, the dropdown, the like button) into its own small Client Component that the Server Component then renders as a child.\n\n```tsx\n// app/posts/page.tsx — stays a Server Component\nimport LikeButton from './LikeButton'; // the only client piece\n\nexport default async function PostsPage() {\n  const posts = await getPosts();\n  return (\n    <ul>\n      {posts.map((p: { id: string; title: string }) => (\n        <li key={p.id}>\n          {p.title}\n          <LikeButton postId={p.id} /> {/* small, isolated client boundary */}\n        </li>\n      ))}\n    </ul>\n  );\n}\n```",
+          "keyConceptsCovered": [
+            "\"use client\" opts a module (and its imports) into client rendering for hooks/events/browser APIs"
+          ],
+          "pitfallsCovered": [
+            "Overusing \"use client\" — drags large subtrees into the client bundle; default to Server Components, push \"use client\" to the smallest leaf"
+          ]
+        },
+        {
+          "subtopic": "SSR-once-then-hydrate for Client Components",
+          "explanation": "A common misconception is that `\"use client\"` means \"this never touches the server.\" It doesn't. **Client Components are still server-rendered once** — Next.js renders them to HTML on the server as part of the initial page response (so the user still sees content immediately, no blank screen), and then the JavaScript bundle for that component downloads and **hydrates** it in the browser, attaching event listeners and making it interactive. `\"use client\"` controls *where the component's JavaScript runs and hydrates*, not whether it's ever rendered on the server at all. The distinction that actually matters is: Server Components render on the server and stay there (no client-side JS, ever); Client Components render on the server once for the initial HTML, then also ship JS and become interactive in the browser.",
+          "keyConceptsCovered": [
+            "Client Components still SSR once, then hydrate"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "Passing data across the Server → Client boundary",
+          "explanation": "When a Server Component renders a Client Component and passes it props, those props have to cross a serialization boundary — they're sent over the wire (conceptually) from server rendering to client hydration, the same way `props` would need to survive a `JSON.stringify`/`JSON.parse` round trip. **Only serializable values are allowed**: plain objects, arrays, strings, numbers, booleans, `null`. You cannot pass a function, a class instance, a `Date` object (pass an ISO string instead and construct the `Date` client-side if needed), a `Map`/`Set`, or a React Context value as a prop from a Server Component to a Client Component. The one deliberate exception: a Server Action reference can be passed as a prop, because Next.js has special handling that turns it into a callable reference rather than trying to serialize the function body itself (this becomes directly useful in Module 7).\n\nThis serialization boundary is also exactly where **pitfall: leaking sensitive data through Server → Client props** happens. It's easy to fetch a full user record on the server (including things like an internal role flag, an email, a password hash if your ORM returns one, an internal ID) and then pass that whole object down to a Client Component that only actually needs the display name. Whatever you pass as a prop to a Client Component **will be visible in the browser** — it appears in the page's initial HTML/serialized payload and is inspectable via dev tools, regardless of whether the UI displays it. The fix is discipline: shape the data to exactly what the client needs before passing it down, not \"whatever the query happened to return.\"",
+          "keyConceptsCovered": [
+            "Server→Client props must be serializable (no functions/class instances, except Server Actions)"
+          ],
+          "pitfallsCovered": [
+            "Leaking sensitive data through Server→Client props — pass only what the client actually needs"
+          ]
+        },
+        {
+          "subtopic": "React Context across the boundary",
+          "explanation": "In plain React, wrapping your app in a Context Provider is unremarkable — you do it wherever's convenient. In the App Router, it has one hard rule: **a Context Provider must be defined in a Client Component.** React Context relies on subscription machinery that only exists in the client rendering runtime; Server Components have no notion of \"re-render when context changes\" because they don't re-render on the client at all — they run once, on the server, and produce static output.\n\n```tsx\n// app/providers/ThemeProvider.tsx\n\"use client\";\n\nimport { createContext, useContext, useState } from 'react';\n\nconst ThemeContext = createContext<'light' | 'dark'>('light');\n\nexport function ThemeProvider({ children }: { children: React.ReactNode }) {\n  const [theme] = useState<'light' | 'dark'>('light');\n  return <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>;\n}\n\nexport const useTheme = () => useContext(ThemeContext);\n```\n\nA Server Component can still render `<ThemeProvider>` as a child and pass server-fetched data down through it — Client Components can appear as children of Server Components and still receive Server-Component-rendered content via `children`, this is completely normal and encouraged. What doesn't work is trying to `createContext` and consume it directly from a Server Component, or expecting a Context value defined in a Server Component to somehow reach a Client Component without an explicit Client Component Provider in between. The fix, per the pitfall, is: **don't try to thread server-read state through Context across the boundary at all** — instead pass it down as an ordinary prop (resolved server-side data), and reserve Context for client-only concerns (theme toggles, client-side UI state) that originate from a Client Component Provider in the first place.",
+          "keyConceptsCovered": [
+            "React Context must be provided from a Client Component — doesn't reach across the boundary otherwise"
+          ],
+          "pitfallsCovered": [
+            "Using React Context across the Server→Client boundary directly — Providers must be Client Components; pass server-read state as props instead"
+          ]
+        },
+        {
+          "subtopic": "\"use server\" is not a rendering mode",
+          "explanation": "One more directive exists — `\"use server\"` — and it is **frequently confused with `\"use client\"`'s counterpart**, as if it meant \"this makes a Server Component.\" It doesn't. `\"use server\"` marks a **Server Action** — a specific kind of callable mutation function, covered in full in Module 7. It has nothing to do with whether a *component* renders on the server; Server Components are the unmarked default and need no directive at all. If you catch yourself writing `\"use server\"` at the top of a component file expecting it to behave like the absence of `\"use client\"`, that's the mistake this pitfall names — the two directives serve entirely different purposes (`\"use client\"` = rendering-location boundary for components; `\"use server\"` = \"this function is a server-side mutation callable from the client\"), and neither one is the on/off switch for the other.",
+          "keyConceptsCovered": [
+            "\"use server\" marks a Server Action, not a rendering mode — frequent point of confusion"
+          ],
+          "pitfallsCovered": [
+            "Confusing \"use server\" with \"this makes a Server Component\" — it marks a Server Action, not a rendering mode"
+          ]
+        }
+      ],
+      "milestoneNote": "MILESTONE A: You should now be able to build a multi-page routed app (Module 2) with deliberate, correct Server/Client Component boundaries — not \"use client everywhere,\" but small, intentional client leaves inside a Server Component tree — and you should be able to explain, in your own words, why Proxy (Module 3) is unsuitable as an auth boundary even though you haven't built any auth yet. If you can look at a piece of UI and say confidently \"this part needs to be a Client Component because it uses X, and everything around it can stay a Server Component,\" you've cleared the gate this milestone checks for. Practically: build a small multi-page app now (a few routes, a shared layout, at least one interactive widget correctly isolated as a small Client Component) before moving on — Modules 5 through 8 all assume this boundary is second nature.",
+      "vizData": {
+        "type": "comparisonTable",
+        "data": {
+          "description": "Server Components vs. Client Components — the core decision table for Module 4.",
+          "columns": ["Dimension", "Server Component (default)", "Client Component (\"use client\")"],
+          "rows": [
+            ["Where it renders", "Server only", "Server once (SSR), then hydrates in browser"],
+            ["JS shipped to browser", "None", "Yes — component code + React runtime glue"],
+            ["Can use hooks (useState, useEffect, etc.)", "No", "Yes"],
+            ["Can use event handlers (onClick, etc.)", "No", "Yes"],
+            ["Can be async and directly await data", "Yes", "No"],
+            ["Can access browser APIs (window, localStorage)", "No", "Yes"],
+            ["Can read server-only secrets/DB directly", "Yes", "No — must receive data via props or a Server Action"],
+            ["Can define/provide React Context", "No", "Yes"],
+            ["Props received must be serializable", "N/A (receives from parent Server or Client Component)", "Yes, when passed down from a Server Component parent"],
+            ["Default in app/ directory", "Yes, no directive needed", "No, requires explicit \"use client\" at top of file"]
+          ]
+        }
+      }
+    },
+    {
+      "name": "Metadata & SEO",
+      "objective": "Ship correct, per-route titles/descriptions/social previews from day one, not as later polish.",
+      "sections": [
+        {
+          "subtopic": "Static metadata export vs. async generateMetadata()",
+          "explanation": "The App Router replaces manually writing `<title>` and `<meta>` tags with a dedicated **Metadata API**. There are two ways to declare metadata for a route segment, and the choice between them comes down to one question: do you need to fetch data before you know what the title should be?\n\nIf the metadata is static — known at build time, no data dependency — export a plain `metadata` object:\n\n```tsx\n// app/about/page.tsx\nimport type { Metadata } from 'next';\n\nexport const metadata: Metadata = {\n  title: 'About Us',\n  description: 'Learn what we do and why.',\n};\n\nexport default function AboutPage() {\n  return <h1>About</h1>;\n}\n```\n\nIf the title/description depends on data — a blog post's title, a product's name — use the async `generateMetadata()` function instead, which runs on the server before the page renders and lets you `await` whatever you need:\n\n```tsx\n// app/blog/[slug]/page.tsx\nimport type { Metadata } from 'next';\n\nexport async function generateMetadata({\n  params,\n}: {\n  params: Promise<{ slug: string }>;\n}): Promise<Metadata> {\n  const { slug } = await params; // remember: params is async (Module 2)\n  const post = await getPost(slug);\n  return {\n    title: post.title,\n    description: post.excerpt,\n  };\n}\n\nexport default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {\n  const { slug } = await params;\n  const post = await getPost(slug);\n  return <article>{post.body}</article>;\n}\n```\n\nBoth `metadata` and `generateMetadata` are read by Next.js and injected into the actual `<head>` of the server-rendered HTML — you never write a `<head>` tag yourself in the App Router.",
+          "keyConceptsCovered": [
+            "Static metadata export vs. async generateMetadata() (lets you fetch data before computing title/description)"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "The server-only constraint",
+          "explanation": "**Both `metadata` and `generateMetadata` are server-only exports.** They cannot be exported from a file that has `\"use client\"` at the top. This is exactly the pitfall to watch for: **exporting `generateMetadata`/`metadata` from a `\"use client\"` file** is a common, and sometimes *silent*, trip-up — it typically happens when a page or layout file was marked `\"use client\"` for an unrelated reason (say, it needed a `useState` somewhere in the same file) and the developer didn't realize that also broke the metadata export sitting in the same file.\n\nThe fix follows directly from what you learned in Module 4 about pushing `\"use client\"` to the smallest leaf: **move the interactive part into a separate child Client Component**, and keep the page/layout file itself a Server Component so its `metadata`/`generateMetadata` export stays valid.\n\n```tsx\n// WRONG — metadata silently doesn't work correctly here\n\"use client\";\nexport const metadata = { title: 'My Page' }; // invalid in a client file\nexport default function Page() {\n  const [open, setOpen] = useState(false);\n  return <button onClick={() => setOpen(!open)}>Toggle</button>;\n}\n\n// RIGHT — split the interactive piece out\n// app/my-page/page.tsx (Server Component, stays default)\nimport type { Metadata } from 'next';\nimport ToggleButton from './ToggleButton';\n\nexport const metadata: Metadata = { title: 'My Page' };\nexport default function Page() {\n  return <ToggleButton />;\n}\n\n// app/my-page/ToggleButton.tsx\n\"use client\";\nimport { useState } from 'react';\nexport default function ToggleButton() {\n  const [open, setOpen] = useState(false);\n  return <button onClick={() => setOpen(!open)}>Toggle</button>;\n}\n```",
+          "keyConceptsCovered": [
+            "Server-only — cannot export from a \"use client\" file"
+          ],
+          "pitfallsCovered": [
+            "Exporting generateMetadata/metadata from a \"use client\" file — server-only; fix is to move the interactive part into a child Client Component"
+          ]
+        },
+        {
+          "subtopic": "Title-template merging down the layout tree",
+          "explanation": "Metadata isn't only declared per-page — it **merges down the layout tree**, so you can set defaults once at the root and have every page contribute just its own piece. The mechanism is `title.template` and `title.default`:\n\n```tsx\n// app/layout.tsx (root layout)\nexport const metadata: Metadata = {\n  title: {\n    template: '%s | My Site',\n    default: 'My Site',\n  },\n};\n```\n\n```tsx\n// app/blog/[slug]/page.tsx\nexport async function generateMetadata({ params }): Promise<Metadata> {\n  const { slug } = await params;\n  const post = await getPost(slug);\n  return { title: post.title }; // becomes \"Post Title | My Site\"\n}\n```\n\nA page that supplies its own `title` gets it substituted into the `%s` placeholder of the nearest ancestor `template`; a page/segment that supplies no title at all falls back to `default`. This means you set the site-wide brand suffix exactly once at the root, and every deeper route only needs to think about its own piece of the title — no repeated string concatenation scattered across the app.",
+          "keyConceptsCovered": [
+            "Merges down the layout tree: root title.template + default, children supply the %s piece"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "File-based metadata conventions",
+          "explanation": "Alongside the `metadata`/`generateMetadata` exports, Next.js recognizes special **filenames** for common SEO/social assets, resolved automatically per route segment without any explicit import or wiring:\n\n- `favicon.ico`, `icon.png` / `apple-icon.png` — browser tab and home-screen icons\n- `opengraph-image.tsx` / `twitter-image.tsx` — social preview images. These can be static image files, or dynamically generated per-route using Next's `ImageResponse` (e.g., rendering a post's title onto a branded template image at request time)\n- `robots.ts` — generates `robots.txt` programmatically\n- `sitemap.ts` — generates `sitemap.xml` programmatically, useful for large or dynamic sites where a hand-written sitemap would go stale\n\nThese live at the same folder level as `page.tsx`/`layout.tsx` and follow the same \"filename is API\" mental model from Module 1 — Next.js discovers and serves them by convention, you don't register them anywhere.",
+          "keyConceptsCovered": [
+            "File-based conventions: favicon.ico, icon.png/apple-icon.png, opengraph-image.tsx/twitter-image.tsx (static or dynamic via ImageResponse), robots.ts, sitemap.ts"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "Contrast with the deprecated next/head pattern",
+          "explanation": "If you've seen older Next.js content (or Pages Router material, covered properly in Module 13), you may have seen `next/head` used to manually push tags into the document head:\n\n```tsx\n// Pages Router pattern — do NOT use this in the App Router\nimport Head from 'next/head';\n\nfunction Page() {\n  return (\n    <>\n      <Head>\n        <title>My Page</title>\n      </Head>\n      <div>content</div>\n    </>\n  );\n}\n```\n\nThis is the pitfall named directly: **using `next/head` in the App Router** is a Pages Router habit that doesn't map onto the App Router's model at all — the Metadata API (`metadata` export / `generateMetadata`) replaces it entirely, not as an alternative you can mix and match, but as the sole mechanism. If you find `next/head` in a tutorial you're following, that tutorial is teaching the Pages Router, and the metadata approach in this module is what to use instead.",
+          "keyConceptsCovered": [
+            "Contrasts with the deprecated Pages Router next/head pattern"
+          ],
+          "pitfallsCovered": [
+            "Using next/head in the App Router — a Pages Router habit; the App Router replaces it entirely with the Metadata API"
+          ]
+        }
+      ],
+      "milestoneNote": null
+    },
+    {
+      "name": "Data Fetching & Caching",
+      "objective": "Fetch data idiomatically in Server Components under the new explicit-caching model, and use streaming to avoid blocking the page on slow data.",
+      "sections": [
+        {
+          "subtopic": "Native fetch() in Server Components",
+          "explanation": "Because Server Components can be `async` and run only on the server (Module 4), fetching data for a page is dramatically simpler than in plain React. There's no `useEffect` + `useState` + loading-flag dance — you just `await` the data directly in the component body, and the component doesn't render until the data is ready:\n\n```tsx\n// app/dashboard/page.tsx\nasync function getStats() {\n  const res = await fetch('https://api.example.com/stats');\n  if (!res.ok) throw new Error('Failed to fetch stats');\n  return res.json();\n}\n\nexport default async function Dashboard() {\n  const stats = await getStats();\n  return <StatsView data={stats} />;\n}\n```\n\nThis is a genuine paradigm shift for anyone coming from client-side data fetching: no request waterfall visible to the client, no flash of empty state before a `useEffect` fires, no extra client-side library needed just to get initial data onto the page. The data is already there in the HTML the server sends.",
+          "keyConceptsCovered": [
+            "Native fetch() in Server Components is primary; no useEffect+useState needed for initial data"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "The explicit caching model: \"use cache\", cacheLife(), cacheTag()",
+          "explanation": "This is the area of Next.js that has changed the most recently, and it's the area where outdated tutorials will actively mislead you — so it gets the most space here.\n\n**Older Next.js versions cached `fetch()` calls by default.** A `fetch()` inside a Server Component would be cached automatically unless you opted out. Under the current model, this is reversed: **caching is now largely explicit/opt-in.** A plain `fetch()` call today is not silently cached the way it used to be — if you learned Next.js from an older guide, or you're pattern-matching off memory of \"Next.js caches fetches,\" that assumption no longer holds and will produce genuinely different (usually: more requests, fresher-but-slower) behavior than you expect. This is **pitfall: assuming fetch() is cached by default** — the fix is to stop assuming, and to be explicit about caching where you want it.\n\nThe explicit mechanism for opting into caching is the **`\"use cache\"` directive**, which can be placed at the top of a function (or a file) to mark its output as cacheable:\n\n```tsx\nasync function getProduct(id: string) {\n  \"use cache\";\n  const res = await fetch(`https://api.example.com/products/${id}`);\n  return res.json();\n}\n```\n\nTwo companion functions refine that caching behavior:\n\n- **`cacheLife()`** — controls how long a cached entry stays fresh before revalidating (e.g., a named profile like `'hours'`, or a custom duration).\n- **`cacheTag()`** — attaches a tag to a cache entry so it can be invalidated on demand later (this becomes directly relevant in Module 7, where `revalidateTag()` is how a Server Action tells the cache \"this data just changed, throw it away\").\n\n```tsx\nimport { unstable_cacheLife as cacheLife, unstable_cacheTag as cacheTag } from 'next/cache';\n\nasync function getProduct(id: string) {\n  \"use cache\";\n  cacheTag(`product-${id}`);\n  cacheLife('hours');\n  const res = await fetch(`https://api.example.com/products/${id}`);\n  return res.json();\n}\n```\n\n(Exact import paths/stability markers shift release to release — treat the shape of the pattern, not the precise import name, as the durable thing to learn.)",
+          "keyConceptsCovered": [
+            "Caching is now largely explicit/opt-in (\"use cache\", cacheLife(), cacheTag(), or Cache Components) rather than cached-by-default"
+          ],
+          "pitfallsCovered": [
+            "Assuming fetch() is cached by default — caching is now largely explicit; code from older tutorials may behave differently under 16"
+          ]
+        },
+        {
+          "subtopic": "Partial Prerendering (PPR) via cacheComponents: true",
+          "explanation": "**Partial Prerendering (PPR)** lets a single route serve a static, instantly-available shell alongside dynamic, per-request content — without you having to choose one rendering strategy for the whole page. The static parts of a page (say, a product page's layout, header, and description) are prerendered once and served immediately; the dynamic parts (say, real-time inventory count or a personalized recommendation) stream in afterward, wrapped in `<Suspense>`.\n\nPPR has now **graduated to stable**, enabled via the `cacheComponents: true` flag in `next.config.ts`. This is important to get right because there's an outdated version of this same feature floating around older content: **pitfall — following outdated PPR/`experimental.ppr` advice.** Older tutorials reference an `experimental.ppr` config flag; that flag is superseded by `cacheComponents: true`. Mixing the old experimental flag with the new caching model in the same project causes genuinely confusing, hard-to-debug behavior — pick one model (the current, `cacheComponents: true` one, for anything you're building today) and don't blend configuration patterns from different Next.js eras.\n\n```ts\n// next.config.ts\nimport type { NextConfig } from 'next';\n\nconst nextConfig: NextConfig = {\n  cacheComponents: true,\n};\n\nexport default nextConfig;\n```\n\nVercel positions `cacheComponents: true` (and the rendering model it enables) as the intended default rendering strategy going forward — worth knowing as the direction the framework is heading, not just a today's-flag-of-many.",
+          "keyConceptsCovered": [
+            "Partial Prerendering (PPR) graduated to stable via cacheComponents: true, replacing the old experimental.ppr flag",
+            "Vercel positions PPR/cacheComponents as the intended default rendering strategy going forward"
+          ],
+          "pitfallsCovered": [
+            "Following outdated PPR/experimental.ppr advice — replaced by cacheComponents: true; mixing old/new caching config causes confusing behavior"
+          ]
+        },
+        {
+          "subtopic": "Streaming with <Suspense>",
+          "explanation": "Streaming solves a specific problem: what happens when one piece of data on a page is slow, but the rest of the page is ready immediately? Without streaming, the whole page waits for the slowest fetch. With `<Suspense>`, you wrap just the slow part, and everything else renders (and reaches the user) right away:\n\n```tsx\nimport { Suspense } from 'react';\n\nasync function SlowRecommendations({ userId }: { userId: string }) {\n  const recs = await getRecommendations(userId); // slow\n  return <RecommendationList items={recs} />;\n}\n\nexport default function ProductPage({ userId }: { userId: string }) {\n  return (\n    <div>\n      <ProductHeader />       {/* renders immediately */}\n      <Suspense fallback={<RecsSkeleton />}>\n        <SlowRecommendations userId={userId} /> {/* streams in when ready */}\n      </Suspense>\n    </div>\n  );\n}\n```\n\nThis is the same `<Suspense>` you may know from plain React, but here it's doing real work at the server-rendering level: the initial HTML response includes everything outside the boundary plus the fallback, and the server pushes the real content for `SlowRecommendations` down the same connection once it resolves — no client-side refetch required. Note the connection to Module 2's `loading.tsx`: that file convention is Next.js automatically wrapping an entire route segment in exactly this kind of `<Suspense>` boundary for you; using `<Suspense>` directly, as shown here, gives you finer-grained control over exactly which piece of a page streams independently.",
+          "keyConceptsCovered": [
+            "<Suspense> streaming keeps slow data from blocking the rest of the page"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "The legacy revalidate export",
+          "explanation": "You may still encounter `export const revalidate = 60;` at the top of a page or layout — a time-based revalidation window that says \"treat this route's cached output as stale after 60 seconds.\" This **still works if `cacheComponents` is off**, but it's deprecated under the new explicit-caching model described above. Recognize it in existing code, but for new work under this course's target version, prefer the `\"use cache\"` + `cacheLife()`/`cacheTag()` pattern — it gives you per-function granularity and tag-based invalidation that the blanket route-level `revalidate` export can't.",
+          "keyConceptsCovered": [
+            "Legacy export const revalidate = 60 still works if cacheComponents is off, but is deprecated under the new model"
+          ],
+          "pitfallsCovered": []
+        }
+      ],
+      "milestoneNote": null,
+      "vizData": {
+        "type": "comparisonTable",
+        "data": {
+          "description": "Data-fetching/caching decision guide for Module 6 — which mechanism to reach for and when.",
+          "columns": ["Mechanism", "What it does", "When to use it"],
+          "rows": [
+            ["Plain fetch() (no directive)", "Fetches fresh data on every request; not cached by default under the current model", "Data that must always be current on every request (e.g., a live inventory count)"],
+            ["\"use cache\" directive", "Marks a function's (or file's) output as cacheable", "Data that's expensive to fetch and safe to reuse across requests for a while (e.g., product details, blog content)"],
+            ["cacheLife()", "Sets how long a cached entry stays fresh before revalidating", "Pair with \"use cache\" when you want a specific freshness window (minutes/hours/custom)"],
+            ["cacheTag()", "Attaches an invalidation tag to a cache entry", "Pair with \"use cache\" when a Server Action (Module 7) needs to invalidate this exact data on demand via revalidateTag()"],
+            ["cacheComponents: true (PPR)", "Prerenders static shell instantly, streams dynamic parts per-request", "Whole-route strategy: pages that mix mostly-static layout with a few genuinely per-request pieces"],
+            ["<Suspense> boundary", "Streams a specific slow subtree in after the rest of the page has rendered", "Any page where one data dependency is meaningfully slower than the rest"],
+            ["export const revalidate = N (legacy)", "Time-based whole-route revalidation window", "Deprecated under cacheComponents: true — recognize in existing code, avoid in new code"]
+          ]
+        }
+      }
+    },
+    {
+      "name": "Mutations: Server Actions & Route Handlers",
+      "objective": "Write data back to the server the right way for the right consumer — a form/UI mutation vs. an external/webhook endpoint.",
+      "sections": [
+        {
+          "subtopic": "Server Actions: \"use server\" functions",
+          "explanation": "A **Server Action** is a function marked with `\"use server\"` that runs exclusively on the server but can be called directly from your UI — as a form's `action` prop, or invoked programmatically from a Client Component event handler — without you having to hand-build an API endpoint and fetch it yourself.\n\n```tsx\n// app/actions.ts\n\"use server\";\n\nimport { db } from '@/lib/db';\n\nexport async function createPost(formData: FormData) {\n  const title = formData.get('title') as string;\n  await db.post.create({ data: { title } });\n}\n```\n\n```tsx\n// app/new-post/page.tsx (Server Component)\nimport { createPost } from '@/app/actions';\n\nexport default function NewPostPage() {\n  return (\n    <form action={createPost}>\n      <input name=\"title\" />\n      <button type=\"submit\">Create</button>\n    </form>\n  );\n}\n```\n\nThis is a form that works even before any JavaScript has loaded in the browser — the `action` prop pointing at a Server Action degrades to a real HTML form submission, then progressively enhances once JS is available. Recall from Module 4: `\"use server\"` marks this function as a Server Action, it says nothing about whether the surrounding component is a Server or Client Component — that's a completely separate axis, and conflating the two is exactly the pitfall flagged back in Module 4.\n\nOne more thing worth knowing about how Server Actions are protected under the hood: Next.js restricts a Server Action's underlying HTTP call to **POST only**, and it independently checks the request's **Origin/Host headers** to confirm the call actually came from your own app's origin before running the action. Together, these two checks mitigate CSRF (Cross-Site Request Forgery) — the class of attack where a malicious page tries to trigger a request against your app using a logged-in user's own browser session. This is a real, useful built-in protection, but it is **not a substitute for real authorization inside the action itself**. POST-only and an Origin/Host check confirm the request came from your own site — they say nothing about whether *this particular user* is allowed to perform *this particular mutation*. A Server Action that updates a post still needs to check, inside its own body, that the calling user actually owns that post (or has the right role) — exactly the DAL-backed authorization pattern Module 10 covers in full. CSRF mitigation and authorization are two different problems; Server Actions solve the first for you automatically, but the second is still entirely on you to write.",
+          "keyConceptsCovered": [
+            "\"use server\" defines a callable mutation, usable from a form's action prop or a Client Component handler",
+            "POST-only by design + Origin/Host checks mitigate CSRF, but that's not a substitute for real authorization inside the action"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "useActionState for pending/result state",
+          "explanation": "Calling a Server Action from a Client Component (rather than a plain HTML form) usually goes through React's `useActionState` hook (React 19+), which gives you the current result, a wrapped action to call, and a pending flag — everything you need to show a spinner or an error without hand-wiring your own loading state:\n\n```tsx\n// app/new-post/PostForm.tsx\n\"use client\";\n\nimport { useActionState } from 'react';\nimport { createPost } from '@/app/actions';\n\nconst initialState = { message: '' };\n\nexport default function PostForm() {\n  const [state, formAction, isPending] = useActionState(createPost, initialState);\n  return (\n    <form action={formAction}>\n      <input name=\"title\" />\n      <button type=\"submit\" disabled={isPending}>\n        {isPending ? 'Creating…' : 'Create'}\n      </button>\n      {state.message && <p>{state.message}</p>}\n    </form>\n  );\n}\n```\n\nThe Server Action's signature changes slightly to accept and return state when used this way (`(prevState, formData) => newState`), but the core idea — a server function called directly from a form — is unchanged.",
+          "keyConceptsCovered": [
+            "useActionState (React 19+) exposes pending/result state"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "revalidatePath vs revalidateTag — the decision most often gotten wrong",
+          "explanation": "After a Server Action mutates data, the page that displayed the old data is still holding stale cached output (recall Module 6's caching model) unless you tell Next.js to throw that cache away. Two functions do this, and choosing between them is, per the research behind this course, **the decision most often gotten wrong**:\n\n- **`revalidatePath('/posts')`** — invalidates the cache for a specific route path. Blunt but simple: everything cached under that path gets refreshed.\n- **`revalidateTag('post-123')`** — invalidates every cache entry that was tagged with `cacheTag('post-123')` (Module 6), regardless of which route(s) that data appears on.\n\nThe guidance: **use `revalidateTag` when the acting user needs to see their own write immediately**, especially if the same data might be cached under more than one route or component (a post that appears on a list page *and* its own detail page, both tagged the same way — one `revalidateTag` call invalidates both, where `revalidatePath` would require you to know and call out every path individually).\n\n```tsx\n\"use server\";\nimport { revalidateTag } from 'next/cache';\n\nexport async function updatePost(id: string, formData: FormData) {\n  const title = formData.get('title') as string;\n  await db.post.update({ where: { id }, data: { title } });\n  revalidateTag(`post-${id}`); // invalidates every cache entry tagged with this, wherever it appears\n}\n```\n\nReach for `revalidatePath` when the affected data genuinely lives at one known path and tagging feels like overkill; reach for `revalidateTag` by default for anything that might be cached in more than one place or where you're not fully sure — it's the safer default per the brief's own framing of this as the most commonly mis-chosen decision.",
+          "keyConceptsCovered": [
+            "revalidatePath vs revalidateTag is the decision most often gotten wrong; use revalidateTag when the acting user needs to see their own write immediately"
+          ],
+          "pitfallsCovered": [
+            "Picking the wrong revalidation function — revalidatePath vs revalidateTag; use revalidateTag when the acting user needs to see their own write immediately"
+          ]
+        },
+        {
+          "subtopic": "Execution model: one at a time, not for large uploads",
+          "explanation": "Two behavioral facts about Server Actions that surprise people used to firing off parallel `fetch()` calls from the client:\n\n**Server Actions execute one at a time per client** — if your UI fires off two Server Action calls close together from the same browser session, they queue and run sequentially, not in parallel. This is the pitfall: don't design a UI that assumes several Server Action calls will race or run concurrently for a single user; if you genuinely need concurrent operations, that's a sign you may want a Route Handler instead (see below), which doesn't have this per-client serialization.\n\n**Server Actions aren't meant for large file uploads.** They're designed around form-style payloads, not streaming large binary data efficiently. The pitfall/fix: for large uploads, use a **Route Handler** with proper streaming support instead of routing the file through a Server Action.",
+          "keyConceptsCovered": [
+            "Server Actions execute one at a time per client (not parallel) and aren't meant for large file uploads"
+          ],
+          "pitfallsCovered": [
+            "Using Server Actions for large file uploads — use a Route Handler with streaming instead",
+            "Assuming Server Actions run in parallel — they're dispatched one at a time per client"
+          ]
+        },
+        {
+          "subtopic": "Route Handlers: app/api/.../route.ts",
+          "explanation": "A **Route Handler** is the App Router's answer to what used to be `pages/api` — a file that defines an actual HTTP endpoint rather than a page. It lives at `app/api/.../route.ts` and exports one function per HTTP verb it supports:\n\n```ts\n// app/api/posts/route.ts\nimport { NextResponse } from 'next/server';\n\nexport async function GET() {\n  const posts = await db.post.findMany();\n  return NextResponse.json(posts);\n}\n\nexport async function POST(request: Request) {\n  const body = await request.json();\n  const post = await db.post.create({ data: body });\n  return NextResponse.json(post, { status: 201 });\n}\n```\n\nThe key structural difference from the old Pages Router pattern: `pages/api` used a single **default export** that received `(req, res)` and had to branch internally on `req.method`. Route Handlers instead export a **separate named function per verb** (`GET`, `POST`, `PUT`, `DELETE`, etc.) — Next.js routes the incoming request to the matching export directly, no manual method-branching needed.",
+          "keyConceptsCovered": [
+            "app/api/.../route.ts exports named per-verb functions (GET/POST/etc.), replacing the Pages Router's default-export pages/api pattern"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "Server Actions vs Route Handlers: when to use which",
+          "explanation": "Both let you run server-side mutation logic, and the boundary between them is a common source of \"which one do I even use here\" hesitation for beginners. The practical rule: **Server Actions are for your own UI's form-driven mutations** — a user on your site submitting a form, clicking a button that updates their own data, anything driven by your app's own React components. **Route Handlers are for anything that needs to look like a real HTTP endpoint to something else** — webhooks from a third-party service (Stripe, GitHub), a mobile app or other non-Next.js client consuming your API, or payloads that need proper HTTP semantics (streaming, custom headers, arbitrary content types) that a Server Action's form-shaped calling convention doesn't fit.\n\nIf you're not sure which one applies: ask who's calling it. Your own page's form? Server Action. Some other system that isn't running your React tree? Route Handler.",
+          "keyConceptsCovered": [
+            "Use Route Handlers for webhooks, external/non-Next clients, large/streaming payloads; use Server Actions for your own UI's form-driven mutations"
+          ],
+          "pitfallsCovered": []
+        }
+      ],
+      "milestoneNote": "MILESTONE B: You should now be able to build one complete CRUD feature end-to-end: read data with caching/streaming (Module 6's fetch()/\"use cache\"/<Suspense> patterns), mutate it via a Server Action with the correct revalidation call (revalidatePath or revalidateTag, chosen deliberately, not by guessing), and expose the same underlying data through a Route Handler for a non-Next client (e.g., a simple GET endpoint returning JSON). Practically: pick one resource (posts, todos, whatever) and build all three pieces before moving on — this is the checkpoint that confirms Modules 5 through 7 are working together, not just individually understood.",
+      "vizData": {
+        "type": "comparisonTable",
+        "data": {
+          "description": "Server Actions vs. Route Handlers — when to reach for which, per Module 7.",
+          "columns": ["Dimension", "Server Action (\"use server\")", "Route Handler (route.ts)"],
+          "rows": [
+            ["Typical caller", "Your own UI — a form or a Client Component event handler", "Anything external: webhooks, non-Next clients, mobile apps"],
+            ["Calling convention", "Called directly like a function from JSX (form action, or invoked in an event handler)", "Called via HTTP request to a URL — GET/POST/etc."],
+            ["Definition style", "Function marked \"use server\"", "Named export per HTTP verb (GET, POST, PUT, DELETE...)"],
+            ["Concurrency per client", "One at a time, sequential", "Normal HTTP concurrency — no special serialization"],
+            ["Good for large file uploads / streaming", "No — not designed for this", "Yes — supports proper streaming"],
+            ["Progressive enhancement (works before JS loads)", "Yes, via a plain <form action={...}>", "N/A — it's a plain HTTP endpoint, not tied to a form"],
+            ["Cache invalidation after mutation", "revalidatePath() / revalidateTag()", "Same functions available, called manually as needed"]
+          ]
+        }
+      }
+    },
+    {
+      "name": "Styling, Assets & Optimization",
+      "objective": "Style a Next.js app and use its built-in asset primitives instead of hand-rolled equivalents.",
+      "sections": [
+        {
+          "subtopic": "CSS Modules and Tailwind",
+          "explanation": "Next.js supports plain CSS Modules out of the box, no extra configuration required — any file named `*.module.css` gets its class names automatically scoped to the component that imports it, avoiding the global-namespace collisions of plain CSS:\n\n```css\n/* app/components/Card.module.css */\n.card {\n  border-radius: 8px;\n  padding: 1rem;\n}\n```\n\n```tsx\nimport styles from './Card.module.css';\n\nexport default function Card({ children }: { children: React.ReactNode }) {\n  return <div className={styles.card}>{children}</div>;\n}\n```\n\nCSS Modules work identically whether the component is a Server or Client Component — styling doesn't participate in the Server/Client boundary the way data and interactivity do.\n\n**Tailwind CSS is the common addition** on top of this — most real-world Next.js projects reach for Tailwind rather than hand-writing CSS Modules for everything, and `create-next-app` offers Tailwind setup as a first-class scaffolding option. Either approach (or both together) is normal; there's no framework-mandated single styling solution.",
+          "keyConceptsCovered": [
+            "CSS Modules built in; Tailwind is the common addition"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "next/image",
+          "explanation": "`next/image` replaces the plain HTML `<img>` tag with a component that automatically handles resizing, format conversion (serving modern formats like WebP/AVIF where supported), and lazy loading — all without you writing that logic yourself:\n\n```tsx\nimport Image from 'next/image';\n\nexport default function Avatar() {\n  return <Image src=\"/avatar.png\" alt=\"User avatar\" width={64} height={64} />;\n}\n```\n\nThe practical requirement to know up front: **`next/image` needs to know the image's dimensions ahead of time** — either explicit `width`/`height` props (as above), or the `fill` prop if the image should fill a sized parent container (`<div style={{ position: 'relative', width: 200, height: 200 }}><Image src=\"...\" alt=\"...\" fill /></div>`). This isn't an arbitrary restriction — it's how the component reserves the correct layout space before the image loads, preventing the page from jumping around as images pop in (cumulative layout shift). Forgetting both `width`/`height` and `fill` is the most common `next/image` error beginners hit, and the fix is always one of those two.",
+          "keyConceptsCovered": [
+            "next/image (auto resize/format/lazy load, needs width/height or fill)"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "next/font",
+          "explanation": "`next/font` self-hosts fonts (including Google Fonts, without the browser making a separate request to Google's CDN) and eliminates layout shift caused by fonts loading in late:\n\n```tsx\n// app/layout.tsx\nimport { Inter } from 'next/font/google';\n\nconst inter = Inter({ subsets: ['latin'] });\n\nexport default function RootLayout({ children }: { children: React.ReactNode }) {\n  return (\n    <html lang=\"en\" className={inter.className}>\n      <body>{children}</body>\n    </html>\n  );\n}\n```\n\nAt build time, Next.js downloads the font, self-hosts the file with your app's other static assets, and generates the right `@font-face` CSS with a fallback that closely matches the target font's metrics — so there's no flash of an unstyled/mismatched fallback font while the real one loads, and no third-party network request to a font CDN at runtime.",
+          "keyConceptsCovered": [
+            "next/font (self-hosted, no layout shift)"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "next/script",
+          "explanation": "Third-party scripts (analytics, chat widgets, ad tags) are notorious for silently hurting page performance if loaded naively with a plain `<script>` tag in the wrong place. `next/script` gives you explicit control over **when** a script loads relative to the rest of the page, via a `strategy` prop:\n\n```tsx\nimport Script from 'next/script';\n\nexport default function Layout({ children }: { children: React.ReactNode }) {\n  return (\n    <>\n      {children}\n      <Script src=\"https://example.com/analytics.js\" strategy=\"afterInteractive\" />\n    </>\n  );\n}\n```\n\nCommon strategies: `beforeInteractive` (loads before any page hydration — reserved for scripts the page truly can't function without), `afterInteractive` (default-ish choice for most third-party tags — loads soon after the page becomes interactive), and `lazyOnload` (loads during idle time, for low-priority scripts like chat widgets). Choosing the right strategy is how you keep a third-party script from blocking or slowing down your own page's interactivity.\n\nOne scoping note carried over from Module 5: **OG/social preview images are handled by the Metadata API's file conventions (`opengraph-image.tsx`, etc.), not by anything in this module** — if you're looking for how to control what image shows up when your page is shared on social media, that's Module 5's territory, not `next/image`.",
+          "keyConceptsCovered": [
+            "next/script (load-strategy control)",
+            "OG/social images live under Metadata (Module 5), not here"
+          ],
+          "pitfallsCovered": []
+        }
+      ],
+      "milestoneNote": null
+    },
+    {
+      "name": "Build & Performance Tooling",
+      "objective": "Understand what's making the dev/build loop fast by default and what's opt-in.",
+      "sections": [
+        {
+          "subtopic": "Turbopack as the default bundler",
+          "explanation": "You already know from Module 1 that Turbopack is the default bundler for both `next dev` and `next build` in v16 — this module is where that fact gets substance. Turbopack is Vercel's Rust-based successor to Webpack, and the claimed performance gains are significant enough to matter in daily work: roughly **~87% faster cold dev server starts and ~2.5x faster production builds** compared to Webpack, with **16.2 adding a further ~400% faster dev startup** on top of that. In practice, this shows up as: `npm run dev` getting you to a working local server noticeably faster, and `next build` for CI/deployment finishing in a fraction of the time a large Webpack-based build would take. You don't configure any of this — it's simply what runs by default when you use the standard `next dev`/`next build` commands in this version.",
+          "keyConceptsCovered": [
+            "Turbopack default for dev+build in v16 (~87% faster cold dev start, ~2.5x faster prod builds vs. Webpack; 16.2 adds ~400% faster dev startup)"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "React Compiler: stable but off by default",
+          "explanation": "The React Compiler automatically memoizes components and values — the kind of optimization you'd otherwise hand-write with `useMemo`, `useCallback`, and `React.memo` scattered through your code to prevent unnecessary re-renders. It analyzes your component code and inserts the equivalent memoization automatically, so you can write plain, un-optimized-looking React and still get the re-render behavior you'd have hand-tuned for.\n\nHere's the pitfall to internalize clearly: **the React Compiler is stable as a configuration option, but it is off by default** in both 16.2 and 16.3(-preview). \"Stable\" here describes the *feature's* maturity, not its default-on status — don't conflate the two. If you want it, you opt in explicitly:\n\n```ts\n// next.config.ts\nimport type { NextConfig } from 'next';\n\nconst nextConfig: NextConfig = {\n  reactCompiler: true,\n};\n\nexport default nextConfig;\n```\n\n...plus installing `babel-plugin-react-compiler` as the mechanism that actually performs the transformation. The tradeoff worth knowing: turning it on adds to your build/dev compile time (the compiler has to analyze your code), in exchange for not having to hand-manage memoization yourself. For a beginner project, it's fine to leave it off and focus on correctly structuring Server/Client boundaries (Module 4) first — the compiler is an optimization layer on top of code that already works, not a substitute for understanding when re-renders happen.",
+          "keyConceptsCovered": [
+            "React Compiler is stable-as-a-config-option but off by default — opt in via reactCompiler: true + babel-plugin-react-compiler",
+            "React Compiler auto-memoizes, replacing manual useMemo/useCallback/React.memo, at the cost of build/dev compile time"
+          ],
+          "pitfallsCovered": [
+            "Expecting React Compiler on by default — it's stable-as-an-option but off by default in 16.2/16.3"
+          ]
+        },
+        {
+          "subtopic": "New in 16.2: developer-experience additions",
+          "explanation": "A few smaller but genuinely useful additions shipped in 16.2, worth knowing exist even at a beginner level since you'll likely encounter their output while developing: **Server Function Logging** (clearer server-side logs when a Server Action or Route Handler runs, making it easier to see what actually executed during a request), a **redesigned 500 error page** (a clearer default error page for unhandled server errors during development), and the **Hydration Diff Indicator** — a dev-time tool that, when a hydration mismatch occurs (server-rendered HTML doesn't match what the client tries to render on hydration, a classically confusing class of bug), shows you a visual diff of exactly where the mismatch is instead of a generic console warning you have to hunt down yourself.",
+          "keyConceptsCovered": [
+            "New in 16.2: Server Function Logging, redesigned 500 page, Hydration Diff Indicator"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "16.3 preview: forward-looking mention only",
+          "explanation": "As of this course's research date, **Next.js 16.3 exists only as a preview release** (installed via `npm install next@preview`), with a stable release described as \"expected in the coming weeks\" but not yet shipped. Its headline focus areas — **Instant Navigations**, deeper AI/agent tooling, and Turbopack persistent-cache work — are mentioned here only so you recognize the names if you see them referenced; none of it is something to install, configure, or build against right now. Building against a preview channel means building against something that can still change before stable release — recognize `next@preview` in a blog post or package.json and know to treat its contents as forward-looking, not as instructions to follow today.",
+          "keyConceptsCovered": [
+            "16.3 (preview-only) focused on Instant Navigations, deeper AI/agent tooling, Turbopack persistent-cache work — mention only, not taught"
+          ],
+          "pitfallsCovered": []
+        }
+      ],
+      "milestoneNote": null
+    },
+    {
+      "name": "Auth & Authorization",
+      "objective": "Add authenticated, authorized routes using a centralized server-side pattern — closing the loop opened by the Module 3 Proxy warning.",
+      "sections": [
+        {
+          "subtopic": "No built-in auth; the cookie/session pattern",
+          "explanation": "Next.js has **no built-in authentication system** — there's no framework-provided \"login\" primitive the way there's a framework-provided router. What it does provide is the server-side plumbing auth is typically built on: **`cookies()` and `headers()`**, both functions you call to read the incoming request's cookies (where a session token typically lives) or headers, from inside a Server Component, Server Action, or Route Handler.\n\nA hard breaking-change point to know: **`cookies()` and `headers()` are fully async in current Next.js — sync access was removed entirely.** Older code (and older tutorials) call them as plain synchronous functions returning a usable object directly; that no longer works.\n\n```tsx\n// Current, correct usage\nimport { cookies } from 'next/headers';\n\nexport default async function ProfilePage() {\n  const cookieStore = await cookies();\n  const sessionToken = cookieStore.get('session')?.value;\n  // ... use sessionToken to look up the current user\n}\n```\n\nThis is the same category of pitfall as `params`/`searchParams` back in Module 2 — anything that reads request-scoped data in the App Router's current form tends to be async, and it's a safe habit to `await` these calls reflexively and double-check the type rather than assume synchronous access still works.",
+          "keyConceptsCovered": [
+            "No built-in auth; standard pattern is cookie/session-based, read via cookies()/headers() (both fully async in v16, sync access removed)"
+          ],
+          "pitfallsCovered": [
+            "Forgetting cookies()/headers() are async — sync access was fully removed in v16"
+          ]
+        },
+        {
+          "subtopic": "The Data Access Layer (DAL) pattern",
+          "explanation": "The recommended pattern for real apps is **not** to scatter `if (user.role !== 'admin')` checks across individual pages, Server Actions, and Route Handlers wherever they happen to be needed. That approach means every new protected route is only as safe as whoever remembered to add the check there — an easy way to end up with one forgotten route that leaks data.\n\nInstead, the recommended pattern is a **server-only Data Access Layer (DAL)**: a centralized module that owns all the data-access functions your app uses, and performs authorization checks *inside* those functions, returning only minimal, already-safe data transfer objects (DTOs) — never a raw database record — to whatever called it.\n\n```ts\n// lib/dal.ts — server-only, imported by pages/actions/route handlers, never by client code\nimport 'server-only';\nimport { cookies } from 'next/headers';\nimport { db } from '@/lib/db';\n\nasync function getSession() {\n  const cookieStore = await cookies();\n  const token = cookieStore.get('session')?.value;\n  if (!token) return null;\n  return db.session.findUnique({ where: { token } });\n}\n\nexport async function getCurrentUserProfile() {\n  const session = await getSession();\n  if (!session) throw new Error('Unauthorized');\n  const user = await db.user.findUnique({ where: { id: session.userId } });\n  if (!user) throw new Error('Unauthorized');\n  // return only what the UI needs — never the raw user record\n  return { id: user.id, name: user.name, avatarUrl: user.avatarUrl };\n}\n\nexport async function requireAdmin() {\n  const session = await getSession();\n  const user = session && (await db.user.findUnique({ where: { id: session.userId } }));\n  if (!user || user.role !== 'admin') throw new Error('Forbidden');\n  return user;\n}\n```\n\nEvery page, Server Action, or Route Handler that needs user or session data calls into the DAL rather than querying the database directly and rolling its own check. This gives you exactly one place to get the authorization logic right, one place to audit, and it directly follows the Module 4 lesson about not leaking sensitive data through props — the DAL is precisely the boundary that shapes a full database record down into a minimal DTO before it ever reaches a component that might pass it to the client.",
+          "keyConceptsCovered": [
+            "Recommended: a server-only Data Access Layer (DAL) centralizing checks and returning minimal DTOs, rather than scattering role checks"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "Closing the Proxy loop",
+          "explanation": "This is the module Module 3 told you was coming. Recall the warning: Proxy operates on a matcher pattern against the raw URL, before your actual routing/rendering logic runs, and two real CVEs (CVE-2026-44573, CVE-2026-44574) demonstrated that matcher patterns can be bypassed by request shapes the pattern didn't anticipate. **The full resolution to that warning is everything in this module**: real authorization lives inside Server Components (checking session state before rendering protected content), Server Actions (checking session state before performing a mutation), and Route Handlers (checking session state before returning data) — ideally all three calling into the same DAL rather than duplicating checks ad hoc.\n\nProxy still has a legitimate, narrow role in an auth *flow*: redirecting an unauthenticated visitor toward a login page is a fine convenience, because it's just a UX nicety, not the actual security boundary. The security boundary is downstream, inside the DAL-backed check that runs regardless of how the request arrived — including requests that never went anywhere near your Proxy matcher's assumptions about what a normal navigation looks like. If a protected Server Component doesn't call `requireAdmin()` (or equivalent) itself, no amount of Proxy-level redirecting protects it — that page is only as safe as the check written inside it.",
+          "keyConceptsCovered": [],
+          "pitfallsCovered": [
+            "Treating Proxy as an auth boundary — full resolution: real checks belong in Server Components/Server Actions/Route Handlers behind a DAL, never solely in Proxy"
+          ]
+        },
+        {
+          "subtopic": "Common libraries",
+          "explanation": "Building the full session/cookie/DAL machinery by hand, as sketched above, is a reasonable learning exercise but not what most real projects do day to day. The common choices in the ecosystem: **NextAuth (also branded Auth.js)** — a full-featured auth library with many provider integrations (OAuth, email/password, etc.) built specifically with the App Router's Server Component model in mind; **Clerk** — a hosted auth service with a polished drop-in UI and session management, popular for projects that want to skip building login/signup screens entirely. Both still fit into the DAL pattern above — you'd typically have your DAL call into whichever library's session-reading API instead of your own hand-rolled `getSession()`, keeping the same centralized-check discipline regardless of which library issues the session.",
+          "keyConceptsCovered": [
+            "Common libraries: Auth.js/NextAuth, Clerk"
+          ],
+          "pitfallsCovered": []
+        }
+      ],
+      "milestoneNote": "MILESTONE C: You should now be able to add a protected route that reads session state in a Server Component (using cookies()/headers(), correctly awaited) and mutates it via a Server Action, gated through a DAL — with zero reliance on Proxy for any actual security decision. Practically: build one protected page (e.g., a profile or admin page) whose data-access goes through DAL functions like getCurrentUserProfile()/requireAdmin() above, not ad hoc checks scattered in the page itself. If Proxy is used at all in this build, it should only be redirecting unauthenticated users toward login as a UX convenience — never the thing actually deciding who's allowed to see or change data."
+    },
+    {
+      "name": "Deployment",
+      "objective": "Ship the app to production, on Vercel or elsewhere.",
+      "sections": [
+        {
+          "subtopic": "Vercel: the zero-config path",
+          "explanation": "Deploying to Vercel is the path of least resistance because Vercel is the company that builds Next.js — the platform and framework are co-designed, and deploying typically means connecting a Git repository and pushing, with no deployment configuration to write. Everything this course has covered works out of the box on Vercel with no extra setup: ISR/caching behavior, Partial Prerendering, `next/image` optimization (actual image resizing happens on Vercel's infrastructure, not just client-side), and Edge-deployed Proxy functions. This tight integration is the main practical argument for choosing Vercel specifically, beyond it simply being convenient.",
+          "keyConceptsCovered": [
+            "Vercel: zero-config, tightest integration (ISR/PPR/Image Optimization/Edge all work out of the box)"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "Self-hosting via output: 'standalone'",
+          "explanation": "For teams that need or want to run their own infrastructure — Docker, Kubernetes, an existing cloud environment — Next.js supports self-hosting via the `output: 'standalone'` config option:\n\n```ts\n// next.config.ts\nimport type { NextConfig } from 'next';\n\nconst nextConfig: NextConfig = {\n  output: 'standalone',\n};\n\nexport default nextConfig;\n```\n\nThis produces a minimal, self-contained Node.js server bundle — it traces exactly which `node_modules` files your app actually needs and copies only those, rather than requiring the full `node_modules` folder to run in production. That minimal bundle is what you'd put in a Docker image. Self-hosting this way gives you full operational control (your own scaling rules, your own monitoring, no vendor dependency) at the cost of more ops overhead — you're now responsible for the things Vercel would otherwise handle: scaling, edge distribution, zero-downtime deploys, and so on.",
+          "keyConceptsCovered": [
+            "Self-hosting: output: 'standalone' for a minimal Node bundle (Docker/Kubernetes), full control but more ops overhead"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "The Deployment Adapter API",
+          "explanation": "New in 16.2, the **Deployment Adapter API** is a stable, versioned contract that lets third-party hosting platforms — Cloudflare, Netlify, AWS, others — build proper, first-class adapters for running Next.js, rather than each platform reverse-engineering undocumented internals to make Next.js work on their infrastructure. The stated goal is reducing the class of bug where an app \"works on Vercel, breaks elsewhere\" because some Next.js feature relied on Vercel-specific behavior a non-Vercel host didn't replicate correctly.\n\nWorth an honest caveat here, straight from the underlying research: **the API itself is stable, but adapter maturity varies by platform** — some third-party adapters will be further along than others in supporting the full feature set (PPR, Image Optimization, Edge runtime behavior, etc.). If you're deploying to a non-Vercel platform, it's worth checking that specific platform's adapter documentation for what's currently supported rather than assuming full parity with Vercel by default.",
+          "keyConceptsCovered": [
+            "Deployment Adapter API (new 16.2): a stable, versioned contract for third-party platforms (Cloudflare, Netlify, AWS) to build proper adapters, reducing \"works on Vercel, breaks elsewhere\" bugs",
+            "Adapter maturity varies by platform"
+          ],
+          "pitfallsCovered": []
+        }
+      ],
+      "milestoneNote": null
+    },
+    {
+      "name": "Error Handling, Loading States & Testing",
+      "objective": "Design good loading/error UX per route segment and know where testing fits (without building a full test suite here).",
+      "sections": [
+        {
+          "subtopic": "loading.tsx: designing good skeletons and nested boundaries",
+          "explanation": "Module 2 introduced `loading.tsx` as a filename Next.js recognizes and automatically wraps around a segment's `page.tsx` in a `<Suspense>` boundary. This module is where the *design* of that file matters: a good `loading.tsx` is a **skeleton** that visually approximates the shape of the real content — gray boxes roughly where the real text/images will appear — rather than a generic spinner that gives the user no sense of the page's structure while they wait.\n\n```tsx\n// app/dashboard/loading.tsx\nexport default function DashboardLoading() {\n  return (\n    <div>\n      <div className=\"h-8 w-48 animate-pulse rounded bg-gray-200\" />\n      <div className=\"mt-4 h-32 w-full animate-pulse rounded bg-gray-200\" />\n    </div>\n  );\n}\n```\n\n**Nested loading boundaries** are the other design lever worth knowing: because every folder can have its own `loading.tsx`, a deeply nested route can show a coarse top-level skeleton immediately, and then a more specific, smaller skeleton for just the slower inner segment, rather than one all-or-nothing loading state for the whole page. This mirrors the manual `<Suspense>` boundaries from Module 6 — `loading.tsx` is the file-convention shortcut for the exact same mechanism, scoped to a whole route segment instead of a hand-placed boundary around one specific slow component.",
+          "keyConceptsCovered": [
+            "loading.tsx auto-wraps a segment in <Suspense>; designing good skeletons, nested loading boundaries"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "error.tsx as a Client Component boundary, reset patterns, global-error.tsx",
+          "explanation": "`error.tsx` catches errors thrown during rendering anywhere in its segment and renders in place of the crashed content — but there's one hard requirement worth calling out explicitly: **`error.tsx` must be a Client Component.** This is because React's error boundary mechanism (which `error.tsx` is built on) is a client-side runtime feature — there's no server equivalent for catching a rendering error mid-stream the way a client error boundary can.\n\n```tsx\n// app/dashboard/error.tsx\n\"use client\";\n\nexport default function DashboardError({\n  error,\n  reset,\n}: {\n  error: Error & { digest?: string };\n  reset: () => void;\n}) {\n  return (\n    <div>\n      <h2>Something went wrong loading the dashboard.</h2>\n      <button onClick={() => reset()}>Try again</button>\n    </div>\n  );\n}\n```\n\nThe `reset` function attempts to re-render the segment that errored, without a full page reload — the right UX for a transient failure (a flaky network request) where retrying might just work. A design consideration worth being deliberate about: **what's safe to show the user vs. what should only be logged server-side.** `error.message` from an unhandled exception can contain internal details (a database error message, an internal file path, a stack fragment) you don't want surfacing in the UI — a common, safer pattern is to show a generic user-facing message in `error.tsx` while separately logging the full `error` object (and its `digest` field, which Next.js provides specifically to let you correlate the client-visible error with the full server-side log entry) somewhere only you can see.\n\n`global-error.tsx`, placed at the root of `app/`, is the one exception to the segment-scoped model — it catches errors that occur in the **root layout itself**, which a segment-level `error.tsx` can't do (a segment's `error.tsx` can't catch errors in layouts above it). Because it replaces the root layout entirely when it activates, `global-error.tsx` must render its own `<html>` and `<body>` tags — it has no parent layout left to rely on.",
+          "keyConceptsCovered": [
+            "error.tsx is a Client Component boundary per segment; reset patterns, what's safe to show vs. log server-side",
+            "global-error.tsx for root-layout errors"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "not-found.tsx and the imperative notFound()",
+          "explanation": "`not-found.tsx` renders automatically when a URL simply doesn't match any route — the ordinary 404 case. The other way it activates is **imperatively**, by calling the `notFound()` function from inside a Server Component when the *route matched* but the specific resource requested genuinely doesn't exist:\n\n```tsx\n// app/blog/[slug]/page.tsx\nimport { notFound } from 'next/navigation';\n\nexport default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {\n  const { slug } = await params;\n  const post = await getPost(slug);\n  if (!post) {\n    notFound(); // route matched (/blog/[slug]), but this specific slug has no post\n  }\n  return <article>{post.body}</article>;\n}\n```\n\nThe distinction worth internalizing: a URL like `/blog` when there's no `page.tsx` for it is an ordinary routing miss, handled automatically. A URL like `/blog/this-post-does-not-exist` matches the `[slug]` pattern perfectly fine as far as routing is concerned — the route exists, the *data* doesn't — and that's exactly the case where your own code needs to call `notFound()` explicitly, because Next.js has no way to know the post doesn't exist until your code checks.",
+          "keyConceptsCovered": [
+            "not-found.tsx + imperative notFound(); when to call it vs. letting a route simply not match"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "Testing: Vitest/Jest/Playwright as community-standard",
+          "explanation": "Next.js **does not bundle a test runner** — there's no framework-provided `next test` command. The community-standard tools you'll see used with Next.js are **Vitest or Jest** for unit/component-level tests, and **Playwright** for end-to-end browser tests that drive a real running instance of your app. None of these are Next.js-specific technology — they're general JavaScript/TypeScript testing tools that happen to be the common choice for Next.js projects specifically, and setting any of them up is largely the same process as setting them up for any other TypeScript project, with a small amount of Next.js-specific config for things like resolving the `app/` alias paths or mocking Server Components in unit tests. Per this course's beginner, build-oriented focus, testing is deliberately scoped light here — know these are the tools you'd reach for, but building a full test suite is its own separate undertaking beyond what this curriculum covers.",
+          "keyConceptsCovered": [
+            "Next.js doesn't bundle a test runner — Vitest/Jest + Playwright are community-standard"
+          ],
+          "pitfallsCovered": []
+        }
+      ],
+      "milestoneNote": null
+    },
+    {
+      "name": "Pages Router: Legacy Recognition",
+      "objective": "Recognize Pages Router code in older tutorials/codebases without building new work in it.",
+      "sections": [
+        {
+          "subtopic": "The pages/ directory and its data-fetching functions",
+          "explanation": "Before the App Router (pre-Next.js-13), the entire framework was built around a `pages/` directory, where each file directly corresponded to a route — `pages/about.tsx` served `/about`, no separate `page.tsx`-inside-a-folder convention needed. Data fetching used a completely different set of exported functions, per-page, instead of just `await`-ing inside the component:\n\n- **`getStaticProps`** — runs at build time, produces static HTML with the returned props baked in (roughly the Pages Router equivalent of what a cached Server Component fetch gives you today).\n- **`getServerSideProps`** — runs on every request, server-side, before the page renders (roughly the Pages Router equivalent of an uncached `fetch()` in a Server Component today).\n- **`getStaticPaths`** — used alongside `getStaticProps` on a dynamic route (`pages/blog/[slug].tsx`) to declare, ahead of time, which specific paths should be statically generated.\n\n```tsx\n// pages/blog/[slug].tsx — Pages Router pattern, shown for recognition only\nexport async function getStaticPaths() {\n  const posts = await getAllPostSlugs();\n  return { paths: posts.map((slug) => ({ params: { slug } })), fallback: false };\n}\n\nexport async function getStaticProps({ params }: { params: { slug: string } }) {\n  const post = await getPost(params.slug);\n  return { props: { post } };\n}\n\nexport default function BlogPost({ post }: { post: Post }) {\n  return <article>{post.body}</article>;\n}\n```\n\nYou don't need to be able to write this fluently — the goal is recognition: if you see `getStaticProps`/`getServerSideProps`/`getStaticPaths` in a tutorial or an existing codebase, you now know that's the Pages Router's data model, not something missing or broken in the App Router you've been learning.",
+          "keyConceptsCovered": [
+            "pages/ directory, getStaticProps/getServerSideProps/getStaticPaths"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "Default-export API routes and the all-Client-Components mental model",
+          "explanation": "The Pages Router's API routes lived under `pages/api/` and used a single **default-exported** handler function that received `(req, res)` and had to branch internally on `req.method` — the pattern Module 7's Route Handlers explicitly replaced with separate named exports per verb:\n\n```ts\n// pages/api/posts.ts — Pages Router pattern, shown for recognition only\nexport default function handler(req: NextApiRequest, res: NextApiResponse) {\n  if (req.method === 'GET') {\n    // ...\n  } else if (req.method === 'POST') {\n    // ...\n  }\n}\n```\n\nMore fundamentally, **the Pages Router has no Server/Client Component distinction at all** — every component in `pages/` is, conceptually, a client component in the plain-React sense (Module 4's whole framing simply didn't exist yet). Data fetching happened through the special exported functions above, not through directly `await`-ing inside a component, precisely because a Pages Router component couldn't be an `async` Server Component the way an App Router one can.",
+          "keyConceptsCovered": [
+            "default-export API routes",
+            "Client-Components-only mental model (no Server/Client distinction existed)"
+          ],
+          "pitfallsCovered": []
+        },
+        {
+          "subtopic": "Why older tutorial content can mislead",
+          "explanation": "This closes the loop on a pitfall that's actually been implicit through this entire course rather than confined to one module: **learning from Pages-Router-era content without realizing it.** A huge amount of Next.js material online — blog posts, Stack Overflow answers, older courses — was written for the Pages Router, and its syntax and mental model differ enough from the App Router (plus v16's caching, Proxy, and Metadata changes on top of that) to cause real, sometimes hard-to-diagnose confusion if you don't recognize which paradigm you're looking at. Concretely: `next/head` instead of the Metadata API (Module 5), `getServerSideProps` instead of an `async` Server Component `await` (this module and Module 6), a default-exported `pages/api` handler instead of named Route Handler exports (Module 7 and this module), `middleware.ts` instead of `proxy.ts` (Module 3), and no Server/Client Component distinction at all (Module 4) are the fastest tells that content is teaching the Pages Router.\n\nThe practical takeaway for a beginner: **Pages Router is in maintenance mode** — you should recognize it when you encounter it in existing/older material, but you should not start any new project in it. Everything you've built through this course has been the App Router, and that remains the right default for new work; this module exists so a Pages Router codebase or tutorial doesn't blindside you, not to teach you to build in it.",
+          "keyConceptsCovered": [
+            "Maintenance mode — don't build new projects here, but recognize it for older material/existing codebases"
+          ],
+          "pitfallsCovered": [
+            "Learning from Pages-Router-era content without realizing it — syntax/mental model differ enough from the App Router + v16 caching/proxy/metadata changes to cause real confusion"
+          ]
+        }
+      ],
+      "milestoneNote": "MILESTONE D (CAPSTONE): You should now be able to take an app from Module 7's CRUD feature through styling (Module 8), performance awareness (Module 9), auth (Module 10), and deployment (Module 11) — a complete, deployed, authenticated, styled application — and separately, look at any Next.js code sample and tell App Router code apart from Pages Router code on sight within a few seconds (page.tsx-in-a-folder vs. pages/name.tsx; async component + fetch vs. getServerSideProps/getStaticProps; named GET/POST exports vs. a default (req,res) handler; proxy.ts vs. middleware.ts; Metadata API vs. next/head). That combination — a working shipped app, plus the ability to correctly place any Next.js code you encounter into the right paradigm — is what this curriculum was building toward.",
+      "vizData": {
+        "type": "comparisonTable",
+        "data": {
+          "description": "App Router vs. Pages Router — the fast recognition table for Module 13.",
+          "columns": ["Dimension", "App Router (this course, current default)", "Pages Router (legacy, maintenance mode)"],
+          "rows": [
+            ["Directory / route file", "app/ folder + page.tsx inside it", "pages/ folder, file itself is the route (pages/about.tsx)"],
+            ["Data fetching", "async Server Component, direct await fetch()", "getStaticProps / getServerSideProps / getStaticPaths exports"],
+            ["API endpoints", "app/api/.../route.ts, named export per verb (GET, POST...)", "pages/api/...ts, single default export, branch on req.method"],
+            ["Rendering model", "Server Components by default, \"use client\" opts into client rendering", "Everything is effectively a client component; no Server/Client distinction"],
+            ["Metadata / SEO", "metadata export / generateMetadata()", "next/head component"],
+            ["Request-level rewriting", "proxy.ts, function proxy", "middleware.ts, function middleware"],
+            ["Mutations", "Server Actions (\"use server\") and/or Route Handlers", "Client-side fetch to a pages/api route; no Server Actions concept"],
+            ["Recommended for new projects", "Yes — the current default paradigm", "No — recognize existing code only, don't build new work here"]
+          ]
+        }
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Next.js Blog",
+      "url": "https://nextjs.org/blog",
+      "note": "Official release announcements, including Next.js 16 and 16.2 posts; used throughout for version-specific facts (Turbopack defaults, cacheComponents, Deployment Adapter API, Hydration Diff Indicator)."
+    },
+    {
+      "title": "Next.js Blog — Next.js 16",
+      "url": "https://nextjs.org/blog/next-16"
+    },
+    {
+      "title": "Next.js Blog — Next.js 16.2",
+      "url": "https://nextjs.org/blog/next-16-2"
+    },
+    {
+      "title": "Next.js Blog — 16.3 Instant Navigations (preview)",
+      "url": "https://nextjs.org/blog/next-16-3-instant-navigations",
+      "note": "Forward-looking mention only per research brief; not taught as stable content."
+    },
+    {
+      "title": "Next.js Blog — 16.3 AI Improvements (preview)",
+      "url": "https://nextjs.org/blog/next-16-3-ai-improvements",
+      "note": "Forward-looking mention only."
+    },
+    {
+      "title": "Next.js Blog — 16.3 Turbopack (preview)",
+      "url": "https://nextjs.org/blog/next-16-3-turbopack",
+      "note": "Forward-looking mention only."
+    },
+    {
+      "title": "Next.js Docs — Server and Client Components",
+      "url": "https://nextjs.org/docs/app/getting-started/server-and-client-components",
+      "note": "Primary source for Module 4."
+    },
+    {
+      "title": "Next.js Docs — Server Actions guide",
+      "url": "https://nextjs.org/docs/app/guides/server-actions",
+      "note": "Primary source for Module 7."
+    },
+    {
+      "title": "Next.js Docs — Forms guide",
+      "url": "https://nextjs.org/docs/app/guides/forms"
+    },
+    {
+      "title": "Next.js Docs — Proxy file convention",
+      "url": "https://nextjs.org/docs/app/api-reference/file-conventions/proxy",
+      "note": "Primary source for Module 3."
+    },
+    {
+      "title": "Next.js Docs — Proxy getting started",
+      "url": "https://nextjs.org/docs/app/getting-started/proxy"
+    },
+    {
+      "title": "Next.js Docs — Middleware to Proxy rename",
+      "url": "https://nextjs.org/docs/messages/middleware-to-proxy",
+      "note": "Source for the middleware.ts → proxy.ts rename covered in Module 3."
+    },
+    {
+      "title": "Next.js Docs — Upgrading to v16",
+      "url": "https://nextjs.org/docs/app/guides/upgrading/version-16"
+    },
+    {
+      "title": "Next.js Docs — PPR platform guide",
+      "url": "https://nextjs.org/docs/app/guides/ppr-platform-guide",
+      "note": "Primary source for Module 6's Partial Prerendering coverage."
+    },
+    {
+      "title": "Next.js Docs — reactCompiler config",
+      "url": "https://nextjs.org/docs/app/api-reference/config/next-config-js/reactCompiler",
+      "note": "Primary source for Module 9's React Compiler coverage."
+    },
+    {
+      "title": "Vercel — Next.js on Vercel",
+      "url": "https://vercel.com/docs/frameworks/full-stack/nextjs",
+      "note": "Primary source for Module 11."
+    },
+    {
+      "title": "Vercel — Common App Router mistakes and how to fix them",
+      "url": "https://vercel.com/blog/common-mistakes-with-the-next-js-app-router-and-how-to-fix-them",
+      "note": "Cross-cutting source for pitfalls across Modules 2, 4, 5, 7."
+    },
+    {
+      "title": "Vercel — May 2026 security release",
+      "url": "https://vercel.com/changelog/next-js-may-2026-security-release",
+      "note": "Primary source for the Proxy/auth CVEs covered in Modules 3 and 10 (CVE-2026-44573, CVE-2026-44574)."
+    },
+    {
+      "title": "vercel/next.js GitHub Releases",
+      "url": "https://github.com/vercel/next.js/releases"
+    },
+    {
+      "title": "GitHub Discussion #84842 — middleware rename",
+      "url": "https://github.com/vercel/next.js/discussions/84842",
+      "note": "Source for Vercel's stated rationale behind the middleware → proxy rename (Module 3)."
+    },
+    {
+      "title": "GitHub Discussion #95130 — 16.3 preview feedback",
+      "url": "https://github.com/vercel/next.js/discussions/95130"
+    },
+    {
+      "title": "CVE-2026-44573 — GitLab Advisories",
+      "url": "https://advisories.gitlab.com/npm/next/CVE-2026-44573/"
+    },
+    {
+      "title": "CVE-2026-44574 — GitLab Advisories",
+      "url": "https://advisories.gitlab.com/npm/next/CVE-2026-44574/"
+    },
+    {
+      "title": "CVE-2026-44573 — Miggo",
+      "url": "https://www.miggo.io/vulnerability-database/cve/CVE-2026-44573"
+    },
+    {
+      "title": "CVE-2026-44573 — NVD",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-44573"
+    },
+    {
+      "title": "Next.js Security Meltdown — byteiota",
+      "url": "https://byteiota.com/next-js-security-meltdown-13-cves-middleware-bypass-ssrf/"
+    },
+    {
+      "title": "16.2.6 fixes writeup — Essa Mamdani",
+      "url": "https://essamamdani.com/blog/nextjs-16-2-6-critical-security-fixes-ai-devtools-mcp",
+      "note": "Source for the 16.2.5-incomplete-under-Turbopack detail covered in Module 3."
+    },
+    {
+      "title": "App Router in 2026 — DEV (ottoaria)",
+      "url": "https://dev.to/ottoaria/nextjs-app-router-in-2026-the-complete-guide-for-full-stack-developers-5bjl"
+    },
+    {
+      "title": "App Router vs Pages Router — Grapes Tech",
+      "url": "https://www.grapestechsolutions.com/blog/next-js-routing-app-router-vs-page-router/",
+      "note": "Cross-cutting source for Module 13's comparison table."
+    },
+    {
+      "title": "App Router vs Pages Router for SaaS — BuildMVPFast",
+      "url": "https://www.buildmvpfast.com/blog/nextjs-app-router-vs-pages-router-saas-2026"
+    },
+    {
+      "title": "Next.js 16 comprehensive guide — Nandann",
+      "url": "https://www.nandann.com/blog/nextjs-16-release-comprehensive-guide"
+    },
+    {
+      "title": "Next.js 16.2 guide — Nandann",
+      "url": "https://www.nandann.com/blog/nextjs-16-2-complete-guide"
+    },
+    {
+      "title": "16 migration guide — Pockit",
+      "url": "https://pockit.tools/blog/nextjs-16-migration-guide-turbopack-proxy-cache-components/",
+      "note": "Cross-cutting source for Modules 3, 6, 9."
+    },
+    {
+      "title": "Turbopack/PPR/cache model — jsmanifest",
+      "url": "https://jsmanifest.com/nextjs-16-turbopack-partial-prerendering-cache",
+      "note": "Primary third-party source for Module 6's caching model."
+    },
+    {
+      "title": "PPR in production — Sam Cheek",
+      "url": "https://samcheek.com/blog/nextjs-partial-prerendering-production-2026"
+    },
+    {
+      "title": "Why Next.js is moving from Middleware — Build with Matija",
+      "url": "https://www.buildwithmatija.com/blog/nextjs16-middleware-change",
+      "note": "Source for Module 3's rename rationale."
+    },
+    {
+      "title": "Server Actions complete guide — MakerKit",
+      "url": "https://makerkit.dev/blog/tutorials/nextjs-server-actions",
+      "note": "Primary third-party source for Module 7."
+    },
+    {
+      "title": "Server Actions in production — Digital Applied",
+      "url": "https://www.digitalapplied.com/blog/nextjs-server-actions-production-patterns-2026-guide"
+    },
+    {
+      "title": "Server Actions vs Route Handlers — Medium (sayhitosumit)",
+      "url": "https://sayhitosumit.medium.com/stop-writing-api-routes-next-js-server-actions-for-mutations-31cfd55cb3fa",
+      "note": "Primary source for Module 7's Server Actions vs Route Handlers comparison table."
+    },
+    {
+      "title": "The complete guide to deploying Next.js apps in 2026 — DEV",
+      "url": "https://dev.to/zahg_81752b307f5df5d56035/the-complete-guide-to-deploying-nextjs-apps-in-2026-vercel-self-hosted-and-everything-in-between-48ia",
+      "note": "Primary source for Module 11."
+    },
+    {
+      "title": "Self-hosting Next.js — Flightcontrol",
+      "url": "https://www.flightcontrol.dev/blog/secret-knowledge-to-self-host-nextjs"
+    },
+    {
+      "title": "Best Next.js hosting 2026 — MakerKit",
+      "url": "https://makerkit.dev/blog/tutorials/best-hosting-nextjs"
+    },
+    {
+      "title": "29 beginner mistakes — DEV (azeem_shafeeq)",
+      "url": "https://dev.to/azeem_shafeeq/all-29-nextjs-mistakes-beginners-make-56nj",
+      "note": "Cross-cutting source for pitfalls throughout the curriculum."
+    },
+    {
+      "title": "React Compiler stable guide — Digital Applied",
+      "url": "https://www.digitalapplied.com/blog/react-compiler-stable-nextjs-16-automatic-memoization",
+      "note": "Primary source for Module 9's React Compiler coverage."
+    },
+    {
+      "title": "React Compiler v1.0 — Econify",
+      "url": "https://www.econify.com/news/the-loop-react-compiler-v1-0-automatic-memoization-goes-stable"
+    },
+    {
+      "title": "16.3 preview — Digital Applied",
+      "url": "https://www.digitalapplied.com/blog/nextjs-16-3-agent-native-turbopack-persistent-cache-2026",
+      "note": "Forward-looking mention only, referenced in Module 9."
+    },
+    {
+      "title": "16.3 preview — Build with Matija",
+      "url": "https://www.buildwithmatija.com/blog/nextjs-16-3-preview-instant-navigations-turbopack-ai"
+    },
+    {
+      "title": "16.3 preview — Nidhin's blog",
+      "url": "https://blog.nidhin.dev/next-js-16-3-preview"
+    },
+    {
+      "title": "16.3 preview — Onix/Medium",
+      "url": "https://medium.com/@onix_react/release-next-js-16-3-fdb243541db5"
+    },
+    {
+      "title": "endoflife.date — Next.js",
+      "url": "https://endoflife.date/nextjs"
+    },
+    {
+      "title": "eosl.date — Next.js",
+      "url": "https://eosl.date/eol/product/nextjs/"
+    }
+  ]
+}
+
+</script>
+
+<script>
+(function () {
+  "use strict";
+
+  var CONTENT = JSON.parse(document.getElementById('content-data').textContent);
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function inlineMd(text) {
+    text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    text = text.replace(/(^|[^*])\*([^*]+?)\*(?!\*)/g, '$1<em>$2</em>');
+    text = text.replace(/`([^`]+?)`/g, '<code>$1</code>');
+    return text;
+  }
+
+  function inlineMdEscaped(text) {
+    return inlineMd(escapeHtml(text));
+  }
+
+  function renderMarkdown(raw) {
+    if (!raw) return '';
+    var codeBlocks = [];
+    var text = raw.replace(/```(\w*)\n([\s\S]*?)```/g, function (m, lang, code) {
+      codeBlocks.push({ lang: lang || 'text', code: code.replace(/\n$/, '') });
+      return '\n\n@@CODEBLOCK' + (codeBlocks.length - 1) + '@@\n\n';
+    });
+    var blocks = text.split(/\n\s*\n/).map(function (b) { return b.trim(); }).filter(Boolean);
+    var html = '';
+    blocks.forEach(function (block) {
+      var cbMatch = block.match(/^@@CODEBLOCK(\d+)@@$/);
+      if (cbMatch) {
+        var cb = codeBlocks[Number(cbMatch[1])];
+        html += '<pre class="code-block"><code class="lang-' + escapeHtml(cb.lang) + '">' + escapeHtml(cb.code) + '</code></pre>';
+        return;
+      }
+      var lines = block.split('\n').map(function (l) { return l.trim(); }).filter(Boolean);
+      if (lines.length && lines.every(function (l) { return /^-\s+/.test(l); })) {
+        html += '<ul>' + lines.map(function (l) {
+          return '<li>' + inlineMdEscaped(l.replace(/^-\s+/, '')) + '</li>';
+        }).join('') + '</ul>';
+      } else {
+        html += '<p>' + inlineMdEscaped(block).replace(/\n/g, '<br>') + '</p>';
+      }
+    });
+    return html;
+  }
+
+  function renderRawFallback(viz) {
+    return '<div class="viz"><p class="viz-caption">Could not render a "' +
+      escapeHtml(viz.type || 'unknown') + '" visualization from the supplied data — showing it as-is.</p>' +
+      '<pre class="code-block"><code>' + escapeHtml(JSON.stringify(viz.data, null, 2)) + '</code></pre></div>';
+  }
+
+  function renderComparisonTable(data) {
+    if (!data || !Array.isArray(data.columns) || !Array.isArray(data.rows)) {
+      return renderRawFallback({ type: 'comparisonTable', data: data });
+    }
+    var html = '<div class="viz">';
+    if (data.description) html += '<p class="viz-caption">' + inlineMdEscaped(data.description) + '</p>';
+    html += '<div class="table-wrap"><table><thead><tr>' +
+      data.columns.map(function (c) { return '<th>' + inlineMdEscaped(String(c)) + '</th>'; }).join('') +
+      '</tr></thead><tbody>';
+    data.rows.forEach(function (row) {
+      html += '<tr>' + row.map(function (cell) { return '<td>' + inlineMdEscaped(String(cell)) + '</td>'; }).join('') + '</tr>';
+    });
+    html += '</tbody></table></div></div>';
+    return html;
+  }
+
+  function wrapLabel(label, maxChars) {
+    var words = label.split(' ');
+    var lines = [];
+    var cur = '';
+    words.forEach(function (w) {
+      var test = cur ? cur + ' ' + w : w;
+      if (test.length > maxChars && cur) {
+        lines.push(cur);
+        cur = w;
+      } else {
+        cur = test;
+      }
+    });
+    if (cur) lines.push(cur);
+    return lines;
+  }
+
+  function renderDependencyGraph(data) {
+    if (!data || !Array.isArray(data.nodes) || !Array.isArray(data.edges)) {
+      return renderRawFallback({ type: 'dependencyGraph', data: data });
+    }
+    var nodes = data.nodes, edges = data.edges;
+    var incoming = {};
+    nodes.forEach(function (n) { incoming[n.id] = []; });
+    edges.forEach(function (e) { if (incoming[e.to]) incoming[e.to].push(e.from); });
+
+    var rank = {};
+    function getRank(id, seen) {
+      if (rank[id] !== undefined) return rank[id];
+      seen = seen || {};
+      if (seen[id]) return 0;
+      seen[id] = true;
+      var preds = incoming[id] || [];
+      if (!preds.length) { rank[id] = 0; return 0; }
+      var r = 0;
+      preds.forEach(function (p) { r = Math.max(r, getRank(p, seen) + 1); });
+      rank[id] = r;
+      return r;
+    }
+    nodes.forEach(function (n) { getRank(n.id); });
+
+    var rows = {};
+    nodes.forEach(function (n) {
+      var r = rank[n.id];
+      (rows[r] = rows[r] || []).push(n);
+    });
+    var rankKeys = Object.keys(rows).map(Number).sort(function (a, b) { return a - b; });
+
+    var nodeW = 210, nodeH = 58, gapX = 26, rowH = 118, padTop = 24, padSide = 24;
+    var maxCount = Math.max.apply(null, rankKeys.map(function (r) { return rows[r].length; }));
+    var rowFullWidth = maxCount * (nodeW + gapX) - gapX;
+    var svgWidth = rowFullWidth + padSide * 2;
+    var pos = {};
+    rankKeys.forEach(function (r) {
+      var list = rows[r];
+      var rowWidth = list.length * (nodeW + gapX) - gapX;
+      var startX = padSide + (rowFullWidth - rowWidth) / 2;
+      list.forEach(function (n, i) {
+        pos[n.id] = { x: startX + i * (nodeW + gapX), y: padTop + r * rowH };
+      });
+    });
+    var svgHeight = padTop + rankKeys.length * rowH + 10;
+
+    var defs = '<defs><marker id="dagArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">' +
+      '<path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/></marker></defs>';
+
+    var edgesSvg = '';
+    var edgeNotes = [];
+    edges.forEach(function (e) {
+      var from = pos[e.from], to = pos[e.to];
+      if (!from || !to) return;
+      var x1 = from.x + nodeW / 2, y1 = from.y + nodeH;
+      var x2 = to.x + nodeW / 2, y2 = to.y;
+      var midY = (y1 + y2) / 2;
+      var d = 'M' + x1 + ',' + y1 + ' C' + x1 + ',' + midY + ' ' + x2 + ',' + midY + ' ' + x2 + ',' + y2;
+      var titleTag = e.note ? ('<title>' + escapeHtml(e.note) + '</title>') : '';
+      edgesSvg += '<path class="dag-edge" d="' + d + '" marker-end="url(#dagArrow)">' + titleTag + '</path>';
+      if (e.note) edgeNotes.push({ from: e.from, to: e.to, note: e.note });
+    });
+
+    var nodesSvg = '';
+    nodes.forEach(function (n) {
+      var p = pos[n.id];
+      if (!p) return;
+      var lines = wrapLabel(n.label, 26);
+      var lineHeight = 13;
+      var textStartY = p.y + nodeH / 2 - ((lines.length - 1) * lineHeight) / 2 + 4;
+      var tspans = lines.map(function (l, i) {
+        return '<tspan x="' + (p.x + nodeW / 2) + '" y="' + (textStartY + i * lineHeight) + '">' + escapeHtml(l) + '</tspan>';
+      }).join('');
+      nodesSvg += '<g class="dag-node"><rect x="' + p.x + '" y="' + p.y + '" width="' + nodeW + '" height="' + nodeH + '" rx="6"/>' +
+        '<text text-anchor="middle" font-family="var(--font-mono)" font-size="11">' + tspans + '</text></g>';
+    });
+
+    var idToLabel = {};
+    nodes.forEach(function (n) { idToLabel[n.id] = n.label; });
+    var notesHtml = '';
+    if (edgeNotes.length) {
+      notesHtml = '<div class="dag-notes-wrap"><div class="concepts-label">Edge notes</div><ul class="dag-notes">' +
+        edgeNotes.map(function (n) {
+          return '<li><strong>' + escapeHtml(idToLabel[n.from] || n.from) + ' &rarr; ' + escapeHtml(idToLabel[n.to] || n.to) + ':</strong> ' + inlineMdEscaped(n.note) + '</li>';
+        }).join('') + '</ul></div>';
+    }
+
+    var html = '<div class="viz">';
+    if (data.description) html += '<p class="viz-caption">' + inlineMdEscaped(data.description) + '</p>';
+    html += '<div class="dag-wrap"><svg viewBox="0 0 ' + svgWidth + ' ' + svgHeight + '" width="100%" role="img" aria-label="Module dependency graph">' +
+      defs + edgesSvg + nodesSvg + '</svg></div>';
+    html += notesHtml;
+    html += '</div>';
+    return html;
+  }
+
+  function renderViz(viz) {
+    try {
+      if (viz.type === 'comparisonTable') return renderComparisonTable(viz.data);
+      if (viz.type === 'dependencyGraph') return renderDependencyGraph(viz.data);
+      return renderRawFallback(viz);
+    } catch (e) {
+      return renderRawFallback(viz);
+    }
+  }
+
+  function renderMilestone(text) {
+    var label = 'Milestone';
+    var body = text;
+    var match = text.match(/^(MILESTONE[^:]*):\s*([\s\S]*)$/);
+    if (match) { label = match[1]; body = match[2]; }
+    return '<div class="milestone"><span class="label">' + escapeHtml(label) + '</span>' + renderMarkdown(body) + '</div>';
+  }
+
+  function renderSection(sec) {
+    var html = '<div class="section"><h3 class="subtopic">' + escapeHtml(sec.subtopic) + '</h3>';
+    html += renderMarkdown(sec.explanation);
+    if (sec.keyConceptsCovered && sec.keyConceptsCovered.length) {
+      html += '<div class="concepts-label">Key concepts</div><div class="concepts">' +
+        sec.keyConceptsCovered.map(function (c) { return '<span class="chip">' + inlineMdEscaped(c) + '</span>'; }).join('') +
+        '</div>';
+    }
+    if (sec.pitfallsCovered && sec.pitfallsCovered.length) {
+      html += sec.pitfallsCovered.map(function (p) {
+        return '<div class="pitfall"><span class="label">Pitfall</span>' + inlineMdEscaped(p) + '</div>';
+      }).join('');
+    }
+    html += '</div>';
+    return html;
+  }
+
+  function renderModules() {
+    var html = '';
+    CONTENT.modules.forEach(function (mod, i) {
+      var num = i + 1;
+      var id = 'module-' + num;
+      html += '<details class="module" id="' + id + '" open>';
+      html += '<summary><span class="mod-num">MODULE ' + num + '</span> <span class="mod-name">' + escapeHtml(mod.name) + '</span></summary>';
+      html += '<div class="module-body">';
+      if (mod.objective) html += '<p class="objective">' + inlineMdEscaped(mod.objective) + '</p>';
+      mod.sections.forEach(function (sec) { html += renderSection(sec); });
+      if (mod.vizData) html += renderViz(mod.vizData);
+      if (mod.milestoneNote) html += renderMilestone(mod.milestoneNote);
+      html += '</div></details>';
+    });
+    document.getElementById('modules').innerHTML = html;
+  }
+
+  function renderToc() {
+    var html = '<ol>';
+    CONTENT.modules.forEach(function (mod, i) {
+      var num = i + 1;
+      html += '<li><a href="#module-' + num + '"><span class="toc-num">' + num + '</span>' + escapeHtml(mod.name) +
+        (mod.milestoneNote ? ' <span class="toc-flag" title="Milestone checkpoint">&#9670;</span>' : '') + '</a></li>';
+    });
+    html += '</ol>';
+    document.getElementById('toc-list').innerHTML = html;
+  }
+
+  function renderSources() {
+    var html = '';
+    (CONTENT.sources || []).forEach(function (s) {
+      html += '<li><a href="' + escapeHtml(s.url) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(s.title) + '</a>';
+      if (s.note) html += '<span class="source-note">' + inlineMdEscaped(s.note) + '</span>';
+      html += '</li>';
+    });
+    document.getElementById('sources-list').innerHTML = html;
+  }
+
+  function renderStats() {
+    var moduleCount = CONTENT.modules.length;
+    var milestoneCount = CONTENT.modules.filter(function (m) { return m.milestoneNote; }).length;
+    document.getElementById('stats').textContent = moduleCount + ' modules · ' + milestoneCount + ' milestone checkpoints · ' + (CONTENT.sources || []).length + ' sources';
+  }
+
+  function initTheme() {
+    var saved = null;
+    try { saved = localStorage.getItem('nextjs-resource-theme'); } catch (e) {}
+    if (saved === 'dark' || saved === 'light') {
+      document.documentElement.setAttribute('data-theme', saved);
+    }
+    var btn = document.getElementById('theme-toggle');
+    btn.addEventListener('click', function () {
+      var current = document.documentElement.getAttribute('data-theme');
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var isDark = current ? current === 'dark' : prefersDark;
+      var next = isDark ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('nextjs-resource-theme', next); } catch (e) {}
+    });
+  }
+
+  renderStats();
+  renderToc();
+  renderModules();
+  renderSources();
+  initTheme();
+})();
+</script>
+
+</body>
+</html>
