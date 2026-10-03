@@ -1,4 +1,4 @@
-# Agent — productPlanner
+# Agent — planner
 
 **Role:** Translate the application idea into a bounded, testable scope.
 

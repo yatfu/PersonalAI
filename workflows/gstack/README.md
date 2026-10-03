@@ -28,10 +28,10 @@ When creating a new full stack application from an idea or requirements brief.
 
 | Agent | Role |
 |---|---|
-| `agents/productPlanner.md` | Defines a concrete, testable application scope. |
+| `agents/planner.md` | Defines a concrete, testable application scope. |
 | `agents/architect.md` | Selects the stack and designs the application contracts. |
-| `agents/appBuilder.md` | Implements frontend, backend, persistence, and integration points. |
-| `agents/appValidator.md` | Checks the implementation against the brief and records evidence. |
+| `agents/builder.md` | Implements frontend, backend, persistence, and integration points. |
+| `agents/validator.md` | Checks the implementation against the brief and records evidence. |
 
 See [orchestrator.md](orchestrator.md) for stage order and revision rules.
 

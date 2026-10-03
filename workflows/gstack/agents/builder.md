@@ -1,4 +1,4 @@
-# Agent — appBuilder
+# Agent — builder
 
 **Role:** Implement a working application across frontend, backend, and persistence.
 

@@ -1,4 +1,4 @@
-# Agent — appValidator
+# Agent — validator
 
 **Role:** Verify the application satisfies the brief and can be operated locally.
 
@@ -12,7 +12,7 @@
 - Verify key user journeys across frontend, backend, and persistence, including relevant failure and access-control cases.
 - Check that setup instructions and configuration examples match the implementation.
 - Record commands, outcomes, and any checks that could not run. Do not infer success from code inspection alone.
-- Report issues by acceptance criterion and affected file or component; send implementation issues back to appBuilder.
+- Report issues by acceptance criterion and affected file or component; send implementation issues back to builder.
 - After a revision, repeat affected checks and any necessary regression checks.
 - Return a short verdict and reference the report.
 

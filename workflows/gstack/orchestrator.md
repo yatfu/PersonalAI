@@ -12,11 +12,11 @@ Control-flow specification for generating a full stack application. An executing
 
 ## Sequence
 
-1. **productPlanner** reads the request and writes `brief.md`.
+1. **planner** reads the request and writes `brief.md`.
 2. **architect** reads the brief and writes `architecture.md`.
-3. **appBuilder** reads both documents, implements `app/`, and writes `handoff.md`.
-4. **appValidator** inspects the application, runs appropriate checks, and writes `validation.md`.
-5. If validation fails, **appBuilder** patches the affected implementation and handoff; **appValidator** repeats the affected checks.
+3. **builder** reads both documents, implements `app/`, and writes `handoff.md`.
+4. **validator** inspects the application, runs appropriate checks, and writes `validation.md`.
+5. If validation fails, **builder** patches the affected implementation and handoff; **validator** repeats the affected checks.
 
 ## Handoff contract
 
