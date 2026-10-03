@@ -32,4 +32,5 @@ workflows/
 
 ## Current workflows
 
+- **[gstack](gstack/README.md)** — foundation for generating full stack applications, from scope and architecture through implementation, validation, and local handoff.
 - **[topicTrainer](topicTrainer/README.md)** — give it a topic, it researches, validates, builds a curriculum, and produces a single accordion-style HTML page to learn it from.
