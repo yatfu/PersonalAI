@@ -13,6 +13,6 @@ Read the brief, architecture, existing contracts, and affected source interfaces
 - Scale detail to scope. Reference existing schemas and symbols; use the application's actual interface mechanism.
 - Mark unresolved decisions and resolve blocking ones before dependent implementation. Keep exact boundary behavior in `contracts.md` and reference it from architecture.
 - Report contradictions, gaps, or infeasible rules by ID with proposed resolutions. Route scope changes to planner and contract decisions to architect; preserve unrelated contracts and record revisions in the decision log.
-- Identify affected increments when contracts change so prior verdicts are invalidated and checks updated before advancement.
+- Identify affected increments and dependent evidence when contracts change. Use `gstack-increments` to invalidate their passes, update checks, and reset final validation to pending before advancement.
 
 The architect owns updates to `contracts.md`. Other roles inspect or propose corrections without silently changing contracts or acceptance criteria. Return a short summary referencing files and IDs.

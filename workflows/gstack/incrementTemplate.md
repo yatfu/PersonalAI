@@ -10,26 +10,44 @@ Integration is explicit work: connecting a form to an endpoint or an endpoint to
 # Increments — <application or feature>
 
 ## Plan
+
 | ID | One goal | Depends on | Acceptance / contract IDs | Status |
 |---|---|---|---|---|
 | I-1 | <one observable outcome> | <IDs or none> | <AC / C IDs or supporting prerequisite> | pending |
 
 ## I-1 — <name>
+
 - Goal: <one outcome>
 - Included: <work needed for that outcome>
 - Excluded: <adjacent work reserved for other increments>
 - Dependencies: <previous increments that must pass>
 - Contract references: <C IDs or not applicable with reason>
 - Required checks: <command/test/manual check → expected outcome>
+- Check prerequisites: <tools, services, configuration, and fixtures needed>
 - Regression checks: <previous behavior at risk, or none with reason>
 - Evidence limits: <what these checks do not establish yet>
+- Correction passes used: 0
+- Latest validation attempt: <number and validation.md section, or none>
+- Revalidation reason: <changed contract/plan/source or none>
 
 ## Execution state
+
 - Current increment: <ID or none>
 - Final validation: <pending / passed / failed / blocked>
+- Final correction passes used: 0
+- Latest final validation attempt: <number and validation.md section, or none>
 ```
 
 Statuses: `pending`, `building`, `validating`, `passed`, `failed`, `blocked`. The architect defines goals, dependencies, and checks. The builder updates implementation progress. The validator owns validation verdicts. Keep failed attempts and evidence in `validation.md`; do not erase them when an increment later passes.
+
+## State and evidence rules
+
+- Builder moves the selected increment to `building`, then `validating`. Validator sets `passed`, `failed`, or `blocked` after checking it.
+- A correction returns a failed increment to `building`; it must pass validation before progression. Resume blocked work only when its missing prerequisite is available.
+- Architect marks increments affected by a contract or plan change `pending` with a reason, including dependent increments whose prior evidence no longer applies. Also reset final validation to `pending`. Only validator can grant a new pass.
+- Each increment needs at least one observable goal-specific check and its prerequisites. A build check alone is insufficient for a goal whose behavior requires runtime verification.
+- Number validation attempts and record correction counts after each pass. Preserve counts and evidence when resuming a run. Link the latest attempt here; store full results in `validation.md`.
+- Revalidation without implementation or planning corrections does not consume a correction pass. Corrections required after a failed recheck do consume one. Follow the orchestrator's limits.
 
 ## Example decomposition
 

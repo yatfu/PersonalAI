@@ -21,7 +21,7 @@ Every agent can use the [shared skills](skills/README.md). Read the selected ski
 4. **validator** uses `gstack-validate` and `gstack-increments` to validate that increment immediately, records checks and verdict in `validation.md`, and updates its status in `increments.md`. Required checks must pass before the next increment starts. Isolated component checks do not count as proof of a connected journey.
 5. If validation fails, **builder** patches that increment and the handoff; **validator** revalidates it. Do not advance on a failed or blocked verdict.
    - Scope defects return to **planner**; design or contract defects return to **architect** before dependent implementation resumes. Changes propagate to affected downstream files and checks. The validator does not change code or acceptance criteria.
-6. Repeat steps 3–5 until all increments pass, including explicitly planned integration increments. Contract or plan changes invalidate affected prior verdicts; revalidate affected increments before advancing.
+6. Repeat steps 3–5 until all increments pass, including planned integration increments. Contract or plan changes invalidate affected increments and dependent evidence, and reset final validation to pending. Revalidate in dependency order before advancing; rebuild only when corrections are needed.
 7. **validator** uses `gstack-validate` for final application validation against the full brief and contracts, including complete user journeys and reproducible local setup. Record a separate final verdict; individual increment passes alone do not establish application completion.
 
 ## Handoff contract
@@ -29,14 +29,17 @@ Every agent can use the [shared skills](skills/README.md). Read the selected ski
 - `brief.md`: application name, source and document directories, problem, target users, in-scope and out-of-scope behavior, user journeys, numbered acceptance criteria, constraints, assumptions, and open questions.
 - `architecture.md`: stack and rationale, directory structure, frontend routes, integration boundaries, configuration, implementation steps, validation strategy, and references to `contracts.md` for exact boundary behavior.
 - `contracts.md`: affected data constraints, stable operation IDs linked to acceptance criteria, interfaces and input/output shapes, permissions, success/failure behavior, side effects, UI states, examples, required verification, and unresolved decisions. Use the shared template proportionally to scope.
-- `increments.md`: ordered IDs, exactly one goal per increment, included/excluded scope, dependencies, acceptance/contract references, required checks and expected outcomes, regression checks, evidence limits, status, and current execution state. Integration work is explicitly represented.
+- `increments.md`: ordered IDs, one goal per increment, scope, dependencies, acceptance/contract references, required checks with prerequisites and expected outcomes, regression checks, evidence limits, statuses, correction counts, latest validation references, and execution state. Include integration work explicitly.
 - Application source: working code at the selected source directory, dependency manifests and lockfiles where supported, example configuration without secrets, and tests appropriate to behavior.
 - `handoff.md`: source and document directories, prerequisites, exact installation/start/test commands and their working directory, environment variable names, database setup, known limitations, and deployment prerequisites. Distinguish working integrations from mocks or unavailable services.
 - `validation.md`: per-increment attempts and verdicts (`passed`, `failed`, or `blocked`), acceptance-criterion and contract coverage, checks and outcomes, unexecuted checks and reasons, actionable issues with responsible role and file references, and a separate final application verdict. Preserve earlier attempts.
 
 ## Loops / retries
 
-Allow up to two revision passes per increment after its initial validation, including required scope or contract corrections and implementation updates. Validate after every revision. If issues remain, stop before starting the next increment and report current artifacts. A missing prerequisite is blocked, with the next action needed. Final validation also allows up to two correction passes; route corrections to affected increments and revalidate them before repeating final checks. Do not reset retry counts merely by renaming or splitting a failed increment.
+- Each increment gets an initial validation and up to two correction passes. A correction pass includes the needed scope, contract, or code fixes followed by validation. If it still fails after two corrections, stop before starting another increment and report the remaining issues.
+- Missing prerequisites produce a blocked verdict. Record what is needed and stop progression; resuming after the prerequisite becomes available does not itself consume a correction pass.
+- Final validation gets an initial attempt and up to two correction passes. Route fixes to affected increments, revalidate them in dependency order, then repeat final checks. Those fixes also count against the affected increments' remaining correction allowance. Stop if either limit is exhausted with unresolved failures.
+- Record counts and attempt references in `increments.md` and preserve full evidence in `validation.md`. Resume from those files; do not reset counts by restarting, renaming, or splitting failed work. Read-only rechecks do not consume correction passes.
 
 ## Stopping condition
 
