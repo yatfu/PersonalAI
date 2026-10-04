@@ -7,10 +7,11 @@ description: Define, inspect, or propose corrections to gstack data and interfac
 
 ## Inputs
 
-Read `brief.md` and `architecture.md`. Inspect existing `contracts.md` and affected source interfaces when available. Use [contractTemplate.md](../../contractTemplate.md) when writing contracts.
+Read `brief.md`, `collaboration.md`, and `architecture.md`. Inspect existing `contracts.md` and affected source interfaces when available. Use [contractTemplate.md](../../contractTemplate.md) when writing contracts.
 
 ## Procedure
 
+- Connect technical operations to planner-defined H-IDs and selected role boundaries. Request planner updates for new communication paths; keep technical schemas here and message rules in `collaboration.md`.
 - Assign stable operation IDs such as C-1 linked to acceptance criteria.
 - Specify input/output shapes, data constraints and relationships, ownership, permissions, errors, side effects, persistence, and UI states.
 - Include examples and observable checks. Check consistency and coverage of required journeys.

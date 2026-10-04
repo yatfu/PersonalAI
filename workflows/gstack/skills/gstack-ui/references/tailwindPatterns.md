@@ -53,7 +53,7 @@ Official guides: [Vite](https://tailwindcss.com/docs/installation/using-vite), [
 
 Adapt [uiTheme.css](../assets/uiTheme.css) into the application's global stylesheet. Its `@theme inline` mappings produce utilities such as `bg-canvas`, `bg-surface`, `text-ink`, `text-muted`, `border-line`, and `focus-visible:ring-accent`.
 
-The eight colors cover backgrounds, text, actions, boundaries, and errors. Keep values consistent across components. Light/dark values follow the OS until an explicit `data-theme="light"` or `data-theme="dark"` attribute is set on the root `<html>` element. If a manual theme control is included in scope, builder implements its state and persistence separately.
+The eight colors cover backgrounds, text, actions, boundaries, and errors. Keep values consistent across components. Light/dark values follow the OS until an explicit `data-theme="light"` or `data-theme="dark"` attribute is set on the root `<html>` element. If a manual theme control is included in scope, frontend implements its state and persistence separately.
 
 These semantic utilities already respond to the theme variables; they do not require `dark:` duplicates. Use the application's existing dark-mode configuration when extending an existing design.
 

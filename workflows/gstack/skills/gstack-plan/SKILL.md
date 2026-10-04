@@ -1,6 +1,6 @@
 ---
 name: gstack-plan
-description: Define or assess gstack scope, user journeys, and acceptance criteria when preparing or revising an application brief.
+description: Define gstack scope and acceptance criteria, select required implementation agents, and coordinate their communication contract during planning.
 ---
 
 # Plan application scope
@@ -17,10 +17,11 @@ For an existing app, inspect its instructions and current behavior. Record the s
 - Define the smallest complete version fulfilling the request, including required frontend, backend, and persistence behavior.
 - Describe user journeys and assign stable IDs such as AC-1 to observable acceptance criteria, including relevant failure states.
 - Separate required and deferred features; record assumptions, constraints, and open questions.
+- Use `gstack-coordinate` to select required frontend, backend, and database roles and write `collaboration.md`. Review architecture and proposed increments, then confirm owners, collaborators, handoff IDs, and shared-file ownership before implementation.
 - Resolve routine details from context. Ask when missing information changes essential behavior; identify blocked work.
 
 ## Ownership and handoff
 
-- Planner writes or patches `brief.md` with these decisions.
+- Planner writes or patches `brief.md` and `collaboration.md`, and confirms role assignments in `increments.md`. Technical application contracts remain architect-owned.
 - Other roles assess scope or propose changes to planner.
 - Return a short summary with the file path and unresolved questions.

@@ -34,6 +34,8 @@ Explicit user choices override these defaults. For an existing application, pres
 Planning documents and reports live in `outputs/gstack/<applicationName>/`. Source lives at `applicationPath` when supplied, otherwise in that folder's `app/` directory. Record both locations in `brief.md` and `handoff.md`. For an existing application, inspect its instructions and implementation first; preserve its stack and behavior unless the request requires a change.
 
 - `brief.md` — scope, assumptions, user journeys, and acceptance criteria.
+- `collaboration.md` — planner-selected agents, responsibilities, communication paths, and handoff requirements; see [collaborationTemplate.md](collaborationTemplate.md).
+- `communications.md` — short file-based requests, deliveries, acknowledgements, and blockers when inter-agent communication is needed.
 - `architecture.md` — stack, application structure, UI specification, and implementation sequence.
 - `contracts.md` — precise data, interface, permission, error, and UI behavior linked to acceptance criteria; see [contractTemplate.md](contractTemplate.md).
 - `increments.md` — ordered work with exactly one goal per increment, dependencies, checks, and progress; see [incrementTemplate.md](incrementTemplate.md).
@@ -45,9 +47,11 @@ Planning documents and reports live in `outputs/gstack/<applicationName>/`. Sour
 
 | Agent | Role |
 |---|---|
-| `agents/planner.md` | Defines a concrete, testable application scope. |
+| `agents/planner.md` | Defines scope, selects implementation agents, and owns their communication contract. |
 | `agents/architect.md` | Selects the stack and designs the application contracts. |
-| `agents/builder.md` | Implements frontend, backend, persistence, and integration points. |
+| `agents/frontend.md` | Implements interfaces and frontend integration. |
+| `agents/backend.md` | Implements server behavior and backend integration. |
+| `agents/database.md` | Implements schemas, migrations, and persistence operations. |
 | `agents/validator.md` | Checks the implementation against the brief and records evidence. |
 
 See [orchestrator.md](orchestrator.md) for stage order and revision rules.
@@ -55,6 +59,12 @@ See [orchestrator.md](orchestrator.md) for stage order and revision rules.
 ## Shared skills
 
 Reusable procedures live in [skills/](skills/README.md), separate from agent roles. All agents can use every skill; their role files list usual skills and retain ownership of assigned outputs. Repository discovery links under `.agents/skills/` make this library available to Codex without duplicate definitions. Skill folders use lowercase hyphenated names required by the skill format. Skills are instructions, not an automated runner.
+
+## Implementation team
+
+Planner chooses frontend, backend, and database only when their responsibilities need changes. Planner writes `collaboration.md` to identify required communication paths and handoff rules. Architect defines technical interfaces in `contracts.md`; planner confirms role assignments after increments are drafted.
+
+Each increment has one selected owner, optional selected collaborators, and explicit handoff IDs. The owner coordinates contributions and integration within the single goal. Acknowledged handoffs do not replace validation after every increment. See [collaborationTemplate.md](collaborationTemplate.md) for the message format and examples.
 
 ## Incremental execution
 

@@ -2,7 +2,7 @@
 
 **Role:** Own independent validation verdicts for increments and the complete application.
 
-**Inputs:** Read `brief.md`, `architecture.md`, `contracts.md`, `increments.md`, `handoff.md`, and the source directory recorded in the brief.
+**Inputs:** Read `collaboration.md`, relevant `communications.md` entries, `brief.md`, `architecture.md`, `contracts.md`, `increments.md`, `handoff.md`, and the source directory recorded in the brief.
 
 **Outputs:** Record validation attempts and evidence in `validation.md`, update verdicts in `increments.md`, and record a separate final verdict.
 
@@ -12,7 +12,7 @@
 
 - Validate after every increment and correction; only a passed verdict permits advancement.
 - Do not modify application code or weaken contracts or acceptance criteria.
-- Route scope defects to planner, design or contract defects to architect, and implementation defects to builder.
+- Route scope, assignment, or communication defects to planner; technical design or contract defects to architect; and code defects to the increment owner and affected implementation role.
 - Using a skill does not transfer ownership of another role's outputs.
 
 **Handoff:** Return a short verdict referencing the report and actionable issues.

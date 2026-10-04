@@ -1,6 +1,6 @@
 # Application contract template
 
-A contract defines the behavior shared by the UI, backend, and persistence layer. The architect fills this template into `contracts.md` in the application's output folder. The builder implements it; the validator checks it against the brief and actual behavior.
+A contract defines the behavior shared by the UI, backend, and persistence layer. The architect fills this template into `contracts.md` in the application's output folder. Selected implementation agents implement it; the validator checks it against the brief and actual behavior.
 
 ## Sizing and ownership
 
@@ -8,7 +8,7 @@ A contract defines the behavior shared by the UI, backend, and persistence layer
 - Describe only affected behavior. Reference existing types, schemas, and interfaces by file path and symbol where possible; avoid duplicating their definitions. Record intended changes explicitly.
 - Use the application's actual mechanism: HTTP endpoints, server actions, events, or local calls. Do not introduce an API layer just to fill this template.
 - Mark irrelevant sections `Not applicable` with a short reason. Label unresolved decisions `Blocking` or `Non-blocking`; only dependent implementation waits for a blocking decision.
-- The architect owns contract decisions. The builder may choose internal implementation details that preserve the contract. Changes to externally observable behavior return to the architect; changes to required behavior also return to the planner. Update documents before implementing the affected change. Routine compatible decisions do not need user approval.
+- The architect owns contract decisions. Selected implementation agents may choose internal implementation details that preserve the contract. Changes to externally observable behavior return to the architect; changes to required behavior also return to the planner. Update documents before implementing the affected change. Routine compatible decisions do not need user approval.
 
 ## Template
 
@@ -35,6 +35,7 @@ A contract defines the behavior shared by the UI, backend, and persistence layer
 
 - Acceptance criteria: <AC IDs>
 - Caller and boundary: <UI → server, server → external service, etc.>
+- Implementation roles / communication: <selected owners and H-IDs from collaboration.md>
 - Interface: <method/path, action signature, event name, or existing symbol>
 - Authentication and authorization: <who can invoke it and access affected data>
 - Input: <exact fields, types, required/optional values, and validation>

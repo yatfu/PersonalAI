@@ -7,15 +7,17 @@ description: Implement or correct one gstack increment across frontend, backend,
 
 ## Inputs
 
-Read `brief.md`, `architecture.md`, `contracts.md`, and `increments.md`, plus validator issues when correcting work. Identify the current increment; its prerequisites must have passed.
+Read `brief.md`, `collaboration.md`, `architecture.md`, `contracts.md`, `increments.md`, and relevant `communications.md` entries, plus validator issues when correcting work. Identify the current increment; its prerequisites must have passed.
 
 ## Procedure
 
-- Implement only its one goal and included scope. Mark it building, then validating. Return control for validation before starting another increment.
+- Work only as a planner-selected implementation role assigned to the current increment. Follow responsibility and shared-file ownership in `collaboration.md`; the increment owner coordinates any collaborators.
+- Use `gstack-coordinate` for contracted messages and acknowledgements. Missing or incompatible handoffs block dependent work.
+- Implement only its one goal and included scope. The increment owner marks it building, then validating. Return control for validation before starting another increment.
 - Follow contracted field shapes, validation, permissions, errors, persistence, and applicable UI states: loading, empty, success, and failure.
 - Use shared types or schemas where supported. Choose internal details autonomously when they preserve behavior; documents alone do not enforce contracts.
 - Report contradictory, incomplete, or infeasible contracts by ID and proposed resolution to architect before dependent implementation. Continue only unaffected work in the current increment.
-- Validate input server-side and enforce required access controls at backend boundaries.
+- Backend validates server input and enforces access controls. Database implements assigned constraints, migrations, and persistence adapters; frontend consumes contracted interfaces and implements UI behavior. Do only the responsibilities assigned to the active role.
 - Keep credentials outside committed files and provide configuration examples with variable names and placeholders.
 - Connect layers in designated integration increments. Label isolated stubs, mocks, and unavailable services; replace them where real integration is required.
 - Include meaningful checks for important success and failure paths, plus exact setup, run, and check commands.
@@ -25,8 +27,8 @@ Read `brief.md`, `architecture.md`, `contracts.md`, and `increments.md`, plus va
 
 ## Ownership and handoff
 
-- Builder writes source to the directory recorded in the brief: `applicationPath` for an existing app, otherwise the output folder's `app/`.
-- Maintain `handoff.md` with source and document paths, prerequisites, commands and their working directory, environment names, database setup, limitations, and deployment prerequisites.
-- Other roles may diagnose or propose fixes within their authority. Builder self-checks do not grant a validation pass.
-- Return increment ID, goal, changed files, checks, and limitations.
+- Each assigned implementation agent writes owned source to the directory recorded in the brief: `applicationPath` for an existing app, otherwise the output folder's `app/`.
+- Increment owner maintains `handoff.md` using collaborator contributions, with source and document paths, prerequisites, commands and their working directory, environment names, database setup, limitations, and deployment prerequisites.
+- Other roles may diagnose or propose fixes within their authority. Implementation self-checks do not grant a validation pass.
+- Contributors report to the increment owner with artifact and communication references. Owner returns increment ID, goal, changed files, handoff IDs, checks, and limitations to validator.
 - Deployment or publication requires user authorization.

@@ -78,7 +78,10 @@ keep their styling system unless a change is requested.]
 
 Execution
 Inspect the application and relevant instructions first. For a broad feature,
-document scope, assumptions, and an implementation plan before building.
+document scope and assumptions before building. Have planner select required
+frontend, backend, and database agents and define their communication contract.
+Have architect define technical interfaces and increments; planner confirms
+role assignments before implementation.
 Implement one goal per increment: a feature, component, or integration
 connection. Validate after every increment and correction; advance only after
 validation passes. Verify complete journeys during final validation.
