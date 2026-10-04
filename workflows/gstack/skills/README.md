@@ -6,6 +6,7 @@ Agents own responsibilities and outputs. Skills provide reusable procedures. Eve
 |---|---|---|
 | [gstack-plan](gstack-plan/SKILL.md) | Scope, journeys, acceptance criteria | Planner |
 | [gstack-design](gstack-design/SKILL.md) | Architecture and stack selection | Architect |
+| [gstack-ui](gstack-ui/SKILL.md) | UI design and concrete Tailwind styling | Architect, builder, validator |
 | [gstack-contracts](gstack-contracts/SKILL.md) | Data and interface contracts | Architect |
 | [gstack-increments](gstack-increments/SKILL.md) | One-goal plans and progress | Architect, builder, validator |
 | [gstack-build](gstack-build/SKILL.md) | Implement one increment | Builder |

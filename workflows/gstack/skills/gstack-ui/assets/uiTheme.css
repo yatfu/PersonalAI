@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+/* Tailwind v4 starter. Adapt names and values to the application's design. */
+@theme inline {
+  --color-canvas: var(--ui-canvas);
+  --color-surface: var(--ui-surface);
+  --color-ink: var(--ui-ink);
+  --color-muted: var(--ui-muted);
+  --color-accent: var(--ui-accent);
+  --color-on-accent: var(--ui-on-accent);
+  --color-line: var(--ui-line);
+  --color-danger: var(--ui-danger);
+}
+
+:root {
+  color-scheme: light;
+  --ui-canvas: #f5f5f5;
+  --ui-surface: #ffffff;
+  --ui-ink: #171717;
+  --ui-muted: #525252;
+  --ui-accent: #0f766e;
+  --ui-on-accent: #ffffff;
+  --ui-line: #a3a3a3;
+  --ui-danger: #b91c1c;
+}
+
+/* Follow the OS only while no manual preference is set. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --ui-canvas: #171717;
+    --ui-surface: #262626;
+    --ui-ink: #fafafa;
+    --ui-muted: #d4d4d4;
+    --ui-accent: #5eead4;
+    --ui-on-accent: #042f2e;
+    --ui-line: #737373;
+    --ui-danger: #fca5a5;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ui-canvas: #171717;
+  --ui-surface: #262626;
+  --ui-ink: #fafafa;
+  --ui-muted: #d4d4d4;
+  --ui-accent: #5eead4;
+  --ui-on-accent: #042f2e;
+  --ui-line: #737373;
+  --ui-danger: #fca5a5;
+}
+
+/* data-theme="light" uses :root values and suppresses the OS override. */
