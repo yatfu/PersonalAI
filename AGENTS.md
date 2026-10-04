@@ -41,6 +41,13 @@ For each task:
 5. Review the output.
 6. Improve the output based on the review.
 
+## Commits and GitHub
+
+- After each completed logical change, use the `git-commits` skill to create a separate commit, unless the user explicitly requests otherwise.
+- Inspect the diff and run appropriate checks before committing. Preserve unrelated changes and existing staged work.
+- Push the completed commits to this repository's configured GitHub upstream. This is standing authorization for routine commits and pushes; do not request confirmation again unless execution permissions require it.
+- Do not force-push or rewrite history. If committing or pushing fails, report the failure and preserve the work.
+
 ## Project status
 
 This repository contains Markdown workflow specifications under `workflows/`, standalone HTML tools and generated deliverables under `outputs/`, and shared reference material under `resources/`. There is no repository-wide build system, package manifest, or test suite. Generated applications may have their own commands under their application directories.
