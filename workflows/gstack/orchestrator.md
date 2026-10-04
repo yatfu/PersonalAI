@@ -13,29 +13,31 @@ Control-flow specification for generating a full stack application. An executing
 ## Sequence
 
 1. **planner** reads the request and writes `brief.md`.
-2. **architect** reads the brief and writes `architecture.md` and `contracts.md` using [contractTemplate.md](contractTemplate.md). Checks coverage and consistency before handing off; blocking decisions pause only dependent work.
-3. **builder** reads the brief, architecture, and contracts, implements `app/`, and writes `handoff.md`.
-4. **validator** inspects the application, runs appropriate checks, and writes `validation.md`.
-5. If validation fails, **builder** patches the affected implementation and handoff; **validator** repeats the affected checks.
-
+2. **architect** reads the brief and writes `architecture.md`, `contracts.md`, and `increments.md` using [contractTemplate.md](contractTemplate.md) and [incrementTemplate.md](incrementTemplate.md). Checks coverage, consistency, dependencies, and one-goal boundaries before handing off.
+3. Select the next pending increment in dependency order. Its prerequisites must have passed and blocking decisions must be resolved. **builder** reads the planning files, implements only that increment's goal under `app/`, updates `handoff.md`, and marks it ready for validation in `increments.md`.
+4. **validator** validates that increment immediately, records checks and verdict in `validation.md`, and updates its status in `increments.md`. Required checks must pass before the next increment starts. Isolated component checks do not count as proof of a connected journey.
+5. If validation fails, **builder** patches that increment and the handoff; **validator** revalidates it. Do not advance on a failed or blocked verdict.
    - Scope defects return to **planner**; design or contract defects return to **architect** before dependent implementation resumes. Changes propagate to affected downstream files and checks. The validator does not change code or acceptance criteria.
+6. Repeat steps 3–5 until all increments pass, including explicitly planned integration increments. Contract or plan changes invalidate affected prior verdicts; revalidate affected increments before advancing.
+7. **validator** performs final application validation against the full brief and contracts, including complete user journeys and reproducible local setup. Record a separate final verdict; individual increment passes alone do not establish application completion.
 
 ## Handoff contract
 
 - `brief.md`: application name, problem, target users, in-scope and out-of-scope behavior, user journeys, numbered acceptance criteria, constraints, assumptions, and open questions.
 - `architecture.md`: stack and rationale, directory structure, frontend routes, integration boundaries, configuration, implementation steps, validation strategy, and references to `contracts.md` for exact boundary behavior.
 - `contracts.md`: affected data constraints, stable operation IDs linked to acceptance criteria, interfaces and input/output shapes, permissions, success/failure behavior, side effects, UI states, examples, required verification, and unresolved decisions. Use the shared template proportionally to scope.
+- `increments.md`: ordered IDs, exactly one goal per increment, included/excluded scope, dependencies, acceptance/contract references, required checks and expected outcomes, regression checks, evidence limits, status, and current execution state. Integration work is explicitly represented.
 - `app/`: working source code, dependency manifests and lockfiles where supported, example environment configuration without secrets, and tests appropriate to application behavior.
 - `handoff.md`: prerequisites, exact installation/start/test commands, environment variable names, database setup, known limitations, and deployment prerequisites. Distinguish working integrations from mocks or unavailable services.
-- `validation.md`: verdict (`passed`, `failed`, or `blocked`), acceptance-criterion and contract coverage, checks and outcomes, unexecuted checks and reasons, and actionable issues with responsible role and file references where possible.
+- `validation.md`: per-increment attempts and verdicts (`passed`, `failed`, or `blocked`), acceptance-criterion and contract coverage, checks and outcomes, unexecuted checks and reasons, actionable issues with responsible role and file references, and a separate final application verdict. Preserve earlier attempts.
 
 ## Loops / retries
 
-Allow up to two revision passes after the initial validation, including any required scope or contract corrections and their implementation updates. Scope each revision to recorded issues. If issues remain, stop and report them with the current artifacts; do not declare success. A prerequisite that cannot be supplied is recorded as blocked, with the next action needed.
+Allow up to two revision passes per increment after its initial validation, including required scope or contract corrections and implementation updates. Validate after every revision. If issues remain, stop before starting the next increment and report current artifacts. A missing prerequisite is blocked, with the next action needed. Final validation also allows up to two correction passes; route corrections to affected increments and revalidate them before repeating final checks. Do not reset retry counts merely by renaming or splitting a failed increment.
 
 ## Stopping condition
 
-Complete when acceptance criteria are satisfied, required checks pass, and the local handoff is reproducible. Otherwise stop after the revision limit or a blocking prerequisite and state the remaining issues. Unrun checks cannot count as passing.
+Complete when every increment has passed, the final application verdict is passed, acceptance criteria are satisfied, and the local handoff is reproducible. Otherwise stop after the applicable revision limit or a blocking prerequisite and state remaining issues. Unrun required checks cannot count as passing.
 
 ## Output location
 

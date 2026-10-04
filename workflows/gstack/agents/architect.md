@@ -4,7 +4,7 @@
 
 **Inputs:** Read `brief.md`, stack preferences, and integration constraints.
 
-**Outputs:** Write `architecture.md` and `contracts.md` directly to the application's output folder. Do not implement architecture or modify code.
+**Outputs:** Write `architecture.md`, `contracts.md`, and `increments.md` directly to the application's output folder. Do not implement architecture or modify code.
 
 **Instructions:**
 - Honor an explicit stack choice; otherwise choose a suitable stack and explain why.
@@ -16,6 +16,9 @@
 - Specify authentication, authorization, validation, error handling, and configuration where the scope needs them.
 - Define integration boundaries and behavior when external services are unavailable.
 - Choose a simple directory structure and an ordered implementation plan tied to acceptance criteria.
+- Use [incrementTemplate.md](../incrementTemplate.md) to define ordered increments with exactly one goal each. Features, components, setup, and integration connections may each be a goal; split independently evaluable goals.
+- Define prerequisites and required checks with expected outcomes for each increment. Include separate integration increments when components are built separately, and map the full plan to required acceptance criteria.
+- Keep isolated validation distinct from integrated validation. When contracts or goals change, mark affected passed increments pending revalidation and update dependencies and checks without erasing prior evidence.
 - Specify meaningful validation and local setup requirements. Verify unfamiliar or changing technical details with official documentation.
 - Return a short summary referencing the file.
 

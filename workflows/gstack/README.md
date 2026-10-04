@@ -23,8 +23,9 @@ See [promptTemplate.md](promptTemplate.md) for short and expanded prompts coveri
 - `brief.md` — scope, assumptions, user journeys, and acceptance criteria.
 - `architecture.md` — stack, application structure, and implementation sequence.
 - `contracts.md` — precise data, interface, permission, error, and UI behavior linked to acceptance criteria; see [contractTemplate.md](contractTemplate.md).
+- `increments.md` — ordered work with exactly one goal per increment, dependencies, checks, and progress; see [incrementTemplate.md](incrementTemplate.md).
 - `app/` — application source, dependency manifests, configuration examples, and tests.
-- `validation.md` — verification results, unresolved issues, and limitations.
+- `validation.md` — validation after every increment, correction attempts, and the final application verdict.
 - `handoff.md` — setup, local run commands, and deployment prerequisites.
 
 ## Agents
@@ -37,6 +38,10 @@ See [promptTemplate.md](promptTemplate.md) for short and expanded prompts coveri
 | `agents/validator.md` | Checks the implementation against the brief and records evidence. |
 
 See [orchestrator.md](orchestrator.md) for stage order and revision rules.
+
+## Incremental execution
+
+Build one goal, validate it, then advance only after it passes. A feature, component, or connection between components can each be an increment. Integration work counts explicitly, and complete user journeys are checked again during final validation.
 
 ## Status
 

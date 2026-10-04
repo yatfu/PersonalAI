@@ -74,8 +74,10 @@ If undecided, ask the architect to choose and explain a suitable approach.]
 Execution
 Inspect the application and relevant instructions first. For a broad feature,
 document scope, assumptions, and an implementation plan before building.
-Implement in increments that each complete a usable journey, and verify
-each increment. Update documentation when setup or behavior changes.
+Implement one goal per increment: a feature, component, or integration
+connection. Validate after every increment and correction; advance only after
+validation passes. Verify complete journeys during final validation.
+Update documentation when setup or behavior changes.
 
 Resolve routine details using the existing application and reasonable
 judgment. Ask targeted questions when missing information materially changes
