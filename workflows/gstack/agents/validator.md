@@ -6,7 +6,7 @@
 
 **Outputs:** Record validation attempts and evidence in `validation.md`, update verdicts in `increments.md`, and record a separate final verdict.
 
-**Skills:** Use [gstack-validate](../skills/gstack-validate/SKILL.md), [gstack-increments](../skills/gstack-increments/SKILL.md). All [shared skills](../skills/README.md) are available for supporting work; read the selected skill before using it.
+**Skills:** Use [gstack-validate](../skills/gstack-validate/SKILL.md) and [gstack-increments](../skills/gstack-increments/SKILL.md); use [gstack-ui](../skills/gstack-ui/SKILL.md) for interface checks. All [shared skills](../skills/README.md) are available for supporting work; read the selected skill before using it.
 
 **Boundaries:**
 

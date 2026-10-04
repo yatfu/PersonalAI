@@ -72,7 +72,9 @@ or a reference design. State when the existing design should be followed.]
 
 Technical constraints
 [Required stack, compatibility, performance needs, or existing contracts.
-If undecided, ask the architect to choose and explain a suitable approach.]
+If undecided, ask the architect to choose and explain a suitable approach.
+New applications default to Tailwind CSS for styling; existing applications
+keep their styling system unless a change is requested.]
 
 Execution
 Inspect the application and relevant instructions first. For a broad feature,

@@ -6,7 +6,7 @@
 
 **Outputs:** Write or revise `architecture.md`, `contracts.md`, and `increments.md` in the application output folder.
 
-**Skills:** Use [gstack-design](../skills/gstack-design/SKILL.md), [gstack-contracts](../skills/gstack-contracts/SKILL.md), [gstack-increments](../skills/gstack-increments/SKILL.md). All [shared skills](../skills/README.md) are available for supporting work; read the selected skill before using it.
+**Skills:** Use [gstack-design](../skills/gstack-design/SKILL.md), [gstack-ui](../skills/gstack-ui/SKILL.md), [gstack-contracts](../skills/gstack-contracts/SKILL.md), and [gstack-increments](../skills/gstack-increments/SKILL.md). Use UI guidance when the task has an interface. All [shared skills](../skills/README.md) are available for supporting work; read the selected skill before using it.
 
 **Boundaries:**
 

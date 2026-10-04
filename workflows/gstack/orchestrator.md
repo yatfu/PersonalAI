@@ -9,6 +9,7 @@ Execution specification for creating an application or changing an existing one.
 - For an existing app, inspect its guidance and implementation before planning. Preserve its conventions and stack unless the request requires a change. Do not copy it into a new `app/` directory.
 - Follow user constraints and repository instructions. Record assumptions; ask for missing information when it blocks meaningful implementation.
 - Use current official documentation when framework or integration behavior needs verification.
+- Use Tailwind CSS as the styling default for new applications, following `gstack-ui`. User-specified styling takes precedence; preserve an existing application's styling system unless a change is requested.
 - Patch existing artifacts when revising. Do not overwrite unrelated user work.
 
 Every agent can use the [shared skills](skills/README.md). Read the selected skill before performing its procedure. Skill access does not change role ownership, stage order, or validation gates; these are file-based instructions, not an automated runner.
@@ -16,7 +17,7 @@ Every agent can use the [shared skills](skills/README.md). Read the selected ski
 ## Sequence
 
 1. **planner** uses `gstack-plan` on the request and writes `brief.md`.
-2. **architect** uses `gstack-design`, `gstack-contracts`, and `gstack-increments` to write `architecture.md`, `contracts.md`, and `increments.md` using [contractTemplate.md](contractTemplate.md) and [incrementTemplate.md](incrementTemplate.md). Checks coverage, consistency, dependencies, and one-goal boundaries before handing off.
+2. **architect** uses `gstack-design`, `gstack-contracts`, and `gstack-increments` to write the planning files using [contractTemplate.md](contractTemplate.md) and [incrementTemplate.md](incrementTemplate.md). For interface work, use `gstack-ui` to include a UI specification in `architecture.md`. Check coverage, consistency, dependencies, and one-goal boundaries before handoff.
 3. Select the next pending increment in dependency order. Its prerequisites must have passed and blocking decisions must be resolved. **builder** uses `gstack-build` and `gstack-increments` to implement only that increment's goal in the selected source directory, updates `handoff.md`, and marks it ready for validation in `increments.md`.
 4. **validator** uses `gstack-validate` and `gstack-increments` to validate that increment immediately, records checks and verdict in `validation.md`, and updates its status in `increments.md`. Required checks must pass before the next increment starts. Isolated component checks do not count as proof of a connected journey.
 5. If validation fails, **builder** patches that increment and the handoff; **validator** revalidates it. Do not advance on a failed or blocked verdict.
@@ -27,7 +28,7 @@ Every agent can use the [shared skills](skills/README.md). Read the selected ski
 ## Handoff contract
 
 - `brief.md`: application name, source and document directories, problem, target users, in-scope and out-of-scope behavior, user journeys, numbered acceptance criteria, constraints, assumptions, and open questions.
-- `architecture.md`: stack and rationale, directory structure, frontend routes, integration boundaries, configuration, implementation steps, validation strategy, and references to `contracts.md` for exact boundary behavior.
+- `architecture.md`: stack and versions, rationale, directory structure, frontend routes, UI layouts and tokens, styling setup, integration boundaries, configuration, implementation steps, validation strategy, and references to `contracts.md` for exact boundary behavior. Mark UI sections not applicable for tasks without an interface.
 - `contracts.md`: affected data constraints, stable operation IDs linked to acceptance criteria, interfaces and input/output shapes, permissions, success/failure behavior, side effects, UI states, examples, required verification, and unresolved decisions. Use the shared template proportionally to scope.
 - `increments.md`: ordered IDs, one goal per increment, scope, dependencies, acceptance/contract references, required checks with prerequisites and expected outcomes, regression checks, evidence limits, statuses, correction counts, latest validation references, and execution state. Include integration work explicitly.
 - Application source: working code at the selected source directory, dependency manifests and lockfiles where supported, example configuration without secrets, and tests appropriate to behavior.

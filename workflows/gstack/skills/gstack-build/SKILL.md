@@ -18,7 +18,8 @@ Read `brief.md`, `architecture.md`, `contracts.md`, and `increments.md`, plus va
 - Validate input server-side and enforce required access controls at backend boundaries.
 - Keep credentials outside committed files and provide configuration examples with variable names and placeholders.
 - Connect layers in designated integration increments. Label isolated stubs, mocks, and unavailable services; replace them where real integration is required.
-- Include meaningful checks for important success and failure paths, plus exact setup, run, and check commands. Use [styleNewsletter.md](../../../../resources/styleNewsletter.md) for visual guidance where appropriate.
+- Include meaningful checks for important success and failure paths, plus exact setup, run, and check commands.
+- Use `gstack-ui` for interface styling and behavior. Tailwind CSS is the default for new apps; follow the chosen architecture and preserve an existing app's styling system unless a change is requested. Compile CSS through the application build and use complete utility class strings.
 - Patch affected files and update the handoff on corrections instead of regenerating the application; preserve unrelated work.
 - Before a correction, check the remaining allowance in `increments.md`. Record the correction pass and identify previously passed increments affected by source changes so validator can invalidate and recheck their evidence. Do not start later increments while a gate is failed or blocked.
 

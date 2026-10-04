@@ -12,6 +12,7 @@ Read `brief.md`, stack preferences, and integration constraints. Inspect existin
 ## Procedure
 
 - Honor an explicit stack choice; otherwise choose a suitable stack and explain why.
+- Default new applications to Tailwind CSS for styling. Use `gstack-ui` to specify layouts, tokens, accessible controls, UI states, and framework-compatible build setup in `architecture.md`. Record selected versions and any departure from defaults; existing apps keep their styling system unless a change is requested.
 - For an existing app, preserve its stack and conventions unless the requested change requires otherwise. Design against its actual source directory recorded in the brief.
 - Define frontend routes, a simple application directory structure, persistence setup, configuration, and integration boundaries.
 - Identify required authentication, authorization, input validation, and error handling.

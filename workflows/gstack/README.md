@@ -17,12 +17,24 @@ See [promptTemplate.md](promptTemplate.md) for short and expanded prompts coveri
 - `stack` (optional) — preferred frameworks, database, and hosting target. If omitted, the architect chooses and explains a suitable stack.
 - `integrations` (optional) — external services and available configuration; credentials stay outside workflow documents.
 
+## Default technologies
+
+| Area | Default |
+|---|---|
+| Styling | Tailwind CSS; use v4 for new compatible applications. |
+| UI design | Shared [gstack-ui](skills/gstack-ui/SKILL.md) skill with concrete utility classes and semantic theme tokens. |
+| Frontend framework and language | Architect selects for the application; no fixed framework or language default. |
+| Backend, database, and authentication | Architect selects according to requirements; no fixed defaults. |
+| Testing and deployment | Architect selects suitable tools and documents the setup; no fixed tools or hosting provider. |
+
+Explicit user choices override these defaults. For an existing application, preserve its styling system and versions unless a migration is requested. Record the selected technologies and versions in `architecture.md`; Tailwind is the default styling approach, not a requirement to change an existing app's stack.
+
 ## Output
 
 Planning documents and reports live in `outputs/gstack/<applicationName>/`. Source lives at `applicationPath` when supplied, otherwise in that folder's `app/` directory. Record both locations in `brief.md` and `handoff.md`. For an existing application, inspect its instructions and implementation first; preserve its stack and behavior unless the request requires a change.
 
 - `brief.md` — scope, assumptions, user journeys, and acceptance criteria.
-- `architecture.md` — stack, application structure, and implementation sequence.
+- `architecture.md` — stack, application structure, UI specification, and implementation sequence.
 - `contracts.md` — precise data, interface, permission, error, and UI behavior linked to acceptance criteria; see [contractTemplate.md](contractTemplate.md).
 - `increments.md` — ordered work with exactly one goal per increment, dependencies, checks, and progress; see [incrementTemplate.md](incrementTemplate.md).
 - Application source — code, dependency manifests, configuration examples, and tests at the selected source directory.
