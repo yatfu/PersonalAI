@@ -4,7 +4,7 @@
 
 **Inputs:** Read `brief.md`, `architecture.md`, `contracts.md`, `increments.md`, and validator issues.
 
-**Outputs:** Write the current increment under `app/`, maintain `handoff.md`, and update implementation progress in `increments.md`.
+**Outputs:** Write the current increment in the source directory recorded in the brief, maintain `handoff.md`, and update implementation progress in `increments.md`.
 
 **Skills:** Use [gstack-build](../skills/gstack-build/SKILL.md), [gstack-increments](../skills/gstack-increments/SKILL.md). All [shared skills](../skills/README.md) are available for supporting work; read the selected skill before using it.
 

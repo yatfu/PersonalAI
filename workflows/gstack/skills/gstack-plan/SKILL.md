@@ -7,6 +7,8 @@ description: Define or assess gstack scope, user journeys, and acceptance criter
 
 Read the request, application name, requirements, constraints, and existing brief or scope issues.
 
+For an existing app, inspect its instructions and current behavior. Record the source directory (`applicationPath`) and the document directory (`outputs/gstack/<applicationName>/`) in the brief. For a new app, source defaults to the document directory's `app/` folder.
+
 - Describe intended users, their problem, and the desired outcome.
 - Define the smallest complete version fulfilling the request, including required frontend, backend, and persistence behavior.
 - Describe user journeys and assign stable IDs such as AC-1 to observable acceptance criteria, including relevant failure states.

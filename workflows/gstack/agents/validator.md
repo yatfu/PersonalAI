@@ -2,7 +2,7 @@
 
 **Role:** Own independent validation verdicts for increments and the complete application.
 
-**Inputs:** Read `brief.md`, `architecture.md`, `contracts.md`, `increments.md`, `handoff.md`, and source under `app/`.
+**Inputs:** Read `brief.md`, `architecture.md`, `contracts.md`, `increments.md`, `handoff.md`, and the source directory recorded in the brief.
 
 **Outputs:** Record attempts/evidence in `validation.md`, update verdicts in `increments.md`, and record a separate final verdict.
 

@@ -2,12 +2,14 @@
 
 Use the short template for focused changes and the expanded template for larger features. Fill only the fields that matter; delete unused fields. Describe the intended behavior rather than guessing implementation details. File paths, screenshots, and examples help when available.
 
-These prompts can accompany the gstack workflow specifications. They do not invoke an automated runner. For features in an existing application, identify its location explicitly: the workflow currently defaults to generating new applications.
+These prompts guide an AI session through the gstack specifications; there is no automated runner. For an existing application, supply its source directory as `applicationPath`. The workflow updates that directory directly.
 
 ## Short template — focused feature or fix
 
 ```text
 In [application path], implement [feature or fix].
+Follow workflows/gstack/orchestrator.md, using one goal per increment and
+validation before advancing. A small change can be a single increment.
 
 Current behavior: [what happens now, if relevant]
 Desired behavior: [what should happen, including the trigger and result]
@@ -22,6 +24,7 @@ change, run appropriate checks, and summarize the result and any limitations.
 
 ```text
 In outputs/gstack/taskManager/app, add a status filter to the task list.
+Follow workflows/gstack/orchestrator.md; this change can be one increment.
 
 Desired behavior: users can choose All, Open, or Completed. Default to All.
 Changing the filter should update the list without reloading the page.

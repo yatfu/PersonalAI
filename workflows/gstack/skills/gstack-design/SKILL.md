@@ -8,6 +8,7 @@ description: Design or assess gstack application architecture from a brief, incl
 Read `brief.md`, stack preferences, integration constraints, and existing design/source where relevant.
 
 - Honor an explicit stack choice; otherwise choose a suitable stack and explain why.
+- For an existing app, preserve its stack and conventions unless the requested change requires otherwise. Design against its actual source directory recorded in the brief.
 - Define frontend routes, a simple application directory structure, persistence setup, configuration, and integration boundaries.
 - Identify required authentication, authorization, input validation, and error handling.
 - Specify unavailable-service behavior and identify incompatible constraints or missing prerequisites before dependent work proceeds.

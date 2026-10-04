@@ -1,30 +1,31 @@
 # gstack
 
-Foundation for AI-generated full stack applications: turn an application idea into a defined scope, an implementation plan, a working frontend and backend, and a verified local handoff.
+Define, build, and validate full stack applications and features through a shared set of agent roles and skills.
 
 ## When to run it
 
-When creating a new full stack application from an idea or requirements brief.
+Use this workflow to create a new application or change an existing one.
 
 See [promptTemplate.md](promptTemplate.md) for short and expanded prompts covering feature requests of different sizes, including changes to existing applications.
 
 ## Inputs
 
-- `applicationName` (required) — descriptive name used to derive a camelCase output folder.
-- `idea` (required) — intended users, problem, and desired behavior.
+- `applicationName` — descriptive name used for the camelCase output folder. For an existing application, derive it from the project when the request does not supply one.
+- `idea` (required) — application idea or feature request: users, problem, and desired behavior.
+- `applicationPath` — source directory for an existing application; required when modifying one. For a new application, source defaults to `outputs/gstack/<applicationName>/app/`.
 - `requirements` (optional) — user journeys, acceptance criteria, and scope constraints.
 - `stack` (optional) — preferred frameworks, database, and hosting target. If omitted, the architect chooses and explains a suitable stack.
 - `integrations` (optional) — external services and available configuration; credentials stay outside workflow documents.
 
 ## Output
 
-`outputs/gstack/<applicationName>/`
+Planning documents and reports live in `outputs/gstack/<applicationName>/`. Source lives at `applicationPath` when supplied, otherwise in that folder's `app/` directory. Record both locations in `brief.md` and `handoff.md`. For an existing application, inspect its instructions and implementation first; preserve its stack and behavior unless the request requires a change.
 
 - `brief.md` — scope, assumptions, user journeys, and acceptance criteria.
 - `architecture.md` — stack, application structure, and implementation sequence.
 - `contracts.md` — precise data, interface, permission, error, and UI behavior linked to acceptance criteria; see [contractTemplate.md](contractTemplate.md).
 - `increments.md` — ordered work with exactly one goal per increment, dependencies, checks, and progress; see [incrementTemplate.md](incrementTemplate.md).
-- `app/` — application source, dependency manifests, configuration examples, and tests.
+- Application source — code, dependency manifests, configuration examples, and tests at the selected source directory.
 - `validation.md` — validation after every increment, correction attempts, and the final application verdict.
 - `handoff.md` — setup, local run commands, and deployment prerequisites.
 
