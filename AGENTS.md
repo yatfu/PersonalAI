@@ -2,41 +2,49 @@
 
 This file provides project guidance to Codex and other coding agents working in this repository.
 
-# Project Context
+## Project context
 
-this workspace is used as a tool for me to:
-  increase productivity and create automated workflows
-  speed up learning and research
-  learn about AI workflow and agent development
+Use this workspace to:
 
-# Communication Style
-Unless explanation is the goal, answers will be short as possible while losing as little detail as possible.
+- Increase productivity and create automated workflows.
+- Speed up learning and research.
+- Learn about AI workflows and agent development.
 
-# Rules
-All outputs in english should prioritize clarity.
-# File Naming Rules
-Lowercase file names
-use camelCase format
-use descriptive names
-avoid special characters
-# Folder Structure
-/workflows contains multi-agent workflow definitions (orchestrator + per-agent specs), one folder per workflow — see workflows/README.md
-/outputs Contains completed work and deliverables
-/resources contains reference material, source documents, examples, and research
+## Communication
 
-# Agent Behavior
-Before starting any task you should:
-  understand the objective well
-  ask questions if there is uncertainty
-  create a plan
-  execute step by step
-  review the output
-  improve the output based on review
+- Keep answers as short as possible while preserving detail, unless explanation is the goal.
+- Prioritize clarity in all English output.
+
+## File naming
+
+- Use descriptive names.
+- Use camelCase with a lowercase initial letter.
+- Avoid special characters.
+
+## Folder structure
+
+| Directory | Purpose |
+|---|---|
+| `workflows/` | Multi-agent workflow definitions: an orchestrator and individual agent specifications, with one folder per workflow. See [workflows/README.md](workflows/README.md). |
+| `outputs/` | Completed work and deliverables. |
+| `resources/` | Reference material, source documents, examples, and research. |
+
+## Agent behavior
+
+For each task:
+
+1. Understand the objective before starting.
+2. Ask questions if there is uncertainty.
+3. Create a plan.
+4. Execute step by step.
+5. Review the output.
+6. Improve the output based on the review.
 
 ## Project status
 
 This repository contains Markdown workflow specifications under `workflows/`, standalone HTML tools and generated deliverables under `outputs/`, and shared reference material under `resources/`. There is no repository-wide build system, package manifest, or test suite. Generated applications may have their own commands under their application directories.
 
 When the project structure or development commands change, update this file with:
-- Build, lint, and test commands (including how to run a single test)
-- The high-level architecture and structure once one exists
+
+- Build, lint, and test commands, including how to run a single test.
+- The high-level architecture and project structure once established.
