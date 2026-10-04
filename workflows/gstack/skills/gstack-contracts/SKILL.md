@@ -3,9 +3,13 @@ name: gstack-contracts
 description: Define, inspect, or propose corrections to gstack data and interface contracts connecting UI, backend, persistence, and integrations to acceptance criteria.
 ---
 
-# gstack-contracts
+# Define and inspect contracts
 
-Read the brief, architecture, existing contracts, and affected source interfaces. Use [contractTemplate.md](../../contractTemplate.md) when writing contracts.
+## Inputs
+
+Read `brief.md` and `architecture.md`. Inspect existing `contracts.md` and affected source interfaces when available. Use [contractTemplate.md](../../contractTemplate.md) when writing contracts.
+
+## Procedure
 
 - Assign stable operation IDs such as C-1 linked to acceptance criteria.
 - Specify input/output shapes, data constraints and relationships, ownership, permissions, errors, side effects, persistence, and UI states.
@@ -15,4 +19,8 @@ Read the brief, architecture, existing contracts, and affected source interfaces
 - Report contradictions, gaps, or infeasible rules by ID with proposed resolutions. Route scope changes to planner and contract decisions to architect; preserve unrelated contracts and record revisions in the decision log.
 - Identify affected increments and dependent evidence when contracts change. Use `gstack-increments` to invalidate their passes, update checks, and reset final validation to pending before advancement.
 
-The architect owns updates to `contracts.md`. Other roles inspect or propose corrections without silently changing contracts or acceptance criteria. Return a short summary referencing files and IDs.
+## Ownership and handoff
+
+- Architect owns updates to `contracts.md`.
+- Other roles inspect or propose corrections; they must not silently change contracts or acceptance criteria.
+- Return a short summary referencing files and affected IDs.

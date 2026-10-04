@@ -6,7 +6,7 @@ Agents own responsibilities and outputs. Skills provide reusable procedures. Eve
 |---|---|---|
 | [gstack-plan](gstack-plan/SKILL.md) | Scope, journeys, acceptance criteria | Planner |
 | [gstack-design](gstack-design/SKILL.md) | Architecture and stack selection | Architect |
-| [gstack-contracts](gstack-contracts/SKILL.md) | Data/interface contracts | Architect |
+| [gstack-contracts](gstack-contracts/SKILL.md) | Data and interface contracts | Architect |
 | [gstack-increments](gstack-increments/SKILL.md) | One-goal plans and progress | Architect, builder, validator |
 | [gstack-build](gstack-build/SKILL.md) | Implement one increment | Builder |
 | [gstack-validate](gstack-validate/SKILL.md) | Evidence and validation | Validator |
@@ -19,6 +19,6 @@ Repository `.agents/skills/` discovery links point to these folders, keeping one
 
 ## Ownership
 
-Shared access does not change stage order or authority. Builder may inspect contracts or run validation self-checks, but architect owns contract changes and validator owns advancement verdicts. Validator may use build guidance to diagnose defects but does not modify application code.
+Shared access does not change stage order or authority. The builder may inspect contracts or run self-checks. The architect owns contract changes; the validator owns verdicts that permit advancement. The validator may use build guidance to diagnose defects but does not modify application code.
 
-Agents retain inputs, outputs, boundaries, and escalation rules. Skills retain procedures. The [orchestrator](../orchestrator.md) retains sequence, gates, and retries. Skill outputs go into the application's output folder, never into skill definitions.
+Agent files define inputs, outputs, boundaries, and escalation rules. Skill files describe procedures. The [orchestrator](../orchestrator.md) retains sequence, gates, and retries. Skill outputs go into the application's output folder, never into skill definitions.

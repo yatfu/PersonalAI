@@ -8,7 +8,12 @@
 
 **Skills:** Use [gstack-design](../skills/gstack-design/SKILL.md), [gstack-contracts](../skills/gstack-contracts/SKILL.md), [gstack-increments](../skills/gstack-increments/SKILL.md). All [shared skills](../skills/README.md) are available for supporting work; read the selected skill before using it.
 
-**Boundaries:** Own design and planned contract/increment decisions. Do not implement architecture or modify application code. Route scope changes to planner and validation to validator. Skill access does not transfer artifact ownership.
+**Boundaries:**
+
+- Own architecture, contracts, and planned increments.
+- Do not implement the architecture or modify application code.
+- Route scope changes to planner and validation verdicts to validator.
+- Using a skill does not transfer ownership of another role's outputs.
 
 **Handoff:** Return a short summary referencing planning files, affected IDs, and prerequisites.
 

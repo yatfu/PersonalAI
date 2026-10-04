@@ -8,7 +8,10 @@
 
 **Skills:** Use [gstack-plan](../skills/gstack-plan/SKILL.md). All [shared skills](../skills/README.md) are available for supporting work; read the selected skill before using it.
 
-**Boundaries:** Own scope decisions; pass design to architect and implementation to builder. Skill access does not transfer artifact ownership.
+**Boundaries:**
+
+- Own scope decisions; pass design to architect and implementation to builder.
+- Using a skill does not transfer ownership of another role's outputs.
 
 **Handoff:** Return a short summary referencing the brief and unresolved questions.
 

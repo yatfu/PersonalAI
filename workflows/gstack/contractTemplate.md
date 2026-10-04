@@ -16,11 +16,13 @@ A contract defines the behavior shared by the UI, backend, and persistence layer
 # Contracts — <application or feature>
 
 ## Scope
+
 - Source brief and acceptance criteria: <path; IDs such as AC-1>
 - Existing contracts preserved: <paths and symbols, or none>
 - Assumptions and unresolved decisions: <decision, blocking status, affected operation>
 
 ## Data
+
 | Entity / field | Type | Required / default | Rules |
 |---|---|---|---|
 | <field> | <type> | <required or default> | <constraints> |
@@ -30,6 +32,7 @@ A contract defines the behavior shared by the UI, backend, and persistence layer
 - Existing data: <migration/backfill behavior, or not applicable>
 
 ## Operation C-1 — <name>
+
 - Acceptance criteria: <AC IDs>
 - Caller and boundary: <UI → server, server → external service, etc.>
 - Interface: <method/path, action signature, event name, or existing symbol>
@@ -42,15 +45,18 @@ A contract defines the behavior shared by the UI, backend, and persistence layer
 - Verification: <observable success and failure checks tied to AC IDs>
 
 ## Compatibility and integrations
+
 - Compatibility: <existing callers or data affected; intended preservation/change>
 - External dependencies: <interface/configuration references; unavailable-service behavior>
 
 ## Required verification
+
 | Criterion / contract | Check | Expected result |
 |---|---|---|
 | <AC-1 / C-1> | <test, command, or manual journey> | <observable outcome> |
 
 ## Decision log
+
 - <decision and reason; affected contract IDs; superseded behavior if any>
 ```
 

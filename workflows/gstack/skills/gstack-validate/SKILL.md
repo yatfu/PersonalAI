@@ -3,9 +3,13 @@ name: gstack-validate
 description: Validate a gstack increment or complete application against acceptance criteria and contracts, recording evidence, regressions, verdicts, and blockers.
 ---
 
-# gstack-validate
+# Validate application behavior
 
-Read the brief, architecture, contracts, increment plan, handoff, and affected source. Select increment, correction, or final application validation.
+## Inputs
+
+Read `brief.md`, `architecture.md`, `contracts.md`, `increments.md`, `handoff.md`, and affected source. Select increment validation, correction validation, or final application validation.
+
+## Procedure
 
 - Validate immediately after every increment and correction. Check the one goal, required checks, contracts, and regressions in prior behavior; identify unrelated bundled goals.
 - Run build, lint, type, and behavior checks appropriate to the stack and planned goal. Record commands and expected/actual outcomes; identify unrun checks. Inspection alone does not prove runtime success.
@@ -17,4 +21,9 @@ Read the brief, architecture, contracts, increment plan, handoff, and affected s
 - Route scope defects to planner, contract/design defects to architect, and implementation defects to builder with IDs and file references. Recheck affected behavior and necessary regressions after correction.
 - When source changes affect a previously passed increment, invalidate its pass and dependent evidence, reset final validation to pending, and require revalidation. Prior evidence remains historical rather than proof of the current version.
 
-Only validator records authoritative verdicts in `validation.md` and `increments.md`. Other roles may run self-checks and report evidence but cannot grant a pass. Do not modify application code or weaken contracts/criteria to make validation pass. Return a short verdict and report reference.
+## Ownership and handoff
+
+- Only validator records authoritative verdicts in `validation.md` and `increments.md`.
+- Other roles may run self-checks and report evidence; they cannot grant a pass.
+- Do not modify application code or weaken contracts or acceptance criteria to make validation pass.
+- Return a short verdict with a report reference and remaining issues.
