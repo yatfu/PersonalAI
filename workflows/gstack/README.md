@@ -6,6 +6,8 @@ Foundation for AI-generated full stack applications: turn an application idea in
 
 When creating a new full stack application from an idea or requirements brief.
 
+See [promptTemplate.md](promptTemplate.md) for short and expanded prompts covering feature requests of different sizes, including changes to existing applications.
+
 ## Inputs
 
 - `applicationName` (required) — descriptive name used to derive a camelCase output folder.
