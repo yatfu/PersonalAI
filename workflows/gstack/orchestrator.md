@@ -13,22 +13,25 @@ Control-flow specification for generating a full stack application. An executing
 ## Sequence
 
 1. **planner** reads the request and writes `brief.md`.
-2. **architect** reads the brief and writes `architecture.md`.
-3. **builder** reads both documents, implements `app/`, and writes `handoff.md`.
+2. **architect** reads the brief and writes `architecture.md` and `contracts.md` using [contractTemplate.md](contractTemplate.md). Checks coverage and consistency before handing off; blocking decisions pause only dependent work.
+3. **builder** reads the brief, architecture, and contracts, implements `app/`, and writes `handoff.md`.
 4. **validator** inspects the application, runs appropriate checks, and writes `validation.md`.
 5. If validation fails, **builder** patches the affected implementation and handoff; **validator** repeats the affected checks.
+
+   - Scope defects return to **planner**; design or contract defects return to **architect** before dependent implementation resumes. Changes propagate to affected downstream files and checks. The validator does not change code or acceptance criteria.
 
 ## Handoff contract
 
 - `brief.md`: application name, problem, target users, in-scope and out-of-scope behavior, user journeys, numbered acceptance criteria, constraints, assumptions, and open questions.
-- `architecture.md`: stack and rationale, directory structure, data entities and relationships, API/request contracts, frontend routes, authentication and authorization needs, integration boundaries, configuration, implementation steps, and validation strategy.
+- `architecture.md`: stack and rationale, directory structure, frontend routes, integration boundaries, configuration, implementation steps, validation strategy, and references to `contracts.md` for exact boundary behavior.
+- `contracts.md`: affected data constraints, stable operation IDs linked to acceptance criteria, interfaces and input/output shapes, permissions, success/failure behavior, side effects, UI states, examples, required verification, and unresolved decisions. Use the shared template proportionally to scope.
 - `app/`: working source code, dependency manifests and lockfiles where supported, example environment configuration without secrets, and tests appropriate to application behavior.
 - `handoff.md`: prerequisites, exact installation/start/test commands, environment variable names, database setup, known limitations, and deployment prerequisites. Distinguish working integrations from mocks or unavailable services.
-- `validation.md`: verdict (`passed`, `failed`, or `blocked`), acceptance-criterion coverage, checks and outcomes, unexecuted checks and reasons, and actionable issues with file references where possible.
+- `validation.md`: verdict (`passed`, `failed`, or `blocked`), acceptance-criterion and contract coverage, checks and outcomes, unexecuted checks and reasons, and actionable issues with responsible role and file references where possible.
 
 ## Loops / retries
 
-Allow up to two implementation revision passes after the initial validation. Scope each revision to recorded issues. If issues remain, stop and report them with the current artifacts; do not declare success. A prerequisite that cannot be supplied is recorded as blocked, with the next action needed.
+Allow up to two revision passes after the initial validation, including any required scope or contract corrections and their implementation updates. Scope each revision to recorded issues. If issues remain, stop and report them with the current artifacts; do not declare success. A prerequisite that cannot be supplied is recorded as blocked, with the next action needed.
 
 ## Stopping condition
 

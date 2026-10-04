@@ -21,7 +21,8 @@ See [promptTemplate.md](promptTemplate.md) for short and expanded prompts coveri
 `outputs/gstack/<applicationName>/`
 
 - `brief.md` — scope, assumptions, user journeys, and acceptance criteria.
-- `architecture.md` — stack, data model, API contracts, and implementation sequence.
+- `architecture.md` — stack, application structure, and implementation sequence.
+- `contracts.md` — precise data, interface, permission, error, and UI behavior linked to acceptance criteria; see [contractTemplate.md](contractTemplate.md).
 - `app/` — application source, dependency manifests, configuration examples, and tests.
 - `validation.md` — verification results, unresolved issues, and limitations.
 - `handoff.md` — setup, local run commands, and deployment prerequisites.
