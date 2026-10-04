@@ -28,6 +28,7 @@ Use this workspace to:
 | `workflows/` | Multi-agent workflow definitions: an orchestrator and individual agent specifications, with one folder per workflow. See [workflows/README.md](workflows/README.md). |
 | `outputs/` | Completed work and deliverables. |
 | `resources/` | Reference material, source documents, examples, and research. |
+| `workflows/gstack/skills/` | Shared gstack procedures, linked from `.agents/skills/` for Codex discovery. |
 
 ## Agent behavior
 

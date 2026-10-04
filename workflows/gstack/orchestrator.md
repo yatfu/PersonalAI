@@ -10,16 +10,18 @@ Control-flow specification for generating a full stack application. An executing
 - Use current official documentation when framework or integration behavior needs verification.
 - Patch existing artifacts when revising. Do not overwrite unrelated user work.
 
+Every agent can use the [shared skills](skills/README.md). Read the selected skill before performing its procedure. Skill access does not change role ownership, stage order, or validation gates; these are file-based instructions, not an automated runner.
+
 ## Sequence
 
-1. **planner** reads the request and writes `brief.md`.
-2. **architect** reads the brief and writes `architecture.md`, `contracts.md`, and `increments.md` using [contractTemplate.md](contractTemplate.md) and [incrementTemplate.md](incrementTemplate.md). Checks coverage, consistency, dependencies, and one-goal boundaries before handing off.
-3. Select the next pending increment in dependency order. Its prerequisites must have passed and blocking decisions must be resolved. **builder** reads the planning files, implements only that increment's goal under `app/`, updates `handoff.md`, and marks it ready for validation in `increments.md`.
-4. **validator** validates that increment immediately, records checks and verdict in `validation.md`, and updates its status in `increments.md`. Required checks must pass before the next increment starts. Isolated component checks do not count as proof of a connected journey.
+1. **planner** uses `gstack-plan` on the request and writes `brief.md`.
+2. **architect** uses `gstack-design`, `gstack-contracts`, and `gstack-increments` to write `architecture.md`, `contracts.md`, and `increments.md` using [contractTemplate.md](contractTemplate.md) and [incrementTemplate.md](incrementTemplate.md). Checks coverage, consistency, dependencies, and one-goal boundaries before handing off.
+3. Select the next pending increment in dependency order. Its prerequisites must have passed and blocking decisions must be resolved. **builder** uses `gstack-build` and `gstack-increments` to implement only that increment's goal under `app/`, updates `handoff.md`, and marks it ready for validation in `increments.md`.
+4. **validator** uses `gstack-validate` and `gstack-increments` to validate that increment immediately, records checks and verdict in `validation.md`, and updates its status in `increments.md`. Required checks must pass before the next increment starts. Isolated component checks do not count as proof of a connected journey.
 5. If validation fails, **builder** patches that increment and the handoff; **validator** revalidates it. Do not advance on a failed or blocked verdict.
    - Scope defects return to **planner**; design or contract defects return to **architect** before dependent implementation resumes. Changes propagate to affected downstream files and checks. The validator does not change code or acceptance criteria.
 6. Repeat steps 3–5 until all increments pass, including explicitly planned integration increments. Contract or plan changes invalidate affected prior verdicts; revalidate affected increments before advancing.
-7. **validator** performs final application validation against the full brief and contracts, including complete user journeys and reproducible local setup. Record a separate final verdict; individual increment passes alone do not establish application completion.
+7. **validator** uses `gstack-validate` for final application validation against the full brief and contracts, including complete user journeys and reproducible local setup. Record a separate final verdict; individual increment passes alone do not establish application completion.
 
 ## Handoff contract
 

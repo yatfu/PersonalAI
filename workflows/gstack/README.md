@@ -39,6 +39,10 @@ See [promptTemplate.md](promptTemplate.md) for short and expanded prompts coveri
 
 See [orchestrator.md](orchestrator.md) for stage order and revision rules.
 
+## Shared skills
+
+Reusable procedures live in [skills/](skills/README.md), separate from agent roles. All agents can use every skill; their role files list usual skills and retain ownership of assigned outputs. Repository discovery links under `.agents/skills/` make this library available to Codex without duplicate definitions. Skill folders use lowercase hyphenated names required by the skill format. Skills are instructions, not an automated runner.
+
 ## Incremental execution
 
 Build one goal, validate it, then advance only after it passes. A feature, component, or connection between components can each be an increment. Integration work counts explicitly, and complete user journeys are checked again during final validation.
