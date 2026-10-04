@@ -26,7 +26,8 @@ Integration is explicit work: connecting a form to an endpoint or an endpoint to
 - Excluded: <adjacent work reserved for other increments>
 - Dependencies: <previous increments that must pass>
 - Contract references: <C IDs or not applicable with reason>
-- Required checks: <command/test/manual check → expected outcome>
+- Acceptance tests: <AC IDs → test files/cases, library, fixtures, and evidence scope>
+- Required checks: <automated test command and supplemental manual check → expected outcome>
 - Check prerequisites: <tools, services, configuration, and fixtures needed>
 - Regression checks: <previous behavior at risk, or none with reason>
 - Evidence limits: <what these checks do not establish yet>
@@ -62,6 +63,10 @@ Statuses: `pending`, `building`, `validating`, `passed`, `failed`, `blocked`. Ar
 5. **I-5: Connect the form to the endpoint.** Validate real submission, error display, and persisted data through the connected application.
 
 These are illustrative boundaries, not mandatory layers for every feature. A small feature may need only one increment. Tests using stubs prove only the isolated behavior; integration increments require real connected boundaries or remain unverified.
+
+## Acceptance-test matrix
+
+Use [acceptanceTestTemplate.md](acceptanceTestTemplate.md) to map every planner criterion to automated tests, test writers, and the increment that verifies its complete behavior. Builders write assigned tests before implementation; validator independently runs them after every increment.
 
 ## Execution rule
 

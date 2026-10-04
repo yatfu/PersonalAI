@@ -15,7 +15,7 @@ For an existing app, inspect its instructions and current behavior. Record the s
 
 - Describe intended users, their problem, and the desired outcome.
 - Define the smallest complete version fulfilling the request, including required frontend, backend, and persistence behavior.
-- Describe user journeys and assign stable IDs such as AC-1 to observable acceptance criteria, including relevant failure states.
+- Explicitly create `## Acceptance criteria` in `brief.md` using [acceptanceTestTemplate.md](../../acceptanceTestTemplate.md). Give every required outcome a stable AC-ID, preconditions, action, and observable expected result, including relevant failure states. Planner owns these criteria; do not delegate their creation to builders.
 - Separate required and deferred features; record assumptions, constraints, and open questions.
 - Use `gstack-coordinate` to select required frontend, backend, and database roles and write `collaboration.md`. Review architecture and proposed increments, then confirm owners, collaborators, handoff IDs, and shared-file ownership before implementation.
 - Resolve routine details from context. Ask when missing information changes essential behavior; identify blocked work.

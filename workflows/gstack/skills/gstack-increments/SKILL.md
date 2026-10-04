@@ -14,6 +14,7 @@ Read `brief.md`, `collaboration.md`, `architecture.md`, and `contracts.md`. Read
 - Give each increment a stable ID, one goal, scope, dependencies, acceptance/contract references, required checks with prerequisites and expected outcomes, regression checks, and evidence limits. Require at least one observable goal-specific check.
 - Features, components, setup capabilities, and integration connections may each be goals. Split independently evaluable goals; multiple files or layers may serve one goal.
 - Have planner confirm one selected owner per increment, collaborators, communication H-IDs, and shared-file ownership. Keep assignments consistent with `collaboration.md`; implementation cannot start with unresolved ownership.
+- Map every planner AC-ID to concrete automated behavioral tests, test writers, and verification increments using [acceptanceTestTemplate.md](../../acceptanceTestTemplate.md). No criterion may be omitted; identify supporting isolated evidence versus complete acceptance coverage.
 - Plan integration explicitly when pieces are built separately. Isolated checks do not prove a connected journey. Ensure the full plan covers required criteria.
 - Prerequisites must pass before dependent work starts. Validate every increment and correction; advance only with a validator-owned passed verdict.
 - Track the statuses and allowed transitions in the increment template, current increment, validation attempt references, correction counts, and separate final validation state.

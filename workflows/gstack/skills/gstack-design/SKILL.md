@@ -19,6 +19,7 @@ Read `brief.md`, `collaboration.md`, stack preferences, and integration constrai
 - Identify required authentication, authorization, input validation, and error handling.
 - Specify unavailable-service behavior and identify incompatible constraints or missing prerequisites before dependent work proceeds.
 - Reference `contracts.md` for exact boundary behavior and `increments.md` for ordered work rather than duplicating them.
+- Select compatible testing libraries and non-watch commands for the application. Preserve suitable existing tools; Vitest, Playwright, and pytest are examples, not fixed requirements.
 - Specify meaningful validation and local setup requirements. Verify unfamiliar or changing details with current official documentation.
 
 ## Ownership and handoff

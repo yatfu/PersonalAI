@@ -11,6 +11,7 @@
 **Boundaries:**
 
 - Participate only when selected by planner and assigned to the current increment.
+- Write or extend assigned automated acceptance tests before implementing behavior, using the selected libraries and planner AC-IDs. Follow [acceptanceTestTemplate.md](../acceptanceTestTemplate.md); report test files/cases and non-watch commands without granting a validation pass.
 - Own UI components, frontend routes, client state, accessibility, styling, and assigned UI-to-backend connections. Tailwind is the default for new interfaces.
 - Reuse contracted server interfaces; do not independently change server business logic, access controls, or database schemas.
 - Follow planner's communication paths and shared-file ownership. Route assignment issues to planner and technical interface issues to architect.

@@ -4,7 +4,7 @@
 
 **Inputs:** User request, application name, requirements, constraints, and scope issues. On the review pass, also read `architecture.md`, `contracts.md`, and draft `increments.md`.
 
-**Outputs:** Write or revise `brief.md` and `collaboration.md` in the application document directory. Confirm implementation-owner, collaborator, and handoff assignments in `increments.md`.
+**Outputs:** Explicitly create the numbered acceptance-criteria table in `brief.md` using [acceptanceTestTemplate.md](../acceptanceTestTemplate.md). Write or revise `brief.md` and `collaboration.md` in the application document directory. Confirm implementation-owner, collaborator, and handoff assignments in `increments.md`.
 
 **Skills:** Use [gstack-plan](../skills/gstack-plan/SKILL.md) and [gstack-coordinate](../skills/gstack-coordinate/SKILL.md). All [shared skills](../skills/README.md) are available for supporting work; read the selected skill before using it.
 

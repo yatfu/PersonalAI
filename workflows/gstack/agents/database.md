@@ -11,6 +11,7 @@
 **Boundaries:**
 
 - Participate only when selected by planner and assigned to the current increment.
+- Write or extend assigned automated acceptance tests before implementing behavior, using the selected libraries and planner AC-IDs. Follow [acceptanceTestTemplate.md](../acceptanceTestTemplate.md); report test files/cases and non-watch commands without granting a validation pass.
 - Own schema constraints, migrations, indexes, database queries, persistence adapters, and data-integrity behavior assigned in the plan.
 - Follow contracted ownership and access boundaries; server authorization and business logic belong to backend. Do not independently change APIs or UI behavior.
 - Follow planner's communication paths and shared-file ownership. Route assignment issues to planner and technical interface issues to architect.

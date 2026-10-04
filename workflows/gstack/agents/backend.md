@@ -11,6 +11,7 @@
 **Boundaries:**
 
 - Participate only when selected by planner and assigned to the current increment.
+- Write or extend assigned automated acceptance tests before implementing behavior, using the selected libraries and planner AC-IDs. Follow [acceptanceTestTemplate.md](../acceptanceTestTemplate.md); report test files/cases and non-watch commands without granting a validation pass.
 - Own server business logic, APIs or actions, authentication, authorization, input validation, service integrations, and assigned server-to-persistence connections.
 - Use database-owned schemas and persistence interfaces. Do not independently change migrations or frontend behavior.
 - Follow planner's communication paths and shared-file ownership. Route assignment issues to planner and technical interface issues to architect.

@@ -33,7 +33,7 @@ Explicit user choices override these defaults. For an existing application, pres
 
 Planning documents and reports live in `outputs/gstack/<applicationName>/`. Source lives at `applicationPath` when supplied, otherwise in that folder's `app/` directory. Record both locations in `brief.md` and `handoff.md`. For an existing application, inspect its instructions and implementation first; preserve its stack and behavior unless the request requires a change.
 
-- `brief.md` — scope, assumptions, user journeys, and acceptance criteria.
+- `brief.md` — scope, assumptions, user journeys, and acceptance criteria explicitly created by planner; see [acceptanceTestTemplate.md](acceptanceTestTemplate.md).
 - `collaboration.md` — planner-selected agents, responsibilities, communication paths, and handoff requirements; see [collaborationTemplate.md](collaborationTemplate.md).
 - `communications.md` — short file-based requests, deliveries, acknowledgements, and blockers when inter-agent communication is needed.
 - `architecture.md` — stack, application structure, UI specification, and implementation sequence.
@@ -67,6 +67,8 @@ Planner chooses frontend, backend, and database only when their responsibilities
 Each increment has one selected owner, optional selected collaborators, and explicit handoff IDs. The owner coordinates contributions and integration within the single goal. Acknowledged handoffs do not replace validation after every increment. See [collaborationTemplate.md](collaborationTemplate.md) for the message format and examples.
 
 ## Incremental execution
+
+Planner explicitly creates acceptance criteria. Builders write automated tests for the current goal before implementation, using libraries suited to the application. The test plan covers every criterion; final validation executes its complete coverage.
 
 Build one goal, validate it, then advance only after it passes. A feature, component, or connection between components can each be an increment. Integration work counts explicitly, and complete user journeys are checked again during final validation.
 

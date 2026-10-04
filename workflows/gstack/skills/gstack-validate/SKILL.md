@@ -12,6 +12,7 @@ Read `brief.md`, `collaboration.md`, relevant `communications.md` entries, `arch
 ## Procedure
 
 - Validate immediately after every increment and correction. Check the one goal, required checks, contracts, and regressions in prior behavior; identify unrelated bundled goals.
+- Review the acceptance-test matrix and assertions against planner criteria using [acceptanceTestTemplate.md](../../acceptanceTestTemplate.md). Independently run the mapped cases; reject missing, skipped, todo, or zero-collected required tests. Future criteria remain pending, and final validation needs automated behavioral coverage of every AC-ID.
 - Run build, lint, type, and behavior checks appropriate to the stack and planned goal. Record commands and expected/actual outcomes; identify unrun checks. Inspection alone does not prove runtime success.
 - Verify selected roles, ownership, and required handoff acknowledgements against `collaboration.md`. Acknowledgements alone are not proof that integration works.
 - Check that setup instructions and configuration examples match the implementation.
