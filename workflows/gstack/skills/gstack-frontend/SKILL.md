@@ -1,13 +1,19 @@
 ---
-name: gstack-ui
-description: Design, implement, or review gstack application interfaces using concrete Tailwind CSS patterns, responsive layouts, accessible controls, and contracted UI states.
+name: gstack-frontend
+description: Design, implement, or review gstack frontend routes, components, client state, server connections, and accessible interfaces with Tailwind styling defaults.
 ---
 
-# Design application interfaces
+# Frontend design and implementation
 
 ## Inputs
 
-Read `brief.md`, relevant `architecture.md` and `contracts.md` sections, the current increment, and existing UI components when available. Use [tailwindPatterns.md](references/tailwindPatterns.md) for setup and implementation examples; use the [theme CSS](assets/uiTheme.css) as an adaptable starting point.
+Read `brief.md`, relevant `architecture.md` and `contracts.md` sections, the current increment when implementing, and existing UI components when available. Use [tailwindPatterns.md](references/tailwindPatterns.md) for setup and implementation examples; use the [theme CSS](assets/uiTheme.css) as an adaptable starting point.
+
+## Use the appropriate mode
+
+- **Design:** Architect specifies routes, components, client/server boundaries, interaction states, and UI details in `architecture.md`, referencing technical C-IDs and communication H-IDs. Planner may refine user requirements. Do not modify application code in design mode.
+- **Implement:** Frontend reads and follows [shared implementation rules](../references/implementation.md) before contributing to the current increment. These cover entry gates, acceptance tests before behavior, contracts, handoffs, and corrections.
+- **Review:** Validator checks the actual interface and test evidence using `gstack-validate`. Skill access does not grant another role's output ownership or a validation pass.
 
 ## Styling default
 
@@ -23,6 +29,14 @@ Read `brief.md`, relevant `architecture.md` and `contracts.md` sections, the cur
 4. Use semantic elements and visible labels. Specify keyboard focus, error associations, disabled and pending behavior, and status announcements. Use an established accessible component for complex interactions when available; styling does not implement keyboard or focus behavior.
 5. Define loading, empty, success, error, and disabled states where the contract requires them. Tailwind classes change presentation; frontend must implement the actual state and event logic in the designated increment.
 6. Verify the production build generates the needed classes. Use complete class strings rather than interpolated fragments. Check narrow/wide layouts, keyboard operation, focus visibility, contrast, and required states in the rendered interface. Record unrun checks explicitly.
+
+## Frontend implementation
+
+- Preserve the selected framework and existing route/component conventions. Use the architecture to decide what renders on the server and what needs client state; server business logic and authorization remain backend responsibilities.
+- Implement navigation, forms, client state, and required loading/empty/success/error behavior. Prevent duplicate submissions and preserve user input on failure according to the contract. Apply optimistic updates only when contracted reconciliation and failure behavior are defined.
+- Connect UI to the contracted endpoint, action, or local interface in its designated integration increment. Use exact input/output shapes and error codes; missing fields or incompatible responses return to architect rather than being silently guessed.
+- Reuse shared types or schemas when available. Client validation improves feedback but does not replace backend validation or access controls. Never put server secrets in client code or public configuration.
+- Write assigned component/interaction tests and connected browser journeys using the chosen libraries. Include planner AC-IDs, narrow/wide layouts, keyboard operation, required states, and real boundaries where the criterion needs them. Isolated UI tests cannot establish persistence or server permissions.
 
 ## Ownership and handoff
 

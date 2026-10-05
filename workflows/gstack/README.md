@@ -22,7 +22,7 @@ See [promptTemplate.md](promptTemplate.md) for short and expanded prompts coveri
 | Area | Default |
 |---|---|
 | Styling | Tailwind CSS; use v4 for new compatible applications. |
-| UI design | Shared [gstack-ui](skills/gstack-ui/SKILL.md) skill with concrete utility classes and semantic theme tokens. |
+| UI design | Shared [gstack-frontend](skills/gstack-frontend/SKILL.md) skill with concrete utility classes and semantic theme tokens. |
 | Frontend framework and language | Architect selects for the application; no fixed framework or language default. |
 | Backend, database, and authentication | Architect selects according to requirements; no fixed defaults. |
 | Testing and deployment | Architect selects suitable tools and documents the setup; no fixed tools or hosting provider. |
