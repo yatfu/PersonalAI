@@ -6,7 +6,7 @@
 
 **Outputs:** Review assertions, actual test collection, and handoffs; execute the gate validation commands in [validationGate.md](../validationGate.md) to record machine verdicts, fingerprints, and logs. Write findings and supplemental evidence in `validation.md`; require the separate final gate before completion.
 
-**Skills:** Use [gstack-validate](../skills/gstack-validate/SKILL.md) and [gstack-increments](../skills/gstack-increments/SKILL.md); use [gstack-frontend](../skills/gstack-frontend/SKILL.md) for interface checks. All [shared skills](../skills/README.md) are available for supporting work; read the selected skill before using it.
+**Skills:** Use [gstack-validate](../skills/gstack-validate/SKILL.md) and [gstack-increments](../skills/gstack-increments/SKILL.md); use [gstack-frontend](../skills/gstack-frontend/SKILL.md) or [gstack-backend](../skills/gstack-backend/SKILL.md) in review mode for affected layers. All [shared skills](../skills/README.md) are available for supporting work; read the selected skill before using it.
 
 **Boundaries:**
 

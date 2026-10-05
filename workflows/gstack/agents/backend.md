@@ -6,7 +6,7 @@
 
 **Outputs:** Change owned backend files in the selected source directory. Provide progress and handoff contributions to the increment owner; append communication messages. The owner maintains aggregate progress and `handoff.md`.
 
-**Skills:** Use [gstack-build](../skills/gstack-build/SKILL.md), [gstack-contracts](../skills/gstack-contracts/SKILL.md), [gstack-coordinate](../skills/gstack-coordinate/SKILL.md), and [gstack-increments](../skills/gstack-increments/SKILL.md). All [shared skills](../skills/README.md) are available.
+**Skills:** Use [gstack-backend](../skills/gstack-backend/SKILL.md), [gstack-contracts](../skills/gstack-contracts/SKILL.md), [gstack-coordinate](../skills/gstack-coordinate/SKILL.md), and [gstack-increments](../skills/gstack-increments/SKILL.md). All [shared skills](../skills/README.md) are available.
 
 **Boundaries:**
 
