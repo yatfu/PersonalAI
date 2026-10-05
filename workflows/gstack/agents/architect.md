@@ -6,7 +6,7 @@
 
 **Outputs:** Write or revise `architecture.md`, `contracts.md`, `increments.md`, and the test-plan definitions in `validationState.json` in the application output folder.
 
-**Skills:** Use [gstack-design](../skills/gstack-design/SKILL.md), [gstack-frontend](../skills/gstack-frontend/SKILL.md), [gstack-backend](../skills/gstack-backend/SKILL.md), [gstack-contracts](../skills/gstack-contracts/SKILL.md), and [gstack-increments](../skills/gstack-increments/SKILL.md). Use frontend or backend guidance in design mode when that layer is affected. All [shared skills](../skills/README.md) are available for supporting work; read the selected skill before using it.
+**Skills:** Use [gstack-design](../skills/gstack-design/SKILL.md), [gstack-contracts](../skills/gstack-contracts/SKILL.md), and [gstack-increments](../skills/gstack-increments/SKILL.md). For affected layers, use [gstack-frontend](../skills/gstack-frontend/SKILL.md), [gstack-backend](../skills/gstack-backend/SKILL.md), and [gstack-database](../skills/gstack-database/SKILL.md) in design mode. All [shared skills](../skills/README.md) are available for supporting work; read the selected skill before using it.
 
 **Boundaries:**
 

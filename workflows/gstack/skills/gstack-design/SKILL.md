@@ -16,6 +16,7 @@ Read `brief.md`, `collaboration.md`, stack preferences, and integration constrai
 - For an existing app, preserve its stack and conventions unless the requested change requires otherwise. Design against its actual source directory recorded in the brief.
 - Respect planner's team and responsibility boundaries. If design requires another role or communication path, propose it to planner before dependent work.
 - For server behavior, use `gstack-backend` in design mode to specify public boundaries, business rules, permissions, persistence connections, and service failure behavior.
+- For persistence, use `gstack-database` in design mode to specify data models, integrity constraints, migrations, queries, transactions, and test-environment setup.
 - Define frontend routes, a simple application directory structure, persistence setup, configuration, and integration boundaries.
 - Identify required authentication, authorization, input validation, and error handling.
 - Specify unavailable-service behavior and identify incompatible constraints or missing prerequisites before dependent work proceeds.

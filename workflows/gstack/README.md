@@ -62,6 +62,8 @@ See [orchestrator.md](orchestrator.md) for stage order and revision rules.
 
 Reusable procedures live in [skills/](skills/README.md), separate from agent roles. All agents can use every skill; their role files list usual skills and retain ownership of assigned outputs. Repository discovery links under `.agents/skills/` make this library available to Codex without duplicate definitions. Skill folders use lowercase hyphenated names required by the skill format. Skills are instructions, not an automated runner.
 
+Implementation roles use [gstack-frontend](skills/gstack-frontend/SKILL.md), [gstack-backend](skills/gstack-backend/SKILL.md), and [gstack-database](skills/gstack-database/SKILL.md). Architect uses their design guidance; validator uses their review guidance. All three share one [implementation procedure](skills/references/implementation.md) for gates, acceptance tests, and handoffs. Frontend includes the Tailwind UI patterns and theme asset.
+
 ## Implementation team
 
 Planner chooses frontend, backend, and database only when their responsibilities need changes. Planner writes `collaboration.md` to identify required communication paths and handoff rules. Architect defines technical interfaces in `contracts.md`; planner confirms role assignments after increments are drafted.
