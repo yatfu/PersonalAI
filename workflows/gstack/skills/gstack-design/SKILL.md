@@ -24,6 +24,6 @@ Read `brief.md`, `collaboration.md`, stack preferences, and integration constrai
 
 ## Ownership and handoff
 
-- Architect writes or patches `architecture.md` with stack rationale, structure, routes, integrations, configuration, implementation overview, and validation strategy.
+- Architect writes or patches `architecture.md` with stack rationale, structure, routes, integrations, configuration, implementation overview, and validation strategy, including gate setup and executable test commands from [validationGate.md](../../validationGate.md).
 - Other roles report findings to architect. Keep this procedure focused on design documents; application implementation belongs to the selected implementation agents.
 - Return a short summary with file references and unresolved prerequisites.

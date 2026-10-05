@@ -40,7 +40,9 @@ Planning documents and reports live in `outputs/gstack/<applicationName>/`. Sour
 - `contracts.md` — precise data, interface, permission, error, and UI behavior linked to acceptance criteria; see [contractTemplate.md](contractTemplate.md).
 - `increments.md` — ordered work with exactly one goal per increment, dependencies, checks, and progress; see [incrementTemplate.md](incrementTemplate.md).
 - Application source — code, dependency manifests, configuration examples, and tests at the selected source directory.
-- `validation.md` — validation after every increment, correction attempts, and the final application verdict.
+- `validationState.json` — executable test plan, authoritative verdicts/attempts, and source/contract fingerprints; see [validationGate.md](validationGate.md).
+- `validationLogs/` — immutable command output linked by each validation attempt.
+- `validation.md` — validator findings, manual evidence, and links to increment/final attempts.
 - `handoff.md` — setup, local run commands, and deployment prerequisites.
 
 ## Agents
@@ -70,8 +72,8 @@ Each increment has one selected owner, optional selected collaborators, and expl
 
 Planner explicitly creates acceptance criteria. Builders write automated tests for the current goal before implementation, using libraries suited to the application. The test plan covers every criterion; final validation executes its complete coverage.
 
-Build one goal, validate it, then advance only after it passes. A feature, component, or connection between components can each be an increment. Integration work counts explicitly, and complete user journeys are checked again during final validation.
+Run the increment gate before starting work. Build one goal, then have validator review and run the gate validation command; advance only after fresh passing evidence. Changes to source or planning invalidate earlier passes. A feature, component, or connection between components can each be an increment. Integration work counts explicitly, and complete user journeys are checked again during final validation.
 
 ## Status
 
-Initial workflow specification. No application has been generated or validated with it yet. These files describe execution; they do not provide an automated runner. Deployment is a separate action requiring user authorization.
+Initial workflow specification. No application has been generated or validated with it yet. The Python gate executes configured validation suites and checks progression; an AI session or runner still dispatches agents. Deployment is a separate action requiring user authorization.

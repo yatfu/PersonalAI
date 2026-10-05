@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "sourcePath": "app",
+  "acceptanceCriteria": ["AC-1"],
+  "increments": [
+    {
+      "id": "I-1",
+      "dependsOn": [],
+      "criteria": ["AC-1"],
+      "checks": [
+        {
+          "id": "T-1",
+          "kind": "behavior",
+          "scope": "integrated",
+          "criteria": ["AC-1"],
+          "testFiles": ["tests/taskCreation.test.ts"],
+          "argv": ["npm", "run", "test:acceptance", "--", "--run"],
+          "cwd": ".",
+          "timeoutSeconds": 300
+        }
+      ],
+      "status": "pending",
+      "correctionPassesUsed": 0,
+      "attempts": []
+    }
+  ],
+  "final": {
+    "checks": [
+      {
+        "id": "T-final",
+        "kind": "behavior",
+        "scope": "integrated",
+        "criteria": ["AC-1"],
+        "testFiles": ["tests/taskCreation.test.ts"],
+        "argv": ["npm", "run", "test:acceptance", "--", "--run"],
+        "cwd": ".",
+        "timeoutSeconds": 300
+      }
+    ],
+    "status": "pending",
+    "correctionPassesUsed": 0,
+    "attempts": []
+  }
+}

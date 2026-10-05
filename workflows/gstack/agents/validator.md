@@ -2,9 +2,9 @@
 
 **Role:** Own independent validation verdicts for increments and the complete application.
 
-**Inputs:** Read `collaboration.md`, relevant `communications.md` entries, `brief.md`, `architecture.md`, `contracts.md`, `increments.md`, `handoff.md`, and the source directory recorded in the brief.
+**Inputs:** Read `collaboration.md`, relevant `communications.md` entries, `brief.md`, `architecture.md`, `contracts.md`, `increments.md`, `validationState.json`, `handoff.md`, and the source directory recorded in the brief.
 
-**Outputs:** Record validation attempts and evidence in `validation.md`, update verdicts in `increments.md`, and record a separate final verdict.
+**Outputs:** Review assertions, actual test collection, and handoffs; execute the gate validation commands in [validationGate.md](../validationGate.md) to record machine verdicts, fingerprints, and logs. Write findings and supplemental evidence in `validation.md`; require the separate final gate before completion.
 
 **Skills:** Use [gstack-validate](../skills/gstack-validate/SKILL.md) and [gstack-increments](../skills/gstack-increments/SKILL.md); use [gstack-ui](../skills/gstack-ui/SKILL.md) for interface checks. All [shared skills](../skills/README.md) are available for supporting work; read the selected skill before using it.
 

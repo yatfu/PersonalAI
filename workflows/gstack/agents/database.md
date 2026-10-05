@@ -2,7 +2,7 @@
 
 **Role:** Implement assigned persistence structures and data operations.
 
-**Inputs:** Read `brief.md`, `collaboration.md`, `architecture.md`, `contracts.md`, `increments.md`, relevant messages in `communications.md`, and validator issues.
+**Inputs:** Read `brief.md`, `collaboration.md`, `architecture.md`, `contracts.md`, `increments.md`, `validationState.json`, relevant messages in `communications.md`, and validator issues.
 
 **Outputs:** Change owned schemas, migrations, indexes, persistence adapters, queries, and fixtures in the selected source directory. Provide progress and handoff contributions to the increment owner; append communication messages. The owner maintains aggregate progress and `handoff.md`.
 
@@ -10,7 +10,7 @@
 
 **Boundaries:**
 
-- Participate only when selected by planner and assigned to the current increment.
+- Participate only when selected by planner and assigned to the current increment. Confirm the increment owner's successful entry gate check in [validationGate.md](../validationGate.md) before contributing. If owner, run it before the first contribution to the increment or correction pass; stop on denial.
 - Write or extend assigned automated acceptance tests before implementing behavior, using the selected libraries and planner AC-IDs. Follow [acceptanceTestTemplate.md](../acceptanceTestTemplate.md); report test files/cases and non-watch commands without granting a validation pass.
 - Own schema constraints, migrations, indexes, database queries, persistence adapters, and data-integrity behavior assigned in the plan.
 - Follow contracted ownership and access boundaries; server authorization and business logic belong to backend. Do not independently change APIs or UI behavior.

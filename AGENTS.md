@@ -29,6 +29,7 @@ Use this workspace to:
 | `outputs/` | Completed work and deliverables. |
 | `resources/` | Reference material, source documents, examples, and research. |
 | `workflows/gstack/skills/` | Shared gstack procedures, linked from `.agents/skills/` for Codex discovery. |
+| `workflows/gstack/scripts/` | Workflow automation, including the increment validation gate and its behavioral tests. |
 
 ## Agent behavior
 
@@ -51,6 +52,8 @@ For each task:
 ## Project status
 
 This repository contains Markdown workflow specifications under `workflows/`, standalone HTML tools and generated deliverables under `outputs/`, and shared reference material under `resources/`. There is no repository-wide build system, package manifest, or test suite. Generated applications may have their own commands under their application directories.
+
+The gstack gate uses Python 3.8+ and the standard library. Run its tests with `python3 -m unittest discover -s workflows/gstack/scripts/tests -p 'test*.py'`; run one case with `python3 -m unittest discover -s workflows/gstack/scripts/tests -p 'test*.py' -k test_order_and_read_only_checks`. See [workflows/gstack/validationGate.md](workflows/gstack/validationGate.md) for application validation commands.
 
 When the project structure or development commands change, update this file with:
 

@@ -11,9 +11,9 @@ Integration is explicit work: connecting a form to an endpoint or an endpoint to
 
 ## Plan
 
-| ID | One goal | Owner | Depends on | Acceptance / contract IDs | Status |
-|---|---|---|---|---|---|
-| I-1 | <one observable outcome> | <selected role; planner confirms> | <IDs or none> | <AC / C IDs or supporting prerequisite> | pending |
+| ID | One goal | Owner | Depends on | Acceptance / contract IDs |
+|---|---|---|---|---|
+| I-1 | <one observable outcome> | <selected role; planner confirms> | <IDs or none> | <AC / C IDs or supporting prerequisite> |
 
 ## I-1 — <name>
 
@@ -31,27 +31,23 @@ Integration is explicit work: connecting a form to an endpoint or an endpoint to
 - Check prerequisites: <tools, services, configuration, and fixtures needed>
 - Regression checks: <previous behavior at risk, or none with reason>
 - Evidence limits: <what these checks do not establish yet>
-- Correction passes used: 0
-- Latest validation attempt: <number and validation.md section, or none>
-- Revalidation reason: <changed contract/plan/source or none>
+- Execution evidence: <I-1 in validationState.json; related validation.md sections>
 
-## Execution state
+## Execution record
 
-- Current increment: <ID or none>
-- Final validation: <pending / passed / failed / blocked>
-- Final correction passes used: 0
-- Latest final validation attempt: <number and validation.md section, or none>
+- Machine record: validationState.json
+- Gate instructions: workflows/gstack/validationGate.md
 ```
 
-Statuses: `pending`, `building`, `validating`, `passed`, `failed`, `blocked`. Architect defines goals, dependencies, and checks. Planner confirms agent assignments and communication paths. Increment owner updates implementation progress. The validator owns validation verdicts. Keep failed attempts and evidence in `validation.md`; do not erase them when an increment later passes.
+Architect defines goals, dependencies, and checks, and creates `validationState.json` using [validationGate.md](validationGate.md). Planner confirms assignments. Increment owner reports building/ready progress in `handoff.md`; validator records machine verdicts (`pending`, `passed`, `failed`, `blocked`), attempt history, and correction counts through the gate. Keep narrative findings in `validation.md`. The JSON record is authoritative; do not duplicate live statuses or counts in this planning document.
 
 ## State and evidence rules
 
-- Increment owner moves the selected increment to `building`, then `validating`. Validator sets `passed`, `failed`, or `blocked` after checking it.
-- A correction returns a failed increment to `building`; it must pass validation before progression. Resume blocked work only when its missing prerequisite is available.
-- Planner requests revalidation for changed assignments or communication rules; architect updates affected technical plans and marks increments affected by a contract or plan change `pending` with a reason, including dependent increments whose prior evidence no longer applies. Also reset final validation to `pending`. Only validator can grant a new pass.
+- Before starting or correcting an increment, run the gate's read-only `check --increment` command and stop on any nonzero exit. All earlier increments need fresh passing evidence.
+- After each increment, validator reviews assertions and handoffs, then runs `validate --through <ID> --reviewed`. This rechecks the earlier prefix before recording the current verdict. Only a passing run permits progression.
+- Planner/architect update plans when scope, assignments, or contracts change. Gate fingerprints invalidate old evidence automatically; preserve history and counts when updating JSON definitions. Revalidate before advancing. Only validator can grant a fresh pass.
 - Each increment needs at least one observable goal-specific check and its prerequisites. A build check alone is insufficient for a goal whose behavior requires runtime verification.
-- Number validation attempts and record correction counts after each pass. Preserve counts and evidence when resuming a run. Link the latest attempt here; store full results in `validation.md`.
+- The gate numbers attempts and saves source/planning fingerprints, command results, and immutable log references. Validator links those attempts from `validation.md`; preserve history when resuming.
 - Revalidation without implementation or planning corrections does not consume a correction pass. Corrections required after a failed recheck do consume one. Follow the orchestrator's limits.
 
 ## Example decomposition

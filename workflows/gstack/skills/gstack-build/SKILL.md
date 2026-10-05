@@ -7,13 +7,14 @@ description: Implement or correct one gstack increment across frontend, backend,
 
 ## Inputs
 
-Read `brief.md`, `collaboration.md`, `architecture.md`, `contracts.md`, `increments.md`, and relevant `communications.md` entries, plus validator issues when correcting work. Identify the current increment; its prerequisites must have passed.
+Read `brief.md`, `collaboration.md`, `architecture.md`, `contracts.md`, `increments.md`, `validationState.json`, and relevant `communications.md` entries, plus validator issues when correcting work. Identify the current increment; its prerequisites must have passed.
 
 ## Procedure
 
+- Before the first contribution to an increment or correction pass, its owner runs `check --state <validationState.json> --increment <ID>` using [validationGate.md](../../validationGate.md). Contributors confirm that successful entry check rather than repeating it after each contribution. Stop on denial; a Markdown status or self-check cannot authorize advancement.
 - Work only as a planner-selected implementation role assigned to the current increment. Follow responsibility and shared-file ownership in `collaboration.md`; the increment owner coordinates any collaborators.
 - Use `gstack-coordinate` for contracted messages and acknowledgements. Missing or incompatible handoffs block dependent work.
-- Implement only its one goal and included scope. The increment owner marks it building, then validating. Return control for validation before starting another increment.
+- Implement only its one goal and included scope. The increment owner reports building/ready progress in `handoff.md`; machine verdicts remain validator-owned. Return control for validation before starting another increment.
 - Follow contracted field shapes, validation, permissions, errors, persistence, and applicable UI states: loading, empty, success, and failure.
 - Use shared types or schemas where supported. Choose internal details autonomously when they preserve behavior; documents alone do not enforce contracts.
 - Report contradictory, incomplete, or infeasible contracts by ID and proposed resolution to architect before dependent implementation. Continue only unaffected work in the current increment.
@@ -23,7 +24,7 @@ Read `brief.md`, `collaboration.md`, `architecture.md`, `contracts.md`, `increme
 - Before implementing current increment behavior, create or extend its automated acceptance tests following [acceptanceTestTemplate.md](../../acceptanceTestTemplate.md). Cover assigned planner criteria through observable behavior using compatible libraries; reference AC-IDs in test names and report test files, cases, fixtures, and exact non-watch commands. Future criteria remain planned, not prematurely implemented. Tests must not weaken planner outcomes or count skipped cases as coverage.
 - Use `gstack-ui` for interface styling and behavior. Tailwind CSS is the default for new apps; follow the chosen architecture and preserve an existing app's styling system unless a change is requested. Compile CSS through the application build and use complete utility class strings.
 - Patch affected files and update the handoff on corrections instead of regenerating the application; preserve unrelated work.
-- Before a correction, check the remaining allowance in `increments.md`. Record the correction pass and identify previously passed increments affected by source changes so validator can invalidate and recheck their evidence. Do not start later increments while a gate is failed or blocked.
+- Before a correction, check the remaining allowance in `validationState.json`. Report corrected increment IDs so validator records each correction pass. The gate rechecks the earlier prefix after source changes; do not start a later increment with failed, blocked, or stale prerequisite evidence.
 
 ## Ownership and handoff
 

@@ -83,8 +83,8 @@ frontend, backend, and database agents and define their communication contract.
 Have architect define technical interfaces and increments; planner confirms
 role assignments before implementation.
 Implement one goal per increment: a feature, component, or integration
-connection. Validate after every increment and correction; advance only after
-validation passes. Verify complete journeys during final validation.
+connection. Use the increment gate before implementation and after every increment or
+correction; advance only after fresh validation passes. Verify complete journeys during final validation.
 Update documentation when setup or behavior changes.
 
 Resolve routine details using the existing application and reasonable
