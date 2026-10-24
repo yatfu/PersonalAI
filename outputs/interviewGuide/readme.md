@@ -1,6 +1,6 @@
 # Interview study guide
 
-An anonymized résumé companion with 55 study topics and 109 practice questions across ten sections. Names, contact information, profile links, employer/client names, school name, and personal dates are removed.
+An anonymized résumé companion with 64 study topics and 129 practice questions across eleven sections. Names, contact information, profile links, employer/client names, school name, and personal dates are removed.
 
 Open `dist/index.html` directly in a browser. No installation or build is required. To serve locally, run `python -m http.server 8765 --directory outputs/interviewGuide/dist` from the repository root.
 
